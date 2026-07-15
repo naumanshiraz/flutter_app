@@ -1,0 +1,29 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
+
+/// Abstraction over `connectivity_plus` so business logic depends on this
+/// interface, not the plugin directly (testable + swappable).
+abstract class ConnectivityService {
+  Future<bool> get isConnected;
+  Stream<bool> get onConnectivityChanged;
+}
+
+class ConnectivityServiceImpl implements ConnectivityService {
+  final Connectivity _connectivity;
+  ConnectivityServiceImpl({Connectivity? connectivity})
+      : _connectivity = connectivity ?? Connectivity();
+
+  @override
+  Future<bool> get isConnected async {
+    final results = await _connectivity.checkConnectivity();
+    return _hasConnection(results);
+  }
+
+  @override
+  Stream<bool> get onConnectivityChanged {
+    return _connectivity.onConnectivityChanged.map(_hasConnection);
+  }
+
+  bool _hasConnection(List<ConnectivityResult> results) {
+    return results.any((r) => r != ConnectivityResult.none);
+  }
+}

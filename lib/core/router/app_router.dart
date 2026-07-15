@@ -1,0 +1,220 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:pms_app/core/router/route_names.dart';
+import 'package:pms_app/core/widgets/placeholder_page.dart';
+import 'package:pms_app/features/auth/presentation/pages/login_page.dart';
+import 'package:pms_app/features/auth/presentation/pages/onboarding_email_page.dart';
+import 'package:pms_app/features/auth/presentation/pages/onboarding_gender_page.dart';
+import 'package:pms_app/features/auth/presentation/pages/onboarding_location_page.dart';
+import 'package:pms_app/features/auth/presentation/pages/onboarding_phone_page.dart';
+import 'package:pms_app/features/auth/presentation/pages/onboarding_profile_page.dart';
+import 'package:pms_app/features/auth/presentation/pages/otp_verification_page.dart';
+import 'package:pms_app/features/auth/presentation/providers/otp_verification_provider.dart';
+import 'package:pms_app/features/family_members/domain/entities/family_member.dart';
+import 'package:pms_app/features/family_members/presentation/pages/edit_family_member_page.dart';
+import 'package:pms_app/features/family_members/presentation/pages/family_members_page.dart';
+import 'package:pms_app/features/home/presentation/pages/home_page.dart';
+import 'package:pms_app/features/profile/presentation/pages/edit_profile_page.dart';
+import 'package:pms_app/features/profile/presentation/pages/profile_picture_page.dart';
+import 'package:pms_app/features/properties/domain/entities/property.dart';
+import 'package:pms_app/features/properties/presentation/pages/edit_property_page.dart';
+import 'package:pms_app/features/properties/presentation/pages/properties_page.dart';
+import 'package:pms_app/features/residency/presentation/pages/residency_identification_page.dart';
+import 'package:pms_app/features/splash/domain/entities/app_destination.dart';
+import 'package:pms_app/features/splash/presentation/pages/splash_page.dart';
+import 'package:pms_app/features/splash/presentation/providers/app_initialization_provider.dart';
+
+/// Bridges a Riverpod [AsyncNotifierProvider] to GoRouter's
+/// `refreshListenable`, so every state change in [appInitializationProvider]
+/// (loading -> data/error) re-runs the redirect logic below automatically.
+class _RouterRefreshNotifier extends ChangeNotifier {
+  _RouterRefreshNotifier(Ref ref) {
+    ref.listen<AsyncValue<AppDestination>>(
+      appInitializationProvider,
+      (previous, next) => notifyListeners(),
+    );
+  }
+}
+
+final _routerRefreshProvider = Provider<_RouterRefreshNotifier>((ref) {
+  return _RouterRefreshNotifier(ref);
+});
+
+/// -------------------------------------------------------------------
+/// Route Guard
+/// -------------------------------------------------------------------
+/// Centralizes every navigation decision that depends on session state:
+///  - While initialization is in-flight -> pin the user on Splash.
+///  - Once resolved -> leave Splash for Login or Home.
+///  - Block unauthenticated deep links into Home -> bounce to Login.
+///  - Block authenticated users from re-entering Login/Splash -> bounce
+///    to Home.
+/// Every future module's protected routes should be added to the
+/// `isProtectedRoute` check below rather than re-implementing this logic
+/// per-page.
+String? _routeGuard(BuildContext context, GoRouterState state, Ref ref) {
+  final initAsync = ref.read(appInitializationProvider);
+  final currentPath = state.matchedLocation;
+  final isSplashRoute = currentPath == RouteNames.splash;
+
+  return initAsync.when(
+    loading: () => isSplashRoute ? null : RouteNames.splash,
+    error: (_, __) => isSplashRoute ? null : RouteNames.splash,
+    data: (destination) {
+      final isAuthenticated = destination == AppDestination.home;
+      final isLoginRoute = currentPath == RouteNames.login;
+      final isProtectedRoute = currentPath == RouteNames.home ||
+          currentPath == RouteNames.editProfile ||
+          currentPath == RouteNames.profilePicture ||
+          currentPath == RouteNames.residencyIdentification ||
+          currentPath == RouteNames.familyMembers ||
+          currentPath == RouteNames.editFamilyMember ||
+          currentPath == RouteNames.properties ||
+          currentPath == RouteNames.editProperty;
+
+      if (isSplashRoute) {
+        return isAuthenticated ? RouteNames.home : RouteNames.login;
+      }
+      if (!isAuthenticated && isProtectedRoute) {
+        return RouteNames.login;
+      }
+      if (isAuthenticated && isLoginRoute) {
+        return RouteNames.home;
+      }
+      return null; // Already on the correct route — no redirect.
+    },
+  );
+}
+
+/// Exposed as a provider so `MaterialApp.router` (built once in main.dart)
+/// always gets a router wired to the live Riverpod container via
+/// `ProviderScope`'s `ConsumerStatefulWidget`/`ref` — see `main.dart`.
+final appRouterProvider = Provider<GoRouter>((ref) {
+  final refreshNotifier = ref.watch(_routerRefreshProvider);
+
+  return GoRouter(
+    initialLocation: RouteNames.splash,
+    debugLogDiagnostics: kDebugMode,
+    refreshListenable: refreshNotifier,
+    redirect: (context, state) => _routeGuard(context, state, ref),
+    routes: [
+      GoRoute(
+        path: RouteNames.splash,
+        name: RouteNames.splash,
+        builder: (context, state) => const SplashPage(),
+      ),
+      GoRoute(
+        path: RouteNames.login,
+        name: RouteNames.login,
+        builder: (context, state) => const LoginPage(),
+      ),
+      GoRoute(
+        path: RouteNames.otpVerification,
+        name: RouteNames.otpVerification,
+        builder: (context, state) {
+          final args = state.extra as OtpVerificationArgs?;
+          if (args == null) {
+            // Defensive fallback: someone deep-linked here directly
+            // without going through Login first.
+            return const PlaceholderPage(
+              title: 'OTP Verification',
+              routeName: RouteNames.otpVerification,
+            );
+          }
+          return OtpVerificationPage(args: args);
+        },
+      ),
+      GoRoute(
+        path: RouteNames.onboardingEmail,
+        name: RouteNames.onboardingEmail,
+        builder: (context, state) => const OnboardingEmailPage(),
+      ),
+      GoRoute(
+        path: RouteNames.onboardingPhone,
+        name: RouteNames.onboardingPhone,
+        builder: (context, state) => const OnboardingPhonePage(),
+      ),
+      GoRoute(
+        path: RouteNames.onboardingProfile,
+        name: RouteNames.onboardingProfile,
+        builder: (context, state) => const OnboardingProfilePage(),
+      ),
+      GoRoute(
+        path: RouteNames.onboardingGender,
+        name: RouteNames.onboardingGender,
+        builder: (context, state) => const OnboardingGenderPage(),
+      ),
+      GoRoute(
+        path: RouteNames.onboardingLocation,
+        name: RouteNames.onboardingLocation,
+        builder: (context, state) => const OnboardingLocationPage(),
+      ),
+      // ---- Home module (bottom-nav shell: Home tab is live, other
+      // tabs render a shared placeholder until their modules exist). ----
+      GoRoute(
+        path: RouteNames.home,
+        name: RouteNames.home,
+        builder: (context, state) => const HomePage(),
+      ),
+      // ---- Profile module: reached by tapping "Edit profile" on Home,
+      // and, from there, by tapping the avatar to change the photo. ----
+      GoRoute(
+        path: RouteNames.editProfile,
+        name: RouteNames.editProfile,
+        builder: (context, state) => const EditProfilePage(),
+      ),
+      GoRoute(
+        path: RouteNames.profilePicture,
+        name: RouteNames.profilePicture,
+        builder: (context, state) => const ProfilePicturePage(),
+      ),
+      GoRoute(
+        path: RouteNames.residencyIdentification,
+        name: RouteNames.residencyIdentification,
+        builder: (context, state) => const ResidencyIdentificationPage(),
+      ),
+      GoRoute(
+        path: RouteNames.familyMembers,
+        name: RouteNames.familyMembers,
+        builder: (context, state) => const FamilyMembersPage(),
+      ),
+      GoRoute(
+        path: RouteNames.editFamilyMember,
+        name: RouteNames.editFamilyMember,
+        builder: (context, state) {
+          final member = state.extra as FamilyMember?;
+          if (member == null) {
+            // Defensive fallback: someone deep-linked here directly
+            // without an affiliate to edit.
+            return const EditFamilyMemberFallbackPage();
+          }
+          return EditFamilyMemberPage(member: member);
+        },
+      ),
+      GoRoute(
+        path: RouteNames.properties,
+        name: RouteNames.properties,
+        builder: (context, state) => const PropertiesPage(),
+      ),
+      GoRoute(
+        path: RouteNames.editProperty,
+        name: RouteNames.editProperty,
+        builder: (context, state) {
+          final property = state.extra as Property?;
+          if (property == null) {
+            // Defensive fallback: someone deep-linked here directly
+            // without a property to edit.
+            return const EditPropertyFallbackPage();
+          }
+          return EditPropertyPage(property: property);
+        },
+      ),
+    ],
+    errorBuilder: (context, state) => PlaceholderPage(
+      title: 'Not Found',
+      routeName: state.matchedLocation,
+    ),
+  );
+});
