@@ -7,7 +7,6 @@ import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 import 'package:pms_app/core/widgets/gradient_button.dart';
 import 'package:pms_app/core/widgets/step_scaffold.dart';
-import 'package:pms_app/features/home/presentation/providers/profile_summary_provider.dart';
 import 'package:pms_app/features/properties/domain/entities/property.dart';
 import 'package:pms_app/features/properties/presentation/providers/properties_provider.dart';
 import 'package:pms_app/features/properties/presentation/widgets/property_form_fields.dart';
@@ -72,8 +71,7 @@ class _PropertiesPageState extends ConsumerState<PropertiesPage> {
   }
 
   Future<void> _onNext() async {
-    ref.invalidate(profileSummaryProvider);
-    context.go(RouteNames.home);
+    context.push(RouteNames.vehicles);
   }
 
   @override

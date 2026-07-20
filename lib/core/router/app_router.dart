@@ -22,6 +22,12 @@ import 'package:pms_app/features/properties/domain/entities/property.dart';
 import 'package:pms_app/features/properties/presentation/pages/edit_property_page.dart';
 import 'package:pms_app/features/properties/presentation/pages/properties_page.dart';
 import 'package:pms_app/features/residency/presentation/pages/residency_identification_page.dart';
+import 'package:pms_app/features/vehicles/domain/entities/vehicle.dart';
+import 'package:pms_app/features/vehicles/presentation/pages/edit_vehicle_page.dart';
+import 'package:pms_app/features/vehicles/presentation/pages/vehicles_page.dart';
+import 'package:pms_app/features/pets/domain/entities/pet.dart';
+import 'package:pms_app/features/pets/presentation/pages/edit_pet_page.dart';
+import 'package:pms_app/features/pets/presentation/pages/pets_page.dart';
 import 'package:pms_app/features/splash/domain/entities/app_destination.dart';
 import 'package:pms_app/features/splash/presentation/pages/splash_page.dart';
 import 'package:pms_app/features/splash/presentation/providers/app_initialization_provider.dart';
@@ -72,7 +78,11 @@ String? _routeGuard(BuildContext context, GoRouterState state, Ref ref) {
           currentPath == RouteNames.familyMembers ||
           currentPath == RouteNames.editFamilyMember ||
           currentPath == RouteNames.properties ||
-          currentPath == RouteNames.editProperty;
+          currentPath == RouteNames.editProperty ||
+          currentPath == RouteNames.vehicles ||
+          currentPath == RouteNames.editVehicle ||
+          currentPath == RouteNames.pets ||
+          currentPath == RouteNames.editPet;
 
       if (isSplashRoute) {
         return isAuthenticated ? RouteNames.home : RouteNames.login;
@@ -203,12 +213,36 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         name: RouteNames.editProperty,
         builder: (context, state) {
           final property = state.extra as Property?;
-          if (property == null) {
-            // Defensive fallback: someone deep-linked here directly
-            // without a property to edit.
-            return const EditPropertyFallbackPage();
-          }
+          if (property == null) return const EditPropertyFallbackPage();
           return EditPropertyPage(property: property);
+        },
+      ),
+      GoRoute(
+        path: RouteNames.vehicles,
+        name: RouteNames.vehicles,
+        builder: (context, state) => const VehiclesPage(),
+      ),
+      GoRoute(
+        path: RouteNames.editVehicle,
+        name: RouteNames.editVehicle,
+        builder: (context, state) {
+          final vehicle = state.extra as Vehicle?;
+          if (vehicle == null) return const EditVehicleFallbackPage();
+          return EditVehiclePage(vehicle: vehicle);
+        },
+      ),
+      GoRoute(
+        path: RouteNames.pets,
+        name: RouteNames.pets,
+        builder: (context, state) => const PetsPage(),
+      ),
+      GoRoute(
+        path: RouteNames.editPet,
+        name: RouteNames.editPet,
+        builder: (context, state) {
+          final pet = state.extra as Pet?;
+          if (pet == null) return const EditPetFallbackPage();
+          return EditPetPage(pet: pet);
         },
       ),
     ],

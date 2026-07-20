@@ -2,64 +2,58 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pms_app/core/router/route_names.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 import 'package:pms_app/core/widgets/placeholder_page.dart';
-import 'package:pms_app/core/router/route_names.dart';
-import 'package:pms_app/features/family_members/domain/entities/family_member.dart';
-import 'package:pms_app/features/family_members/presentation/providers/family_members_provider.dart';
-import 'package:pms_app/features/family_members/presentation/widgets/family_member_form_fields.dart';
+import 'package:pms_app/features/vehicles/domain/entities/vehicle.dart';
+import 'package:pms_app/features/vehicles/presentation/providers/vehicles_provider.dart';
+import 'package:pms_app/features/vehicles/presentation/widgets/vehicle_form_fields.dart';
 
 /// Matches the design's "Edit" screen exactly: X to close (discards),
 /// checkmark to save, same field group as the add form, pre-filled
-/// with the affiliate being edited.
-class EditFamilyMemberPage extends ConsumerStatefulWidget {
-  final FamilyMember member;
+/// with the vehicle being edited.
+class EditVehiclePage extends ConsumerStatefulWidget {
+  final Vehicle vehicle;
 
-  const EditFamilyMemberPage({super.key, required this.member});
+  const EditVehiclePage({super.key, required this.vehicle});
 
   @override
-  ConsumerState<EditFamilyMemberPage> createState() => _EditFamilyMemberPageState();
+  ConsumerState<EditVehiclePage> createState() => _EditVehiclePageState();
 }
 
-class _EditFamilyMemberPageState extends ConsumerState<EditFamilyMemberPage> {
-  late final TextEditingController _nameController;
-  late final TextEditingController _emailController;
-  late final TextEditingController _phoneController;
-  late String? _relationship;
-  late int? _birthYear;
-  late String? _gender;
+class _EditVehiclePageState extends ConsumerState<EditVehiclePage> {
+  late final TextEditingController _licensePlateController;
+  late String? _type;
+  late String? _brand;
+  late String? _engineType;
 
   bool _isSaving = false;
+  bool _showValidationErrors = false;
   String? _errorMessage;
 
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: widget.member.name);
-    _emailController = TextEditingController(text: widget.member.email);
-    _phoneController = TextEditingController(text: widget.member.phone);
-    _relationship = widget.member.relationship;
-    _birthYear = widget.member.birthYear;
-    _gender = widget.member.gender;
+    _licensePlateController = TextEditingController(text: widget.vehicle.licensePlate);
+    _type = widget.vehicle.type;
+    _brand = widget.vehicle.brand;
+    _engineType = widget.vehicle.engineType;
   }
 
   @override
   void dispose() {
-    _nameController.dispose();
-    _emailController.dispose();
-    _phoneController.dispose();
+    _licensePlateController.dispose();
     super.dispose();
   }
 
   Future<void> _onSave() async {
-    final updated = widget.member.copyWith(
-      name: _nameController.text.trim(),
-      email: _emailController.text.trim(),
-      phone: _phoneController.text.trim(),
-      relationship: _relationship,
-      birthYear: _birthYear,
-      gender: _gender,
+    setState(() => _showValidationErrors = true);
+    final updated = widget.vehicle.copyWith(
+      type: _type,
+      brand: _brand,
+      engineType: _engineType,
+      licensePlate: _licensePlateController.text.trim(),
     );
 
     if (!updated.isValid) {
@@ -72,7 +66,7 @@ class _EditFamilyMemberPageState extends ConsumerState<EditFamilyMemberPage> {
       _errorMessage = null;
     });
 
-    final ok = await ref.read(familyMembersProvider.notifier).updateMember(updated);
+    final ok = await ref.read(vehiclesProvider.notifier).updateVehicle(updated);
 
     if (!mounted) return;
     if (ok) {
@@ -80,7 +74,7 @@ class _EditFamilyMemberPageState extends ConsumerState<EditFamilyMemberPage> {
     } else {
       setState(() {
         _isSaving = false;
-        _errorMessage = ref.read(familyMembersProvider).errorMessage;
+        _errorMessage = ref.read(vehiclesProvider).errorMessage;
       });
     }
   }
@@ -130,23 +124,22 @@ class _EditFamilyMemberPageState extends ConsumerState<EditFamilyMemberPage> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      'Please note that you only need to include family '
-                      'members living in this property or those requiring access.',
+                      'Please let us know the details of your vehicles. '
+                      'Your contribution is vital to our property '
+                      'management system for maintaining your convenience.',
                       textAlign: TextAlign.center,
                       style: AppTextStyles.bodySecondary,
                     ),
                     SizedBox(height: 24.h),
-                    SizedBox(height: 24.h),
-                    FamilyMemberFormFields(
-                      nameController: _nameController,
-                      emailController: _emailController,
-                      phoneController: _phoneController,
-                      relationship: _relationship,
-                      birthYear: _birthYear,
-                      gender: _gender,
-                      onRelationshipChanged: (v) => setState(() => _relationship = v),
-                      onBirthYearChanged: (v) => setState(() => _birthYear = v),
-                      onGenderChanged: (v) => setState(() => _gender = v),
+                    VehicleFormFields(
+                      type: _type,
+                      brand: _brand,
+                      engineType: _engineType,
+                      licensePlateController: _licensePlateController,
+                      onTypeChanged: (v) => setState(() => _type = v),
+                      onBrandChanged: (v) => setState(() => _brand = v),
+                      onEngineTypeChanged: (v) => setState(() => _engineType = v),
+                      showValidationErrors: _showValidationErrors,
                     ),
                     if (_errorMessage != null) ...[
                       SizedBox(height: 16.h),
@@ -168,16 +161,15 @@ class _EditFamilyMemberPageState extends ConsumerState<EditFamilyMemberPage> {
 }
 
 /// Defensive fallback for the (unlikely) case someone deep-links to the
-/// edit route without a member in `state.extra` — mirrors the pattern
-/// used for OTP verification's missing-args case.
-class EditFamilyMemberFallbackPage extends StatelessWidget {
-  const EditFamilyMemberFallbackPage({super.key});
+/// edit route without a vehicle in `state.extra`.
+class EditVehicleFallbackPage extends StatelessWidget {
+  const EditVehicleFallbackPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const PlaceholderPage(
-      title: 'Edit Family Member',
-      routeName: RouteNames.editFamilyMember,
+      title: 'Edit Vehicle',
+      routeName: RouteNames.editVehicle,
     );
   }
 }

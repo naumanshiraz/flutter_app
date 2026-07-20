@@ -2,14 +2,6 @@
 
 Flutter 3.44.4 / Dart 3.x · Clean Architecture · Feature-first · Riverpod · GoRouter
 
-## What's in this module
-
-| Page | Responsibility |
-|---|---|
-| **Splash** | Branded first frame (logo + app name). Purely presentational — reacts to `appInitializationProvider`. |
-| **App Initialization** | `AppInitializationNotifier` — bootstraps theme, DI, secure storage, local DB, connectivity check, and the mocked auth-session check; resolves to `AppDestination.login` or `AppDestination.home`. |
-| **Route Guard** | `_routeGuard` in `app_router.dart` — the single source of truth for "where can the user go right now". Pins the user on Splash while loading, then blocks unauthenticated access to Home and blocks authenticated users from re-entering Login/Splash. |
-
 ## Layers
 
 ```
@@ -33,15 +25,6 @@ lib/
 
 Dependency direction is strictly `presentation -> domain <- data`. The
 Presentation layer never imports anything from `data/`.
-
-## Mocked-now, API-ready-later
-
-There is no backend yet, so `AuthRepositoryImpl` only calls
-`AuthLocalDataSource` (Hive flag + Secure Storage token). `AuthRemoteDataSource`
-and `DioClient` are already fully wired against `AppConstants.baseUrl` —
-swapping the repository to call the remote source when connectivity is
-available is the **only** change needed once a real API exists. No UI,
-router, or domain code changes required.
 
 ## Setup
 

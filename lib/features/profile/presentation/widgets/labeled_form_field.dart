@@ -3,6 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 
+/// Label-above-input field with a small-radius rounded rectangle,
+/// matching the Edit Profile PDF's boxier style (distinct from the
+/// full-pill `AppTextField` used on Login/Onboarding).
 class LabeledFormField extends StatelessWidget {
   final String label;
   final TextEditingController controller;
@@ -10,7 +13,6 @@ class LabeledFormField extends StatelessWidget {
   final TextInputType keyboardType;
   final ValueChanged<String>? onChanged;
   final bool enabled;
-  final String? errorText;
 
   const LabeledFormField({
     super.key,
@@ -20,12 +22,10 @@ class LabeledFormField extends StatelessWidget {
     this.keyboardType = TextInputType.text,
     this.onChanged,
     this.enabled = true,
-    this.errorText,
   });
 
   @override
   Widget build(BuildContext context) {
-    final hasError = errorText != null;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -40,47 +40,34 @@ class LabeledFormField extends StatelessWidget {
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: AppTextStyles.inputHint,
-            errorText: null, // handled manually below
             contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(
-                color: hasError ? AppColors.error : AppColors.border,
-              ),
+              borderSide: const BorderSide(color: AppColors.border),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(
-                color: hasError ? AppColors.error : AppColors.primary,
-                width: 1.4,
-              ),
+              borderSide: const BorderSide(color: AppColors.primary, width: 1.4),
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(
-                color: hasError ? AppColors.error : AppColors.border,
-              ),
+              borderSide: const BorderSide(color: AppColors.border),
             ),
           ),
         ),
-        if (hasError) ...[
-          SizedBox(height: 4.h),
-          Text(
-            errorText!,
-            style: AppTextStyles.caption.copyWith(color: AppColors.error),
-          ),
-        ],
       ],
     );
   }
 }
 
+/// Label-above-dropdown / date-picker-trigger variant of
+/// [LabeledFormField] — used for Country and Birthdate, which open a
+/// picker instead of accepting free text.
 class LabeledPickerField extends StatelessWidget {
   final String label;
   final String displayValue;
   final bool isPlaceholder;
   final VoidCallback onTap;
-  final String? errorText;
 
   const LabeledPickerField({
     super.key,
@@ -88,12 +75,10 @@ class LabeledPickerField extends StatelessWidget {
     required this.displayValue,
     required this.onTap,
     this.isPlaceholder = false,
-    this.errorText,
   });
 
   @override
   Widget build(BuildContext context) {
-    final hasError = errorText != null;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -106,10 +91,7 @@ class LabeledPickerField extends StatelessWidget {
             width: double.infinity,
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
             decoration: BoxDecoration(
-              border: Border.all(
-                color: hasError ? AppColors.error : AppColors.border,
-                width: hasError ? 1.4 : 1.0,
-              ),
+              border: Border.all(color: AppColors.border),
               borderRadius: BorderRadius.circular(12.r),
             ),
             child: Row(
@@ -124,13 +106,6 @@ class LabeledPickerField extends StatelessWidget {
             ),
           ),
         ),
-        if (hasError) ...[
-          SizedBox(height: 4.h),
-          Text(
-            errorText!,
-            style: AppTextStyles.caption.copyWith(color: AppColors.error),
-          ),
-        ],
       ],
     );
   }
