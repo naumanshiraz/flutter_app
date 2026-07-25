@@ -75,8 +75,16 @@ class _PetsPageState extends ConsumerState<PetsPage> {
   }
 
   Future<void> _onNext() async {
-    ref.invalidate(profileSummaryProvider);
-    context.go(RouteNames.home);
+    final accepted = await context.push<bool>(RouteNames.residencyTerms);
+
+    if (accepted == true) {
+      ref.invalidate(profileSummaryProvider);
+      context.go(RouteNames.home);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('You must accept the agreement to proceed.')),
+      );
+    }
   }
 
   @override

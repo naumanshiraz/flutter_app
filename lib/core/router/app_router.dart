@@ -28,6 +28,7 @@ import 'package:pms_app/features/vehicles/presentation/pages/vehicles_page.dart'
 import 'package:pms_app/features/pets/domain/entities/pet.dart';
 import 'package:pms_app/features/pets/presentation/pages/edit_pet_page.dart';
 import 'package:pms_app/features/pets/presentation/pages/pets_page.dart';
+import 'package:pms_app/features/residency_terms/presentation/pages/term_screen_page.dart';
 import 'package:pms_app/features/splash/domain/entities/app_destination.dart';
 import 'package:pms_app/features/splash/presentation/pages/splash_page.dart';
 import 'package:pms_app/features/splash/presentation/providers/app_initialization_provider.dart';
@@ -82,7 +83,8 @@ String? _routeGuard(BuildContext context, GoRouterState state, Ref ref) {
           currentPath == RouteNames.vehicles ||
           currentPath == RouteNames.editVehicle ||
           currentPath == RouteNames.pets ||
-          currentPath == RouteNames.editPet;
+          currentPath == RouteNames.editPet ||
+          currentPath == RouteNames.residencyTerms;
 
       if (isSplashRoute) {
         return isAuthenticated ? RouteNames.home : RouteNames.login;
@@ -244,6 +246,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           if (pet == null) return const EditPetFallbackPage();
           return EditPetPage(pet: pet);
         },
+      ),
+      GoRoute(
+        path: RouteNames.residencyTerms,
+        name: RouteNames.residencyTerms,
+        builder: (context, state) => const ResidencyTermsPage(),
       ),
     ],
     errorBuilder: (context, state) => PlaceholderPage(
