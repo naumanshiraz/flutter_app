@@ -29,6 +29,7 @@ import 'package:pms_app/features/pets/domain/entities/pet.dart';
 import 'package:pms_app/features/pets/presentation/pages/edit_pet_page.dart';
 import 'package:pms_app/features/pets/presentation/pages/pets_page.dart';
 import 'package:pms_app/features/residency_terms/presentation/pages/term_screen_page.dart';
+import 'package:pms_app/features/main_home//presentation/pages/main_home_page.dart';
 import 'package:pms_app/features/splash/domain/entities/app_destination.dart';
 import 'package:pms_app/features/splash/presentation/pages/splash_page.dart';
 import 'package:pms_app/features/splash/presentation/providers/app_initialization_provider.dart';
@@ -87,13 +88,15 @@ String? _routeGuard(BuildContext context, GoRouterState state, Ref ref) {
           currentPath == RouteNames.residencyTerms;
 
       if (isSplashRoute) {
-        return isAuthenticated ? RouteNames.home : RouteNames.login;
+        //return isAuthenticated ? RouteNames.home : RouteNames.login;
+        return isAuthenticated ? RouteNames.mainHome : RouteNames.login;
       }
       if (!isAuthenticated && isProtectedRoute) {
         return RouteNames.login;
       }
       if (isAuthenticated && isLoginRoute) {
-        return RouteNames.home;
+        //return RouteNames.home;
+        return RouteNames.mainHome;
       }
       return null; // Already on the correct route — no redirect.
     },
@@ -251,6 +254,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: RouteNames.residencyTerms,
         name: RouteNames.residencyTerms,
         builder: (context, state) => const ResidencyTermsPage(),
+      ),
+      GoRoute(
+        path: RouteNames.mainHome,
+        name: RouteNames.mainHome,
+        builder: (context, state) => const MainHomePage(),
       ),
     ],
     errorBuilder: (context, state) => PlaceholderPage(

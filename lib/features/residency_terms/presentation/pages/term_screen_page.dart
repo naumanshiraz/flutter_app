@@ -29,7 +29,7 @@ class _ResidencyTermsPageState extends ConsumerState<ResidencyTermsPage> {
       );
       return;
     }
-    context.push(RouteNames.familyMembers);
+    context.push(RouteNames.mainHome);
   }
 
   @override

@@ -20,6 +20,7 @@ class AppColors {
   // Neutrals
   static const Color textPrimary = Color(0xFF0D1B2A); // near-black navy
   static const Color textSecondary = Color(0xFF8A94A6); // muted gray
+  static const Color textBlack = Color(0xFF1F2A37);
   static const Color background = Color(0xFFFFFFFF);
   static const Color surface = Color(0xFFFFFFFF);
   static const Color border = Color(0xFFE1E4EA);

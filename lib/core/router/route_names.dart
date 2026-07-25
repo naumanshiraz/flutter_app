@@ -24,4 +24,5 @@ class RouteNames {
   static const String pets = '/profile/pets';
   static const String editPet = '/profile/pets/edit';
   static const String residencyTerms = '/profile/residency-terms';
+  static const String mainHome = '/main-home';
 }
