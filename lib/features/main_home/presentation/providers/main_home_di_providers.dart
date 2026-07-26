@@ -5,6 +5,7 @@ import 'package:pms_app/features/main_home/data/datasources/main_home_remote_dat
 import 'package:pms_app/features/main_home/data/repositories/main_home_repository_impl.dart';
 import 'package:pms_app/features/main_home/domain/repositories/main_home_repository.dart';
 import 'package:pms_app/features/main_home/domain/usecases/get_controls_usecase.dart';
+import 'package:pms_app/features/main_home/domain/usecases/toggle_control_usecase.dart';
 
 final mainHomeLocalDataSourceProvider = Provider<MainHomeLocalDataSource>((ref) {
   return MainHomeLocalDataSourceImpl();
@@ -24,4 +25,8 @@ final mainHomeRepositoryProvider = Provider<MainHomeRepository>((ref) {
 
 final getControlsUseCaseProvider = Provider<GetControlsUseCase>((ref) {
   return GetControlsUseCase(ref.watch(mainHomeRepositoryProvider));
+});
+
+final toggleControlUseCaseProvider = Provider<ToggleControlUseCase>((ref) {
+  return ToggleControlUseCase(ref.watch(mainHomeRepositoryProvider));
 });

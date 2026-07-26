@@ -7,6 +7,7 @@ import 'package:pms_app/features/main_home/presentation/providers/main_home_prov
 import 'package:pms_app/features/main_home/presentation/widgets/control_card.dart';
 import 'package:pms_app/features/main_home/presentation/widgets/image_carousel.dart';
 import 'package:pms_app/core/widgets/bottom_nav_bar.dart';
+import 'package:pms_app/core/widgets/placeholder_page.dart';
 import 'package:pms_app/features/main_home/presentation/widgets/visitor_vehicle_signup_card.dart';
 
 class MainHomePage extends ConsumerStatefulWidget {
@@ -17,19 +18,7 @@ class MainHomePage extends ConsumerStatefulWidget {
 }
 
 class _MainHomePageState extends ConsumerState<MainHomePage> {
-  bool _initialized = false;
-
   int _selectedIndex = 0;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (!_initialized) {
-      // provider's notifier auto-fetches on creation; if you want manual load,
-      // call ref.read(mainHomeNotifierProvider.notifier).refresh();
-      _initialized = true;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +38,27 @@ class _MainHomePageState extends ConsumerState<MainHomePage> {
           IconButton(onPressed: () {}, icon: const Icon(Icons.menu)),
         ],
       ),
-      body: state.isLoading
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: [
+          _buildMainHomeTab(state, notifier),
+          const PlaceholderPage(title: 'Chat', routeName: '/main-home (tab: chat)'),
+          const PlaceholderPage(title: 'Cart', routeName: '/main-home (tab: cart)'),
+          const PlaceholderPage(title: 'Community', routeName: '/main-home (tab: community)'),
+        ],
+      ),
+      bottomNavigationBar: SafeArea(
+        top: false,
+        child: BottomNavBar(
+          selectedIndex: _selectedIndex,
+          onTap: (index) => setState(() => _selectedIndex = index),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMainHomeTab(MainHomeState state, MainHomeNotifier notifier) {
+    return state.isLoading
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
               onRefresh: notifier.refresh,
@@ -113,6 +122,14 @@ class _MainHomePageState extends ConsumerState<MainHomePage> {
                     ),
                     SizedBox(height: 8.h),
 
+                    if (state.error != null) ...[
+                      Text(
+                        state.error!,
+                        style: AppTextStyles.caption.copyWith(color: AppColors.error),
+                      ),
+                      SizedBox(height: 8.h),
+                    ],
+
                     GridView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
@@ -138,21 +155,7 @@ class _MainHomePageState extends ConsumerState<MainHomePage> {
                   ],
                 ),
               ),
-            ),
-      bottomNavigationBar: SafeArea(
-        top: false,
-        child: BottomNavBar(
-          selectedIndex: _selectedIndex,
-          onTap: (index) {
-            setState(() {
-              _selectedIndex = index;
-            });
-
-            // TODO: Navigate to each page when implemented.
-          },
-        ),
-      ),
-    );
+            );
   }
 
   Widget _sectionChip(String label, {bool selected = false}) {

@@ -1,13 +1,7 @@
-import 'dart:async';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:uuid/uuid.dart';
-import 'package:pms_app/core/utils/result.dart';
 import 'package:pms_app/features/main_home/domain/entities/visitor_schedule.dart';
 import 'package:pms_app/features/main_home/domain/usecases/visitor_usecases.dart';
-import 'package:pms_app/features/main_home/presentation/providers/main_home_di_providers.dart';
-import 'package:pms_app/features/main_home/data/datasources/visitor_local_datasource.dart';
-import 'package:pms_app/features/main_home/data/repositories/visitor_repository_impl.dart';
+import 'package:pms_app/features/main_home/presentation/providers/visitor_di_providers.dart';
 
 class VisitorState {
   final bool isLoading;
@@ -26,12 +20,11 @@ class VisitorState {
 }
 
 class VisitorNotifier extends StateNotifier<VisitorState> {
-  final Ref _ref;
   final GetVisitorSchedulesUseCase _getUseCase;
   final AddOrUpdateVisitorScheduleUseCase _addUpdateUseCase;
   final DeleteVisitorScheduleUseCase _deleteUseCase;
 
-  VisitorNotifier(this._ref, this._getUseCase, this._addUpdateUseCase, this._deleteUseCase) : super(const VisitorState()) {
+  VisitorNotifier(this._getUseCase, this._addUpdateUseCase, this._deleteUseCase) : super(const VisitorState()) {
     _fetch();
   }
 
@@ -69,11 +62,9 @@ class VisitorNotifier extends StateNotifier<VisitorState> {
 }
 
 final visitorNotifierProvider = StateNotifierProvider.autoDispose<VisitorNotifier, VisitorState>((ref) {
-  // Wire via DI providers if you have them; otherwise create local instances
-  final local = VisitorLocalDataSourceImpl();
-  final repo = VisitorRepositoryImpl(local: local);
-  final getUse = GetVisitorSchedulesUseCase(repo);
-  final addUpd = AddOrUpdateVisitorScheduleUseCase(repo);
-  final del = DeleteVisitorScheduleUseCase(repo);
-  return VisitorNotifier(ref, getUse, addUpd, del);
+  return VisitorNotifier(
+    ref.watch(getVisitorSchedulesUseCaseProvider),
+    ref.watch(addOrUpdateVisitorScheduleUseCaseProvider),
+    ref.watch(deleteVisitorScheduleUseCaseProvider),
+  );
 });

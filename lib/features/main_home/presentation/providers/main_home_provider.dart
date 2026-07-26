@@ -1,12 +1,8 @@
-import 'dart:async';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pms_app/core/theme/app_text_styles.dart';
-import 'package:pms_app/core/utils/result.dart';
 import 'package:pms_app/features/main_home/domain/entities/control.dart';
 import 'package:pms_app/features/main_home/domain/usecases/get_controls_usecase.dart';
+import 'package:pms_app/features/main_home/domain/usecases/toggle_control_usecase.dart';
 import 'package:pms_app/features/main_home/presentation/providers/main_home_di_providers.dart';
-import 'package:pms_app/core/error/failures.dart';
 
 class MainHomeState {
   final bool isLoading;
@@ -26,10 +22,9 @@ class MainHomeState {
 
 class MainHomeNotifier extends StateNotifier<MainHomeState> {
   final GetControlsUseCase _getControlsUseCase;
-  final Ref _ref;
-  Timer? _debounce;
+  final ToggleControlUseCase _toggleControlUseCase;
 
-  MainHomeNotifier(this._ref, this._getControlsUseCase) : super(const MainHomeState()) {
+  MainHomeNotifier(this._getControlsUseCase, this._toggleControlUseCase) : super(const MainHomeState()) {
     _fetch();
   }
 
@@ -49,36 +44,31 @@ class MainHomeNotifier extends StateNotifier<MainHomeState> {
   Future<void> refresh() => _fetch();
 
   Future<void> toggle(String id) async {
-    final repo = _ref.read(mainHomeRepositoryProvider);
     final idx = state.controls.indexWhere((c) => c.id == id);
     if (idx == -1) return;
 
     final current = state.controls[idx];
     final updated = current.copyWith(isOn: !current.isOn);
-    final newList = List<Control>.from(state.controls);
-    newList[idx] = updated;
-    state = state.copyWith(controls: newList);
+    final optimisticList = List<Control>.from(state.controls)..[idx] = updated;
+    state = state.copyWith(controls: optimisticList);
 
-    final result = await repo.toggleControl(id, updated.isOn);
+    final result = await _toggleControlUseCase(id, updated.isOn);
     result.when(
       onSuccess: (_) {
         // success: nothing else to do (persisted by repo)
       },
       onFailure: (failure) {
-        // rollback on failure
-        newList[idx] = current;
-        state = state.copyWith(controls: newList, error: failure.message);
+        // rollback on failure using a fresh list, not the optimistic one
+        final rolledBackList = List<Control>.from(state.controls)..[idx] = current;
+        state = state.copyWith(controls: rolledBackList, error: failure.message);
       },
     );
-  }
-
-  @override
-  void dispose() {
-    _debounce?.cancel();
-    super.dispose();
   }
 }
 
 final mainHomeNotifierProvider = StateNotifierProvider.autoDispose<MainHomeNotifier, MainHomeState>(
-      (ref) => MainHomeNotifier(ref, ref.watch(getControlsUseCaseProvider)),
+      (ref) => MainHomeNotifier(
+    ref.watch(getControlsUseCaseProvider),
+    ref.watch(toggleControlUseCaseProvider),
+  ),
 );
