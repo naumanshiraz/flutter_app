@@ -9,6 +9,10 @@ import 'package:pms_app/features/main_home/presentation/widgets/image_carousel.d
 import 'package:pms_app/core/widgets/bottom_nav_bar.dart';
 import 'package:pms_app/core/widgets/placeholder_page.dart';
 import 'package:pms_app/features/main_home/presentation/widgets/visitor_vehicle_signup_card.dart';
+import 'package:go_router/go_router.dart';
+import 'package:pms_app/core/router/route_names.dart';
+import 'package:pms_app/core/widgets/menu_sheet.dart';
+import 'package:pms_app/features/activity_log/presentation/pages/activity_log_page.dart';
 
 class MainHomePage extends ConsumerStatefulWidget {
   const MainHomePage({Key? key}) : super(key: key);
@@ -34,8 +38,9 @@ class _MainHomePageState extends ConsumerState<MainHomePage> {
         title: Text('Good morning!', style: AppTextStyles.pageTitle),
         actions: [
           IconButton(
-              onPressed: () {}, icon: const Icon(Icons.notifications_none)),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.menu)),
+              onPressed: () => ActivityLogSheet.show(context),
+              icon: const Icon(Icons.notifications_none)),
+          IconButton(onPressed: () => MenuSheet.show(context), icon: const Icon(Icons.menu)),
         ],
       ),
       body: IndexedStack(
@@ -83,12 +88,34 @@ class _MainHomePageState extends ConsumerState<MainHomePage> {
                     SizedBox(height: 12.h),
 
                     // Use AppTextStyles.body (exists) instead of a non-existent `title`
-                    Text('Gerlug vista',
-                        style: AppTextStyles.body.copyWith(
-                            fontWeight: FontWeight.w700, fontSize: 16.sp)),
-                    Text(
-                      '15th Khoroo, Khan Uul District, Ulaanbaatar, Mongolia 13146',
-                      style: AppTextStyles.caption,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Gerlug vista',
+                                  style: AppTextStyles.body.copyWith(
+                                      fontWeight: FontWeight.w700, fontSize: 16.sp)),
+                              Text(
+                                '15th Khoroo, Khan Uul District, Ulaanbaatar, Mongolia 13146',
+                                style: AppTextStyles.caption,
+                              ),
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          // Opens the full Property Detail screen (hero
+                          // image, Report/Invoice, Available services).
+                          onPressed: () => context.push(
+                            RouteNames.propertyDetail,
+                            extra: 'gerlug-vista',
+                          ),
+                          icon: const Icon(Icons.settings_outlined),
+                        ),
+                      ],
                     ),
                     SizedBox(height: 8.h),
 

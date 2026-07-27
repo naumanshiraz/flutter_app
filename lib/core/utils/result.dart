@@ -1,8 +1,5 @@
 import 'package:pms_app/core/error/failures.dart';
 
-/// Lightweight `Either`-style result so repositories never throw across
-/// layer boundaries. Uses Dart 3 sealed classes + pattern matching instead
-/// of pulling in a functional-programming package.
 sealed class Result<T> {
   const Result();
 
@@ -30,8 +27,6 @@ class Success<T> extends Result<T> {
   const Success(this.data);
 }
 
-/// Named `ResultError` (not `Error`) to avoid shadowing Dart's built-in
-/// `dart:core` `Error` class.
 class ResultError<T> extends Result<T> {
   final Failure failure;
   const ResultError(this.failure);

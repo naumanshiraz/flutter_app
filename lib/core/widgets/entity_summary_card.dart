@@ -5,9 +5,6 @@ import 'package:pms_app/core/theme/app_text_styles.dart';
 
 enum EntitySummaryCardAction { edit, delete }
 
-/// A single label/value pair shown inside the card, with an optional
-/// [flex] so callers can make some fields wider than others within a
-/// row (e.g. "Name" gets more room than "Gender").
 class SummaryField {
   final String label;
   final String value;
@@ -16,12 +13,6 @@ class SummaryField {
   const SummaryField({required this.label, required this.value, this.flex = 1});
 }
 
-/// Shared visual shell for the "added item" summary cards across
-/// Family Members, Properties, and Vehicles: a grey rounded card of
-/// label/value field rows, followed *below* the card by an
-/// "{itemLabel} X of N" caption and an Edit/Delete overflow menu —
-/// matching the design exactly (the count + menu row is NOT inside the
-/// card).
 class EntitySummaryCard extends StatelessWidget {
   final List<List<SummaryField>> rows;
   final String itemLabel;

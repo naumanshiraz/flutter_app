@@ -3,9 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 
-/// The solid orange-to-red gradient CTA used throughout the PDF
-/// (Log in, Next, Confirm, ...). Centralized here so every screen gets
-/// identical spacing/radius/disabled-state behavior for free.
 class GradientButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;

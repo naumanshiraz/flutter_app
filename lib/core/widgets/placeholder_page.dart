@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 
-/// Temporary stand-in for routes that belong to modules not yet built
-/// (Login, OTP, Onboarding, Home, ...). Each future module replaces the
-/// corresponding entry in `app_router.dart` with its real page — this
-/// widget itself is never imported by feature code, only by the router.
 class PlaceholderPage extends StatelessWidget {
   final String title;
   final String routeName;

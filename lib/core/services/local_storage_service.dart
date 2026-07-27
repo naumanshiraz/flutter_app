@@ -2,9 +2,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pms_app/core/constants/app_constants.dart';
 import 'package:pms_app/core/services/logger_service.dart';
 
-/// Initializes and exposes Hive boxes used for non-sensitive local state
-/// (login flag, cached profile JSON, onboarding flags, etc).
-/// Sensitive tokens NEVER go here — see [SecureStorageService].
 class LocalStorageService {
   late Box _userBox;
   late Box _settingsBox;

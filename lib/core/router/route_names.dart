@@ -1,5 +1,3 @@
-/// Centralized route paths/names for GoRouter. Every `context.go(...)`
-/// call in the app should reference these constants, never raw strings.
 class RouteNames {
   RouteNames._();
 
@@ -25,4 +23,5 @@ class RouteNames {
   static const String editPet = '/profile/pets/edit';
   static const String residencyTerms = '/profile/residency-terms';
   static const String mainHome = '/main-home';
+  static const String propertyDetail = '/main-home/property-detail';
 }

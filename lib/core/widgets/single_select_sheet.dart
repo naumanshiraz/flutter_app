@@ -3,9 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 
-/// Generic single-choice bottom sheet — pairs with [LabeledPickerField].
-/// Returns the selected item via `Navigator.pop(context, item)`, or
-/// `null` if dismissed without choosing.
 class SingleSelectSheet extends StatelessWidget {
   final List<String> options;
   final String? current;
@@ -18,8 +15,6 @@ class SingleSelectSheet extends StatelessWidget {
     this.title,
   });
 
-  /// Convenience launcher so callers don't need to know the sheet's
-  /// styling/shape boilerplate.
   static Future<String?> show(
     BuildContext context, {
     required List<String> options,

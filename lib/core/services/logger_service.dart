@@ -1,8 +1,5 @@
 import 'package:logger/logger.dart';
 
-/// Thin wrapper around `logger` so the rest of the app never imports the
-/// package directly — swapping log sinks (e.g. to Crashlytics/Sentry)
-/// later only touches this file.
 class AppLogger {
   AppLogger._();
 

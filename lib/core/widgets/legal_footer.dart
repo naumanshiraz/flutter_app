@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 
-/// The "Please read our Terms of Service and Privacy Policy" footer that
-/// appears at the bottom of the Login and OTP screens in the PDF.
 class LegalFooter extends StatelessWidget {
   final VoidCallback? onTermsTap;
   final VoidCallback? onPrivacyTap;

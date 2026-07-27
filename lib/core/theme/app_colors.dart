@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// Centralized color palette extracted from the provided PDF designs.
-/// The brand identity is an orange-to-red gradient over a dark navy /
-/// off-white neutral scale.
 class AppColors {
   AppColors._();
 

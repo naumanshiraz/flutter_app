@@ -1,14 +1,9 @@
-/// Centralized form validators. Every text field across the app should
-/// reuse these instead of writing regex/logic inline.
 class Validators {
   Validators._();
 
   static final RegExp _emailRegex =
       RegExp(r'^[\w\.\-]+@([\w\-]+\.)+[\w\-]{2,}$');
 
-  // Very permissive international phone check: optional leading '+',
-  // 7–15 digits. Real-world validation belongs server-side; this just
-  // catches obvious typos client-side.
   static final RegExp _phoneRegex = RegExp(r'^\+?[0-9]{7,15}$');
 
   static bool isEmail(String value) => _emailRegex.hasMatch(value.trim());
@@ -52,8 +47,6 @@ class Validators {
     return null;
   }
 
-  /// Masks an email/phone for display, e.g. `dtul*****@gmail.com` or
-  /// `+1234*****890`.
   static String maskIdentifier(String value) {
     if (isEmail(value)) {
       final parts = value.split('@');

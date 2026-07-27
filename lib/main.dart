@@ -11,20 +11,6 @@ import 'package:pms_app/core/services/local_storage_service.dart';
 import 'package:pms_app/core/services/logger_service.dart';
 import 'package:pms_app/core/theme/app_theme.dart';
 
-/// -------------------------------------------------------------------
-/// App bootstrap sequence (Module 1 — App Initialization)
-/// -------------------------------------------------------------------
-/// Order matters:
-///  1. `ensureInitialized` — required before any platform channel call.
-///  2. Local database (Hive) initialization — must finish before any
-///     provider that reads Hive boxes is created.
-///  3. Build a `ProviderContainer` up front so we can override
-///     `localStorageServiceProvider` with the already-initialized
-///     instance (Riverpod providers can't `await` inside their body).
-///  4. Global error handling wired to [AppLogger] so nothing in Module 1
-///     ever crashes silently.
-///  5. `runApp` inside `runZonedGuarded` to also catch async errors
-///     outside the Flutter error pipeline.
 Future<void> main() async {
   runZonedGuarded(
     () async {
@@ -69,8 +55,6 @@ class PmsApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final GoRouter router = ref.watch(appRouterProvider);
 
-    // 375x812 matches the reference frame used throughout the provided
-    // PDF designs, so `.w` / `.h` / `.sp` map 1:1 to the design specs.
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       minTextAdapt: true,

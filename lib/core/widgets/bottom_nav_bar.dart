@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 
-/// The 4-tab bottom bar (Home, Chat, Cart, Community) shown across the
-/// authenticated part of the app. Purely presentational — the parent
-/// owns `selectedIndex` and what each tab shows; this widget only knows
-/// how to render itself and report taps.
 class BottomNavBar extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onTap;

@@ -30,6 +30,7 @@ import 'package:pms_app/features/pets/presentation/pages/edit_pet_page.dart';
 import 'package:pms_app/features/pets/presentation/pages/pets_page.dart';
 import 'package:pms_app/features/residency_terms/presentation/pages/term_screen_page.dart';
 import 'package:pms_app/features/main_home//presentation/pages/main_home_page.dart';
+import 'package:pms_app/features/property_detail/presentation/pages/property_detail_page.dart';
 import 'package:pms_app/features/splash/domain/entities/app_destination.dart';
 import 'package:pms_app/features/splash/presentation/pages/splash_page.dart';
 import 'package:pms_app/features/splash/presentation/providers/app_initialization_provider.dart';
@@ -53,15 +54,6 @@ final _routerRefreshProvider = Provider<_RouterRefreshNotifier>((ref) {
 /// -------------------------------------------------------------------
 /// Route Guard
 /// -------------------------------------------------------------------
-/// Centralizes every navigation decision that depends on session state:
-///  - While initialization is in-flight -> pin the user on Splash.
-///  - Once resolved -> leave Splash for Login or Home.
-///  - Block unauthenticated deep links into Home -> bounce to Login.
-///  - Block authenticated users from re-entering Login/Splash -> bounce
-///    to Home.
-/// Every future module's protected routes should be added to the
-/// `isProtectedRoute` check below rather than re-implementing this logic
-/// per-page.
 String? _routeGuard(BuildContext context, GoRouterState state, Ref ref) {
   final initAsync = ref.read(appInitializationProvider);
   final currentPath = state.matchedLocation;
@@ -85,7 +77,8 @@ String? _routeGuard(BuildContext context, GoRouterState state, Ref ref) {
           currentPath == RouteNames.editVehicle ||
           currentPath == RouteNames.pets ||
           currentPath == RouteNames.editPet ||
-          currentPath == RouteNames.residencyTerms;
+          currentPath == RouteNames.residencyTerms ||
+          currentPath == RouteNames.propertyDetail;
 
       if (isSplashRoute) {
         //return isAuthenticated ? RouteNames.home : RouteNames.login;
@@ -103,9 +96,6 @@ String? _routeGuard(BuildContext context, GoRouterState state, Ref ref) {
   );
 }
 
-/// Exposed as a provider so `MaterialApp.router` (built once in main.dart)
-/// always gets a router wired to the live Riverpod container via
-/// `ProviderScope`'s `ConsumerStatefulWidget`/`ref` — see `main.dart`.
 final appRouterProvider = Provider<GoRouter>((ref) {
   final refreshNotifier = ref.watch(_routerRefreshProvider);
 
@@ -131,8 +121,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final args = state.extra as OtpVerificationArgs?;
           if (args == null) {
-            // Defensive fallback: someone deep-linked here directly
-            // without going through Login first.
             return const PlaceholderPage(
               title: 'OTP Verification',
               routeName: RouteNames.otpVerification,
@@ -166,15 +154,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         name: RouteNames.onboardingLocation,
         builder: (context, state) => const OnboardingLocationPage(),
       ),
-      // ---- Home module (bottom-nav shell: Home tab is live, other
-      // tabs render a shared placeholder until their modules exist). ----
       GoRoute(
         path: RouteNames.home,
         name: RouteNames.home,
         builder: (context, state) => const HomePage(),
       ),
-      // ---- Profile module: reached by tapping "Edit profile" on Home,
-      // and, from there, by tapping the avatar to change the photo. ----
       GoRoute(
         path: RouteNames.editProfile,
         name: RouteNames.editProfile,
@@ -201,8 +185,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final member = state.extra as FamilyMember?;
           if (member == null) {
-            // Defensive fallback: someone deep-linked here directly
-            // without an affiliate to edit.
             return const EditFamilyMemberFallbackPage();
           }
           return EditFamilyMemberPage(member: member);
@@ -259,6 +241,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: RouteNames.mainHome,
         name: RouteNames.mainHome,
         builder: (context, state) => const MainHomePage(),
+      ),
+      GoRoute(
+        path: RouteNames.propertyDetail,
+        name: RouteNames.propertyDetail,
+        builder: (context, state) {
+          final propertyId = state.extra as String? ?? 'gerlug-vista';
+          return PropertyDetailPage(propertyId: propertyId);
+        },
       ),
     ],
     errorBuilder: (context, state) => PlaceholderPage(

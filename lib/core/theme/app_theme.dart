@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'app_text_styles.dart';
 
-/// Single source of truth for `ThemeData`. Every screen consumes this
-/// instead of hardcoding colors/fonts inline.
 class AppTheme {
   AppTheme._();
 

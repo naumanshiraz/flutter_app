@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-/// Domain-layer representation of "what went wrong". Presentation only
-/// ever sees `Failure`, never raw exceptions — keeps layers decoupled.
 abstract class Failure extends Equatable {
   final String message;
   const Failure(this.message);

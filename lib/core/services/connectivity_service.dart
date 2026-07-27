@@ -1,7 +1,5 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 
-/// Abstraction over `connectivity_plus` so business logic depends on this
-/// interface, not the plugin directly (testable + swappable).
 abstract class ConnectivityService {
   Future<bool> get isConnected;
   Stream<bool> get onConnectivityChanged;

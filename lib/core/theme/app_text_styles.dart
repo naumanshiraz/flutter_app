@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'app_colors.dart';
 
-/// Centralized typography. All sizes use ScreenUtil's `.sp` so text scales
-/// consistently across device densities, matching the PDF's fixed
-/// 375x812 reference frame.
 class AppTextStyles {
   AppTextStyles._();
 

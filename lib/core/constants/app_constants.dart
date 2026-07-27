@@ -1,6 +1,4 @@
 /// Centralized application constants.
-/// Keep every "magic string/number" here so the whole app stays consistent
-/// and easy to re-point at a real backend later.
 class AppConstants {
   AppConstants._();
 
@@ -33,7 +31,7 @@ class AppConstants {
   static const Duration apiTimeout = Duration(seconds: 30);
 
   // ---------------------------------------------------------------------
-  // API (API-ready placeholders — swap with real backend later)
+  // API (Swap with real backend later)
   // ---------------------------------------------------------------------
   static const String baseUrl = 'https://api.pms-app.example.com/v1';
   static const String endpointRequestOtp = '/auth/request-otp';

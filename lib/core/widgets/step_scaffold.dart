@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 
-/// The dot step-indicator shown at the top of any multi-step flow —
-/// originally built for sign-up onboarding, promoted here so other
-/// multi-step flows (e.g. Residency Identification) share the same
-/// widget instead of re-implementing it.
 class StepProgressDots extends StatelessWidget {
   final int totalSteps;
   final int currentStep; // 0-based
@@ -37,8 +33,6 @@ class StepProgressDots extends StatelessWidget {
   }
 }
 
-/// Shared page chrome for any multi-step flow: back chevron + progress
-/// dots header, scrollable body, and a pinned bottom action button.
 class StepScaffold extends StatelessWidget {
   final int currentStep;
   final int totalSteps;
