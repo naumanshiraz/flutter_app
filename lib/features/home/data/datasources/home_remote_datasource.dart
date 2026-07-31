@@ -6,10 +6,6 @@ abstract class HomeRemoteDataSource {
   Future<List<PropertyListingModel>> getPropertyListings();
 }
 
-/// **There is no backend yet.** This returns a fixed mocked JSON payload
-/// (with an artificial delay) instead of calling `GET /properties`. The
-/// real call is written and commented directly below the mock — flip
-/// them the day a backend exists; nothing above this class changes.
 class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   final Dio _dio;
 

@@ -6,7 +6,7 @@ import 'package:pms_app/features/main_home/data/models/control_model.dart';
 
 /// Remote datasource interface. Currently mocked (no backend).
 abstract class MainHomeRemoteDataSource {
-  Future<List<ControlModel>> getControls();
+  Future<List<ControlModel>> getControls({String? propertyId});
   Future<void> toggleControl(String id, bool newState);
 }
 
@@ -47,7 +47,7 @@ class MainHomeRemoteDataSourceImpl implements MainHomeRemoteDataSource {
   ];
 
   @override
-  Future<List<ControlModel>> getControls() async {
+  Future<List<ControlModel>> getControls({String? propertyId}) async {
     try {
       // MOCK:
       await Future.delayed(const Duration(milliseconds: 500));

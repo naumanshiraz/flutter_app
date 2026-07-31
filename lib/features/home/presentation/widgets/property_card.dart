@@ -5,8 +5,6 @@ import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 import 'package:pms_app/features/home/domain/entities/property_listing.dart';
 
-/// A single grid cell: rounded thumbnail, bold title, muted management
-/// company line underneath — matches the Home screenshot's cards.
 class PropertyCard extends StatelessWidget {
   final PropertyListing listing;
   final VoidCallback? onTap;

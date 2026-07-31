@@ -35,9 +35,6 @@ import 'package:pms_app/features/splash/domain/entities/app_destination.dart';
 import 'package:pms_app/features/splash/presentation/pages/splash_page.dart';
 import 'package:pms_app/features/splash/presentation/providers/app_initialization_provider.dart';
 
-/// Bridges a Riverpod [AsyncNotifierProvider] to GoRouter's
-/// `refreshListenable`, so every state change in [appInitializationProvider]
-/// (loading -> data/error) re-runs the redirect logic below automatically.
 class _RouterRefreshNotifier extends ChangeNotifier {
   _RouterRefreshNotifier(Ref ref) {
     ref.listen<AsyncValue<AppDestination>>(
@@ -81,15 +78,13 @@ String? _routeGuard(BuildContext context, GoRouterState state, Ref ref) {
           currentPath == RouteNames.propertyDetail;
 
       if (isSplashRoute) {
-        //return isAuthenticated ? RouteNames.home : RouteNames.login;
-        return isAuthenticated ? RouteNames.mainHome : RouteNames.login;
+        return isAuthenticated ? RouteNames.home : RouteNames.login;
       }
       if (!isAuthenticated && isProtectedRoute) {
         return RouteNames.login;
       }
       if (isAuthenticated && isLoginRoute) {
-        //return RouteNames.home;
-        return RouteNames.mainHome;
+        return RouteNames.home;
       }
       return null; // Already on the correct route — no redirect.
     },
@@ -240,7 +235,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: RouteNames.mainHome,
         name: RouteNames.mainHome,
-        builder: (context, state) => const MainHomePage(),
+        builder: (context, state) => MainHomePage(propertyId: state.extra as String?),
       ),
       GoRoute(
         path: RouteNames.propertyDetail,

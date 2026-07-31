@@ -15,7 +15,9 @@ import 'package:pms_app/core/widgets/menu_sheet.dart';
 import 'package:pms_app/features/activity_log/presentation/pages/activity_log_page.dart';
 
 class MainHomePage extends ConsumerStatefulWidget {
-  const MainHomePage({Key? key}) : super(key: key);
+  final String? propertyId;
+
+  const MainHomePage({Key? key, this.propertyId}) : super(key: key);
 
   @override
   ConsumerState<MainHomePage> createState() => _MainHomePageState();

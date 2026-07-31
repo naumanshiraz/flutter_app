@@ -5,10 +5,6 @@ import 'package:pms_app/core/services/local_storage_service.dart';
 import 'package:pms_app/features/home/data/models/profile_summary_model.dart';
 
 abstract class HomeLocalDataSource {
-  /// Reads whatever profile was cached during sign-up onboarding
-  /// (`AuthLocalDataSource.persistOnboardingProfile`). Returns `null` if
-  /// the user only ever logged in (no onboarding profile was ever
-  /// collected) — the repository decides what to show in that case.
   ProfileSummaryModel? getCachedProfile();
 }
 

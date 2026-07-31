@@ -6,13 +6,12 @@ import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 import 'package:pms_app/features/property_detail/presentation/providers/property_detail_provider.dart';
 import 'package:pms_app/features/property_detail/presentation/widgets/action_buttons_row.dart';
+import 'package:pms_app/features/property_detail/presentation/widgets/invoice_sheet.dart';
+import 'package:pms_app/features/property_detail/presentation/widgets/property_access_config_sheet.dart';
+import 'package:pms_app/features/property_detail/presentation/widgets/report_sheet.dart';
 import 'package:pms_app/features/property_detail/presentation/widgets/property_hero_header.dart';
 import 'package:pms_app/features/property_detail/presentation/widgets/services_masonry_grid.dart';
 
-/// Full-screen property view reached by opening a specific property
-/// from Home/Properties: hero image, name/address, Report & Invoice
-/// actions, and the "Available services" grid (mixed vertical /
-/// horizontal / normal tiles — see `ServicesMasonryGrid`).
 class PropertyDetailPage extends ConsumerWidget {
   final String propertyId;
 
@@ -40,9 +39,6 @@ class PropertyDetailPage extends ConsumerWidget {
       return const Center(child: CircularProgressIndicator());
     }
 
-    // Error state: show it — never silently drop a failed load, per
-    // architecture guidance — with a retry action, still letting the
-    // user get back out via the app bar back button.
     if (state.error != null && state.propertyDetail == null) {
       return _ErrorState(message: state.error!, onRetry: notifier.refresh);
     }
@@ -78,15 +74,16 @@ class PropertyDetailPage extends ConsumerWidget {
                     ],
                   ),
                 ),
-                Icon(Icons.settings_outlined, size: 20.sp, color: AppColors.textSecondary),
+                InkWell(
+                  onTap: () => PropertyAccessConfigSheet.show(context),
+                  child: Icon(Icons.settings_outlined, size: 20.sp, color: AppColors.textSecondary),
+                ),
               ],
             ),
             SizedBox(height: 14.h),
             ActionButtonsRow(
-              // Report/Invoice modules don't exist yet — wire the tap
-              // targets now so this isn't a silent no-op once they do.
-              onReportPressed: () {},
-              onInvoicePressed: () {},
+              onReportPressed: () => ReportSheet.show(context),
+              onInvoicePressed: () => InvoiceSheet.show(context),
             ),
             SizedBox(height: 18.h),
             Text.rich(

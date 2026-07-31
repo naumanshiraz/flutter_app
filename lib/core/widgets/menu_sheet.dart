@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pms_app/core/router/route_names.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
+import 'package:pms_app/core/widgets/settings_sheet.dart';
 
 class MenuSheet extends StatelessWidget {
   const MenuSheet({super.key});
@@ -35,7 +36,7 @@ class MenuSheet extends StatelessWidget {
               label: 'Add another property',
               onTap: () {
                 Navigator.of(context).pop();
-                context.push(RouteNames.properties);
+                context.push(RouteNames.editProperty);
               },
             ),
             SizedBox(height: 16.h),
@@ -43,6 +44,7 @@ class MenuSheet extends StatelessWidget {
               label: 'Settings',
               onTap: () {
                 Navigator.of(context).pop();
+                SettingsSheet.show(context);
               },
             ),
             SizedBox(height: 16.h),

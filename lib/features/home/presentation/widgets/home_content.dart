@@ -108,7 +108,10 @@ class HomeContent extends ConsumerWidget {
                   childAspectRatio: 0.78,
                 ),
                 delegate: SliverChildBuilderDelegate(
-                  (context, index) => PropertyCard(listing: listingsState.listings[index]),
+                  (context, index) => PropertyCard(
+                    listing: listingsState.listings[index],
+                    onTap: () => context.push(RouteNames.mainHome, extra: listingsState.listings[index].id),
+                  ),
                   childCount: listingsState.listings.length,
                 ),
               ),
