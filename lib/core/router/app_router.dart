@@ -33,6 +33,7 @@ import 'package:pms_app/features/main_home/presentation/pages/main_home_page.dar
 import 'package:pms_app/features/property_detail/presentation/pages/property_detail_page.dart';
 import 'package:pms_app/features/invoice/presentation/pages/invoice_payment_page.dart';
 import 'package:pms_app/features/billing_account/presentation/pages/billing_account_page.dart';
+import 'package:pms_app/features/payment/presentation/pages/payment_page.dart';
 import 'package:pms_app/features/splash/domain/entities/app_destination.dart';
 import 'package:pms_app/features/splash/presentation/pages/splash_page.dart';
 import 'package:pms_app/features/splash/presentation/providers/app_initialization_provider.dart';
@@ -260,6 +261,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: RouteNames.billingAccount,
         name: RouteNames.billingAccount,
         builder: (context, state) => const BillingAccountPage(),
+      ),
+      GoRoute(
+        path: RouteNames.payment,
+        name: RouteNames.payment,
+        builder: (context, state) => const PaymentPage(),
       ),
     ],
     errorBuilder: (context, state) => PlaceholderPage(

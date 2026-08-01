@@ -26,4 +26,5 @@ class RouteNames {
   static const String propertyDetail = '/main-home/property-detail';
   static const String invoicePayment = '/main-home/invoice-payment';
   static const String billingAccount = '/main-home/billing-account';
+  static const String payment = '/main-home/payment';
 }
