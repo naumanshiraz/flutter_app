@@ -24,4 +24,6 @@ class RouteNames {
   static const String residencyTerms = '/profile/residency-terms';
   static const String mainHome = '/main-home';
   static const String propertyDetail = '/main-home/property-detail';
+  static const String invoicePayment = '/main-home/invoice-payment';
+  static const String billingAccount = '/main-home/billing-account';
 }

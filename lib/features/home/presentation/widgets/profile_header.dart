@@ -8,9 +8,6 @@ import 'package:pms_app/core/theme/app_text_styles.dart';
 import 'package:pms_app/core/widgets/gradient_pill_button.dart';
 import 'package:pms_app/features/home/domain/entities/profile_summary.dart';
 
-/// Matches the Home screenshot's header: circular avatar (initials
-/// fallback, real photo if `avatarUrl` is ever set), bold name, email,
-/// phone, and the "Edit profile" gradient pill CTA.
 class ProfileHeader extends StatelessWidget {
   final ProfileSummary profile;
   final VoidCallback onEditProfile;
@@ -43,7 +40,11 @@ class ProfileHeader extends StatelessWidget {
           ),
         ],
         SizedBox(height: 16.h),
-        GradientPillButton(label: 'Edit profile', onPressed: onEditProfile),
+        GradientPillButton(
+          label: 'Edit profile', 
+          onPressed: onEditProfile,  
+          borderRadius: 10.r,
+        ),
       ],
     );
   }

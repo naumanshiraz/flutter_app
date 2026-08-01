@@ -5,7 +5,11 @@ import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 import 'package:pms_app/features/invoice/domain/entities/invoice.dart';
 import 'package:pms_app/features/invoice/presentation/providers/invoice_detail_provider.dart';
+import 'package:pms_app/features/billing_account/presentation/pages/billing_account_page.dart';
 
+/// Full invoice detail, opened by tapping a row in `InvoiceSheet`.
+/// Data is fetched via `GetInvoiceDetailUseCase` (mocked — no backend
+/// yet, see `InvoiceRemoteDataSource`).
 class InvoicePaymentPage extends ConsumerWidget {
   final String invoiceId;
 
@@ -36,14 +40,14 @@ class InvoicePaymentPage extends ConsumerWidget {
                 ],
               ),
             ),
-            Expanded(child: _buildBody(state, notifier)),
+            Expanded(child: _buildBody(context, state, notifier)),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildBody(InvoiceDetailState state, InvoiceDetailNotifier notifier) {
+  Widget _buildBody(BuildContext context, InvoiceDetailState state, InvoiceDetailNotifier notifier) {
     if (state.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -108,7 +112,7 @@ class InvoicePaymentPage extends ConsumerWidget {
         for (final charge in detail.charges) _chargeRow(charge.label, charge.amount),
         SizedBox(height: 20.h),
         OutlinedButton(
-          onPressed: () {},
+          onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => const BillingAccountPage())),
           style: OutlinedButton.styleFrom(
             side: const BorderSide(color: AppColors.primary),
             padding: EdgeInsets.symmetric(vertical: 12.h),

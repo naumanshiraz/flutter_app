@@ -29,8 +29,10 @@ import 'package:pms_app/features/pets/domain/entities/pet.dart';
 import 'package:pms_app/features/pets/presentation/pages/edit_pet_page.dart';
 import 'package:pms_app/features/pets/presentation/pages/pets_page.dart';
 import 'package:pms_app/features/residency_terms/presentation/pages/term_screen_page.dart';
-import 'package:pms_app/features/main_home//presentation/pages/main_home_page.dart';
+import 'package:pms_app/features/main_home/presentation/pages/main_home_page.dart';
 import 'package:pms_app/features/property_detail/presentation/pages/property_detail_page.dart';
+import 'package:pms_app/features/invoice/presentation/pages/invoice_payment_page.dart';
+import 'package:pms_app/features/billing_account/presentation/pages/billing_account_page.dart';
 import 'package:pms_app/features/splash/domain/entities/app_destination.dart';
 import 'package:pms_app/features/splash/presentation/pages/splash_page.dart';
 import 'package:pms_app/features/splash/presentation/providers/app_initialization_provider.dart';
@@ -244,6 +246,20 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           final propertyId = state.extra as String? ?? 'gerlug-vista';
           return PropertyDetailPage(propertyId: propertyId);
         },
+      ),
+       GoRoute(
+        path: RouteNames.invoicePayment,
+        name: RouteNames.invoicePayment,
+        builder: (context, state) {
+          // `extra` carries the invoice id tapped in InvoiceSheet.
+          final invoiceId = state.extra as String? ?? 'inv-2024-05';
+          return InvoicePaymentPage(invoiceId: invoiceId);
+        },
+      ),
+      GoRoute(
+        path: RouteNames.billingAccount,
+        name: RouteNames.billingAccount,
+        builder: (context, state) => const BillingAccountPage(),
       ),
     ],
     errorBuilder: (context, state) => PlaceholderPage(

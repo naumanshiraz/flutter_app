@@ -37,9 +37,6 @@ class HomeContent extends ConsumerWidget {
                   profile: profile,
                   onEditProfile: () async {
                     await context.push(RouteNames.editProfile);
-                    // The edit flow persists to the same cached-profile
-                    // JSON this header reads from — refresh so any saved
-                    // changes (name/avatar/etc) show immediately.
                     ref.invalidate(profileSummaryProvider);
                   },
                 ),

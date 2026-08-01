@@ -27,26 +27,38 @@ class ActionButtonsRow extends StatelessWidget {
             onPressed: onReportPressed,
             style: OutlinedButton.styleFrom(
               side: const BorderSide(color: AppColors.primary),
-              padding: EdgeInsets.symmetric(vertical: 12.h),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.r)),
+              padding: EdgeInsets.symmetric(vertical: 8.h), // Reduced from 12.h
+              minimumSize: Size(double.infinity, 36.h), // Optional
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap, // Optional
             ),
             child: Text('Report', style: AppTextStyles.buttonSecondary),
           ),
         ),
         SizedBox(width: 12.w),
         Expanded(
-          child: Container(
+          child: Ink(
             decoration: BoxDecoration(
               gradient: AppColors.primaryGradient,
-              borderRadius: BorderRadius.circular(24.r),
+              borderRadius: BorderRadius.circular(10.r),
             ),
-            child: TextButton(
-              onPressed: onInvoicePressed,
-              style: TextButton.styleFrom(padding: EdgeInsets.symmetric(vertical: 12.h)),
-              child: Text('Invoice', style: AppTextStyles.buttonPrimary),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(10.r),
+              onTap: onInvoicePressed,
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.h),
+                child: Center(
+                  child: Text(
+                    'Invoice',
+                    style: AppTextStyles.buttonPrimary,
+                  ),
+                ),
+              ),
             ),
           ),
-        ),
+        )
       ],
     );
   }

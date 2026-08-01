@@ -7,12 +7,14 @@ class GradientPillButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
   final IconData? icon;
+  final double borderRadius;
 
   const GradientPillButton({
     super.key,
     required this.label,
     required this.onPressed,
     this.icon,
+    this.borderRadius = 10,
   });
 
   @override
@@ -25,12 +27,12 @@ class GradientPillButton extends StatelessWidget {
         height: 44.h,
         decoration: BoxDecoration(
           gradient: AppColors.primaryGradient,
-          borderRadius: BorderRadius.circular(22.r),
+          borderRadius: BorderRadius.circular(borderRadius.r),
         ),
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            borderRadius: BorderRadius.circular(22.r),
+            borderRadius: BorderRadius.circular(borderRadius.r),
             onTap: enabled ? onPressed : null,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 28.w),
