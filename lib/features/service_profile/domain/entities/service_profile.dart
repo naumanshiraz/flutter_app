@@ -20,12 +20,14 @@ class ServiceReply extends Equatable {
 }
 
 class ServiceComment extends Equatable {
+  final String id;
   final String authorInitial;
   final String authorName;
   final String text;
   final List<ServiceReply> replies;
 
   const ServiceComment({
+    required this.id,
     required this.authorInitial, 
     required this.authorName, 
     required this.text,
@@ -34,6 +36,7 @@ class ServiceComment extends Equatable {
 
   @override
   List<Object?> get props => [
+    id,
     authorInitial, 
     authorName, 
     text,

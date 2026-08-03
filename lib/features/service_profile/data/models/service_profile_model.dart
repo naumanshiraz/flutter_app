@@ -29,6 +29,7 @@ class ServiceCommentModel with _$ServiceCommentModel {
   const ServiceCommentModel._();
 
   const factory ServiceCommentModel({
+    required String id,
     required String authorInitial,
     required String authorName,
     required String text,
@@ -38,6 +39,7 @@ class ServiceCommentModel with _$ServiceCommentModel {
   factory ServiceCommentModel.fromJson(Map<String, dynamic> json) => _$ServiceCommentModelFromJson(json);
 
   ServiceComment toEntity() => ServiceComment(
+    id: id,
     authorInitial: authorInitial, 
     authorName: authorName, 
     text: text,

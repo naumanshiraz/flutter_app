@@ -24,6 +24,7 @@ class ServiceProfileRemoteDataSourceImpl implements ServiceProfileRemoteDataSour
       'rating': 4.0,
       'comments': [
         {
+          'id': 'c1',
           'authorInitial': 'ZT', 
           'authorName': 
           'Zolbayar Tuvshuu', 

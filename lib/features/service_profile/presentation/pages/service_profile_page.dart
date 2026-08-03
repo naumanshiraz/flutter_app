@@ -7,6 +7,8 @@ import 'package:pms_app/core/theme/app_text_styles.dart';
 import 'package:pms_app/features/service_profile/domain/entities/service_profile.dart';
 import 'package:pms_app/features/service_profile/presentation/providers/service_profile_provider.dart';
 import 'package:pms_app/features/profile/presentation/providers/edit_profile_provider.dart';
+import 'package:pms_app/features/service_profile/presentation/widgets/reply_sheet.dart';
+import 'package:pms_app/features/service_profile/presentation/widgets/add_comment_sheet.dart';
 
 class ServiceProfilePage extends ConsumerWidget {
   final String serviceId;
@@ -199,9 +201,11 @@ class ServiceProfilePage extends ConsumerWidget {
                 ],
               ),
               const Divider(color: AppColors.border, height: 24),
-              for (final comment in profile.comments) _commentRow(comment),
+              for (final comment in profile.comments) _commentRow(context, comment),
               SizedBox(height: 16.h),
-              Row(
+              InkWell(
+                onTap: () => AddCommentSheet.show(context, serviceId: serviceId),
+                child: Row(
                 children: [
                   CircleAvatar(
                     radius: 16.r,
@@ -234,6 +238,7 @@ class ServiceProfilePage extends ConsumerWidget {
                     ),
                   ),
                 ],
+                ),
               ),
               SizedBox(height: 24.h),
             ],
@@ -243,7 +248,7 @@ class ServiceProfilePage extends ConsumerWidget {
     );
   }
 
-  Widget _commentRow(ServiceComment comment) {
+  Widget _commentRow(BuildContext context, ServiceComment comment) {
     return ExpansionTile(
       tilePadding: EdgeInsets.zero,
       childrenPadding: EdgeInsets.only(left: 42.w, top: 8.h),
@@ -278,11 +283,19 @@ class ServiceProfilePage extends ConsumerWidget {
                   style: AppTextStyles.body.copyWith(fontSize: 13.sp),
                 ),
                 SizedBox(height: 4.h),
-                Text(
-                  'Reply',
-                  style: AppTextStyles.caption.copyWith(
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.textBlack,
+                InkWell(
+                  onTap: () => ReplySheet.show(
+                    context,
+                    serviceId: serviceId,
+                    commentId: comment.id,
+                    authorName: comment.authorName,
+                  ),
+                  child: Text(
+                    'Reply',
+                    style: AppTextStyles.caption.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textBlack,
+                    ),
                   ),
                 ),
               ],
