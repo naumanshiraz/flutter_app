@@ -2,15 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pms_app/core/widgets/entity_summary_card.dart';
 import 'package:pms_app/features/family_members/domain/entities/family_member.dart';
 
-// Re-exported so pages that switch on the action don't need to import
-// the core widget directly, and so this file's public surface hasn't
-// changed shape for existing callers.
 typedef FamilyMemberCardAction = EntitySummaryCardAction;
 
-/// Matches the design's summary card: Name/Relationship/Year of birth
-/// on one row, Email/Phone/Gender on the next, inside a grey card —
-/// with "Family member X of N" and the Edit/Delete overflow menu on
-/// their own row *below* the card (not inside it).
 class FamilyMemberSummaryCard extends StatelessWidget {
   final FamilyMember member;
   final int index;

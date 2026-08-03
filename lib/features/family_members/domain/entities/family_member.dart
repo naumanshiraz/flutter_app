@@ -1,8 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-/// A single family member / affiliate, as shown in the "Please identify
-/// your affiliates" step: name, contact info, relationship, birth year,
-/// gender.
 class FamilyMember extends Equatable {
   final String id;
   final String name;

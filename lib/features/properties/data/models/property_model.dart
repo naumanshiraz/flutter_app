@@ -4,8 +4,6 @@ import 'package:pms_app/features/properties/domain/entities/property.dart';
 part 'property_model.freezed.dart';
 part 'property_model.g.dart';
 
-/// Data-layer shape — exactly the body a real
-/// `POST/PATCH /user/properties` would send once a backend exists.
 @freezed
 class PropertyModel with _$PropertyModel {
   const PropertyModel._();

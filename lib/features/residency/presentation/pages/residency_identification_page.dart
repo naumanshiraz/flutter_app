@@ -11,15 +11,6 @@ import 'package:pms_app/core/widgets/single_select_sheet.dart';
 import 'package:pms_app/core/widgets/step_scaffold.dart';
 import 'package:pms_app/features/residency/presentation/providers/residency_form_provider.dart';
 
-/// Matches the PDF exactly: back arrow + 5-dot progress (step 1 of 5),
-/// "Please identify your residency" heading, the privacy note, and the
-/// five cascading Country/City/District/Khoroo/Residence pickers,
-/// followed by Next. Reached from Edit Profile's checkmark (save).
-///
-/// Only this one step's design was provided — steps 2-5 of this flow
-/// aren't specified yet, so "Next" currently persists the address and
-/// returns to Home. Once the remaining steps arrive, chain them here
-/// instead by pushing the next route in the sequence.
 class ResidencyIdentificationPage extends ConsumerWidget {
   const ResidencyIdentificationPage({super.key});
 

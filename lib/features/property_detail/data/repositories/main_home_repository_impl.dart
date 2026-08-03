@@ -19,7 +19,7 @@ class MainHomeRepositoryImpl implements MainHomeRepository {
   @override
   Future<Result<List<Control>>> getControls({String? propertyId}) async {
     try {
-      // Prefer remote (mocked) but fall back to local if remote fails.
+      // Prefer remote. If it fails, try local fallback.
       final remoteModels = await remoteDataSource.getControls(propertyId: propertyId);
       final entities = remoteModels.map((m) => m.toEntity()).toList();
       return Success(entities);

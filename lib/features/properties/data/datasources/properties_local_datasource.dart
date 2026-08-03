@@ -4,11 +4,6 @@ import 'package:pms_app/core/error/exceptions.dart';
 import 'package:pms_app/core/services/local_storage_service.dart';
 import 'package:pms_app/features/properties/data/models/property_model.dart';
 
-/// Reads/writes the properties list into the same cached-profile JSON
-/// blob every other profile-adjacent module uses
-/// (`LocalStorageService.cachedUserProfileJson`), under a nested
-/// `properties` array — merges rather than overwrites so fields other
-/// modules own are preserved.
 abstract class PropertiesLocalDataSource {
   List<PropertyModel> getProperties();
   Future<void> saveProperties(List<PropertyModel> properties);

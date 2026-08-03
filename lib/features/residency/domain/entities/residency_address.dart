@@ -1,8 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-/// The 5-level address hierarchy shown on the "Please identify your
-/// residency" screen. All levels are optional individually (the form
-/// fills them progressively), but a "complete" address has all five.
 class ResidencyAddress extends Equatable {
   final String? country;
   final String? city;

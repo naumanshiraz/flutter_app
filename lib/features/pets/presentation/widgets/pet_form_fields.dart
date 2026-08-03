@@ -5,8 +5,6 @@ import 'package:pms_app/core/widgets/labeled_form_field.dart';
 import 'package:pms_app/core/widgets/single_select_sheet.dart';
 import 'package:pms_app/features/pets/presentation/widgets/pet_options.dart';
 
-/// The Species/Breed/Number of pets field group shown on both the
-/// add-pet form and the Edit-pet screen.
 class PetFormFields extends StatelessWidget {
   final String? species;
   final TextEditingController breedController;

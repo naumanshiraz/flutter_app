@@ -1,10 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-/// A single entry under "Available services" on the Property Detail
-/// screen (e.g. "Printing house", "California bakery"). How this tile
-/// is *arranged* on screen is not a property of the item itself — see
-/// [ServicesGridLayout] — it's a single screen-level setting the API
-/// returns, so the whole grid re-arranges together.
 class ServiceListing extends Equatable {
   final String id;
   final String name;

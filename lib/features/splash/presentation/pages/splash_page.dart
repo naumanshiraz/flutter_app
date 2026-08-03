@@ -8,12 +8,6 @@ import 'package:pms_app/features/splash/domain/entities/app_destination.dart';
 import 'package:pms_app/features/splash/presentation/providers/app_initialization_provider.dart';
 import 'package:pms_app/features/splash/presentation/widgets/splash_logo.dart';
 
-/// Matches the PDF's branded first-frame: centered logo mark + app name
-/// on a plain white background. Purely presentational — all the actual
-/// bootstrap work happens in [AppInitializationNotifier]; this page just
-/// reacts to it and hands off navigation to GoRouter's redirect (the
-/// Route Guard), which is the single source of truth for "where do we go
-/// next" so there's never a race between this page and the router.
 class SplashPage extends ConsumerWidget {
   const SplashPage({super.key});
 

@@ -3,14 +3,7 @@ import 'package:pms_app/core/constants/app_constants.dart';
 import 'package:pms_app/core/error/exceptions.dart';
 import 'package:pms_app/features/splash/data/models/auth_session_model.dart';
 
-/// Remote counterpart of [AuthLocalDataSource]. Not called anywhere in
-/// Module 1 today (there's no backend), but implemented against the real
-/// Dio client so that swapping the mocked repository for the real one
-/// later is a one-line change in `injection.dart` — no UI or domain code
-/// needs to change.
 abstract class AuthRemoteDataSource {
-  /// Validates the given [token] against the backend and returns the
-  /// authoritative session state.
   Future<AuthSessionModel> validateSession(String token);
 }
 

@@ -4,10 +4,6 @@ import 'package:pms_app/features/auth/domain/entities/user_profile.dart';
 part 'user_profile_model.freezed.dart';
 part 'user_profile_model.g.dart';
 
-/// Data-layer shape of the onboarding profile. This is exactly the body
-/// a real `POST /auth/signup` (or `/user/profile`) call will send once a
-/// backend exists — building it now means `AuthRemoteDataSource` only
-/// needs its mocked delay swapped for a real Dio call later.
 @freezed
 class UserProfileModel with _$UserProfileModel {
   const UserProfileModel._();

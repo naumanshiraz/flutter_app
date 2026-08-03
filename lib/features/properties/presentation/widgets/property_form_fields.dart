@@ -4,9 +4,6 @@ import 'package:pms_app/core/widgets/labeled_form_field.dart';
 import 'package:pms_app/core/widgets/single_select_sheet.dart';
 import 'package:pms_app/features/properties/presentation/widgets/property_options.dart';
 
-/// The Suite/Floor/Type/Building field group shown on both the
-/// add-property form and the Edit-property screen — kept as one
-/// reusable widget so the two screens can't drift out of sync.
 class PropertyFormFields extends StatelessWidget {
   final TextEditingController suiteController;
   final String? floor;

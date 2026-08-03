@@ -4,10 +4,6 @@ import 'package:pms_app/features/property_detail/domain/entities/service_listing
 part 'service_listing_model.freezed.dart';
 part 'service_listing_model.g.dart';
 
-/// Data-layer shape for one "Available services" tile — exactly the
-/// shape a real `GET /properties/{id}/services` would return. No
-/// per-item layout field: the grid arrangement is a single screen-level
-/// value on `PropertyDetailModel.servicesLayout`, not per service.
 @freezed
 class ServiceListingModel with _$ServiceListingModel {
   const ServiceListingModel._();

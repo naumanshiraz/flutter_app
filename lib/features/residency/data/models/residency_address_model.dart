@@ -4,8 +4,6 @@ import 'package:pms_app/features/residency/domain/entities/residency_address.dar
 part 'residency_address_model.freezed.dart';
 part 'residency_address_model.g.dart';
 
-/// Data-layer shape — exactly the body a real `PATCH /user/residency`
-/// would send once a backend exists.
 @freezed
 class ResidencyAddressModel with _$ResidencyAddressModel {
   const ResidencyAddressModel._();

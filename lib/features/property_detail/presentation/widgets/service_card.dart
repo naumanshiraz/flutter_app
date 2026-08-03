@@ -5,13 +5,6 @@ import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 import 'package:pms_app/features/property_detail/domain/entities/service_listing.dart';
 
-/// A single "Available services" tile. [imageAspectRatio] is decided by
-/// the *caller* (`ServicesMasonryGrid`, based on the screen-level
-/// `ServicesGridLayout`) — this card itself has no opinion on whether
-/// it's the tall tile, the banner tile, or a plain grid tile, it just
-/// renders whatever slot it's given. The card chrome (name, description,
-/// "..." menu) stays identical across every slot so the grid reads as
-/// one consistent design regardless of arrangement.
 class ServiceCard extends StatelessWidget {
   final ServiceListing service;
   final double? imageAspectRatio;

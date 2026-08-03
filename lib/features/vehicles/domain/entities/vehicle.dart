@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-/// A single vehicle — Type, Brand, Engine type, License plate number,
-/// as shown on "Please share details of your vehicles".
 class Vehicle extends Equatable {
   final String id;
   final String? type;

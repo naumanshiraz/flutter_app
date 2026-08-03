@@ -2,11 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:pms_app/core/error/exceptions.dart';
 import 'package:pms_app/features/profile/data/models/editable_profile_model.dart';
 
-/// **There is no backend yet.** `updateProfile` simulates a network
-/// round-trip with a delay; the real `PATCH /user/profile` call (and,
-/// once file uploads are supported server-side, a multipart avatar
-/// upload) is written and commented directly below — flip it the day a
-/// backend exists. Nothing above this class needs to change.
 abstract class ProfileRemoteDataSource {
   Future<void> updateProfile(EditableProfileModel profile);
 }

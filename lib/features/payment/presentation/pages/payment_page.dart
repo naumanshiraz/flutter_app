@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:pms_app/core/router/route_names.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 import 'package:pms_app/features/payment/domain/entities/payment_method.dart';
@@ -36,25 +38,28 @@ class PaymentPage extends ConsumerWidget {
           children: [
             Padding(
               padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 8.h),
-              child: Stack(
-                alignment: Alignment.center,
+              child: Row(
                 children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: IconButton(onPressed: () => Navigator.of(context).pop(), icon: const Icon(Icons.arrow_back_ios_new)),
+                  IconButton(onPressed: () => Navigator.of(context).pop(), icon: const Icon(Icons.arrow_back_ios_new)),
+                  Expanded(
+                    child: Text(
+                      'Payment',
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700, fontSize: 16.sp),
+                    ),
                   ),
-                  Text('Payment', style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700, fontSize: 16.sp)),
+                  SizedBox(width: 48.w),
                 ],
               ),
             ),
-            Expanded(child: _buildBody(state, notifier)),
+            Expanded(child: _buildBody(context, state, notifier)),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildBody(PaymentState state, PaymentNotifier notifier) {
+  Widget _buildBody(BuildContext context, PaymentState state, PaymentNotifier notifier) {
     if (state.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -89,13 +94,13 @@ class PaymentPage extends ConsumerWidget {
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
         children: [
           for (final category in PaymentMethodCategory.values)
-            if (sections[category]?.isNotEmpty ?? false) _buildSection(category, sections[category]!),
+            if (sections[category]?.isNotEmpty ?? false) _buildSection(context, category, sections[category]!),
         ],
       ),
     );
   }
 
-  Widget _buildSection(PaymentMethodCategory category, List<PaymentMethod> methods) {
+  Widget _buildSection(BuildContext context, PaymentMethodCategory category, List<PaymentMethod> methods) {
     return Padding(
       padding: EdgeInsets.only(bottom: 20.h),
       child: Column(
@@ -103,24 +108,44 @@ class PaymentPage extends ConsumerWidget {
         children: [
           Text(_sectionTitles[category]!, style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700, fontSize: 14.sp)),
           SizedBox(height: 8.h),
-          for (final method in methods) _buildRow(method),
+          for (final method in methods) _buildRow(context, method),
         ],
       ),
     );
   }
 
-  Widget _buildRow(PaymentMethod method) {
-    return Padding(
+  Widget _buildRow(BuildContext context, PaymentMethod method) {
+    final isTradeDevBank = method.id == 'trade_dev_bank';
+    return InkWell(
+      onTap: isTradeDevBank ? () => context.push(RouteNames.bankTransaction, extra: method.id) : null,
+      child: Padding(
       padding: EdgeInsets.symmetric(vertical: 8.h),
       child: Row(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8.r),
-            child: Image.asset(
-              'assets/images/${method.iconAsset}',
-              width: 40.w,
-              height: 40.w,
-              fit: BoxFit.contain,
+          Container(
+            width: 36.w,
+            height: 36.w,
+            decoration: BoxDecoration(
+              color: _sectionColors[method.category],
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+            child: Container(
+              width: 36.w,
+              height: 36.w,
+              decoration: BoxDecoration(
+                color: _sectionColors[method.category],
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: Image.asset(
+                'assets/images/${method.iconAsset}',
+                width: double.infinity,
+                height: double.infinity,
+                fit: BoxFit.cover, // Use BoxFit.fill if you don't want to preserve aspect ratio
+                errorBuilder: (context, error, stackTrace) {
+                  return const SizedBox.shrink();
+                },
+              ),
             ),
           ),
           SizedBox(width: 12.w),
@@ -128,26 +153,14 @@ class PaymentPage extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  method.name,
-                  style: AppTextStyles.body.copyWith(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14.sp,
-                  ),
-                ),
-                Text(
-                  method.subtitle,
-                  style: AppTextStyles.caption,
-                ),
+                Text(method.name, style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700, fontSize: 14.sp)),
+                Text(method.subtitle, style: AppTextStyles.caption),
               ],
             ),
           ),
-          Icon(
-            Icons.chevron_right,
-            size: 20.sp,
-            color: AppColors.textSecondary,
-          ),
+          Icon(Icons.chevron_right, size: 20.sp, color: AppColors.textSecondary),
         ],
+      ),
       ),
     );
   }

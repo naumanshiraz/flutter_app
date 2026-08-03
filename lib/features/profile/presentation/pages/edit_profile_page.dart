@@ -11,10 +11,6 @@ import 'package:pms_app/core/widgets/single_select_sheet.dart';
 import 'package:pms_app/features/profile/presentation/providers/edit_profile_provider.dart';
 import 'package:pms_app/features/profile/presentation/widgets/profile_avatar_circle.dart';
 
-/// Matches the PDF exactly: X to close (discards unsaved changes),
-/// checkmark to save, tappable avatar (routes to
-/// [ProfilePicturePage]), and the Name/Email/Phone number/Country/
-/// Birthdate/Pronouns fields.
 class EditProfilePage extends ConsumerStatefulWidget {
   const EditProfilePage({super.key});
 
@@ -48,10 +44,6 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     super.dispose();
   }
 
-  /// Fills the text controllers from loaded state exactly once — after
-  /// that the controllers are the source of truth for typed text, and
-  /// only explicit picker fields (country/birthdate) write back into
-  /// provider state directly.
   void _hydrateControllersIfNeeded(EditProfileState state) {
     if (_controllersHydrated || state.status == EditProfileStatus.loading) return;
     _nameController.text = state.profile.name;
@@ -87,8 +79,6 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   }
 
   Future<void> _onSave() async {
-    // Push whatever's currently typed into the controllers into state
-    // before saving, so the notifier validates/persists the latest text.
     ref.read(editProfileProvider.notifier).updateFields(
           name: _nameController.text.trim(),
           email: _emailController.text.trim(),
@@ -97,9 +87,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
         );
 
     final ok = await ref.read(editProfileProvider.notifier).save();
-    // On success, continue forward into the Residency Identification
-    // step rather than popping — X still discards and pops back to
-    // Home directly; the checkmark advances the flow.
+  
     if (ok && mounted) context.push(RouteNames.residencyIdentification);
   }
 
@@ -238,8 +226,6 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   }
 }
 
-/// Small static country list for now — no backend/places API yet.
-/// Swap for a real country lookup once one exists.
 const List<String> _kCountries = [
   'Mongolia',
   'United States',

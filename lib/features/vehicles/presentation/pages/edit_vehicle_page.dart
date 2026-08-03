@@ -10,9 +10,6 @@ import 'package:pms_app/features/vehicles/domain/entities/vehicle.dart';
 import 'package:pms_app/features/vehicles/presentation/providers/vehicles_provider.dart';
 import 'package:pms_app/features/vehicles/presentation/widgets/vehicle_form_fields.dart';
 
-/// Matches the design's "Edit" screen exactly: X to close (discards),
-/// checkmark to save, same field group as the add form, pre-filled
-/// with the vehicle being edited.
 class EditVehiclePage extends ConsumerStatefulWidget {
   final Vehicle vehicle;
 

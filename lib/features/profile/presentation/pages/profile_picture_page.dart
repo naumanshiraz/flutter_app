@@ -9,12 +9,6 @@ import 'package:pms_app/features/profile/domain/entities/editable_profile.dart';
 import 'package:pms_app/features/profile/presentation/providers/edit_profile_provider.dart';
 import 'package:pms_app/features/profile/presentation/widgets/profile_avatar_circle.dart';
 
-/// Matches the PDF exactly: X to close, the user's name as the title,
-/// a large avatar (initials fallback), "Please add your profile
-/// picture" copy, and Take a photo / Camera roll CTAs. Reached by
-/// tapping the avatar on [EditProfilePage] — shares the same
-/// [editProfileProvider] so a picked photo shows immediately once the
-/// user navigates back.
 class ProfilePicturePage extends ConsumerWidget {
   const ProfilePicturePage({super.key});
 
@@ -23,8 +17,7 @@ class ProfilePicturePage extends ConsumerWidget {
     final ok = await notifier.pickAvatar(source);
     if (ok && context.mounted) {
       final state = ref.read(editProfileProvider);
-      // Only pop automatically if a photo was actually set (not a
-      // silent cancel) — otherwise stay so the user can try again.
+   
       if (state.profile.avatarPath != null && state.profile.avatarPath!.isNotEmpty) {
         context.pop();
       }

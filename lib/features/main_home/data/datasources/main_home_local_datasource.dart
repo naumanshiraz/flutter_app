@@ -3,9 +3,7 @@ import 'dart:async';
 import 'package:pms_app/core/error/exceptions.dart';
 import 'package:pms_app/features/main_home/data/models/control_model.dart';
 
-/// Local datasource interface for controls. Keeps parity with repo patterns.
 abstract class MainHomeLocalDataSource {
-  /// Returns cached controls or null/empty if none cached.
   Future<List<ControlModel>> fetchControls();
   Future<void> persistToggle(String id, bool newState);
 }

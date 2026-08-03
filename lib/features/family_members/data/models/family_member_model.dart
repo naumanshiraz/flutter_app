@@ -4,8 +4,6 @@ import 'package:pms_app/features/family_members/domain/entities/family_member.da
 part 'family_member_model.freezed.dart';
 part 'family_member_model.g.dart';
 
-/// Data-layer shape — exactly the body a real
-/// `POST/PATCH /user/family-members` would send once a backend exists.
 @freezed
 class FamilyMemberModel with _$FamilyMemberModel {
   const FamilyMemberModel._();

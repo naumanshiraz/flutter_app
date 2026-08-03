@@ -4,13 +4,6 @@ import 'package:pms_app/features/auth/domain/entities/otp_session.dart';
 part 'otp_session_model.freezed.dart';
 part 'otp_session_model.g.dart';
 
-/// Data-layer shape of an OTP challenge. Mirrors what a real
-/// `POST /auth/request-otp` response will look like once a backend
-/// exists — note `code` would never actually be returned by a real API
-/// (it'd only be sent via SMS/email); it's included here purely so the
-/// mocked `AuthRemoteDataSource` can round-trip it for local
-/// verification until then. Remove it from the JSON contract the day a
-/// real backend ships.
 @freezed
 class OtpSessionModel with _$OtpSessionModel {
   const OtpSessionModel._();

@@ -3,8 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 
-/// "Report" bottom sheet opened from the Report button on Property
-/// Detail — monthly reports, each downloadable.
 class ReportSheet extends StatelessWidget {
   const ReportSheet({super.key});
 

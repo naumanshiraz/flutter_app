@@ -5,14 +5,6 @@ import 'package:pms_app/features/property_detail/domain/entities/service_listing
 part 'property_detail_model.freezed.dart';
 part 'property_detail_model.g.dart';
 
-/// Data-layer shape for the Property Detail header — exactly the body a
-/// real `GET /properties/{id}/detail` would return once a backend exists.
-///
-/// `servicesLayout` is kept as the raw API string
-/// ("horizontal" | "vertical" | "grid") here and only turned into the
-/// [ServicesGridLayout] enum when mapped to the domain entity via
-/// [toEntity] — this is the single field that switches the whole
-/// "Available services" grid between the 3 design variants.
 @freezed
 class PropertyDetailModel with _$PropertyDetailModel {
   const PropertyDetailModel._();

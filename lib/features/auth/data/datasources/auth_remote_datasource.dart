@@ -8,15 +8,6 @@ import 'package:pms_app/features/auth/data/models/otp_session_model.dart';
 import 'package:pms_app/features/auth/data/models/user_profile_model.dart';
 import 'package:pms_app/features/auth/domain/entities/otp_session.dart';
 
-/// Talks to the backend. **There is no backend yet**, so every method
-/// here is mocked with a randomly-generated code and an artificial
-/// network delay instead of a real `Dio` call — but the method
-/// signatures, the request "shape" (via the Freezed models), and the
-/// error mapping are exactly what they'll be once a real API exists.
-///
-/// To go live: replace each method body with the commented-out `Dio`
-/// call beneath it. Nothing above this class (repository, use cases,
-/// providers, pages) needs to change.
 abstract class AuthRemoteDataSource {
   Future<OtpSessionModel> requestOtp({
     required String identifier,

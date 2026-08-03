@@ -12,14 +12,6 @@ import 'package:pms_app/features/properties/presentation/providers/properties_pr
 import 'package:pms_app/features/properties/presentation/widgets/property_form_fields.dart';
 import 'package:pms_app/features/properties/presentation/widgets/property_summary_card.dart';
 
-/// Matches the design's "Please specify your property" screens: step 3
-/// of the multi-step flow (back arrow + dots), a summary card per
-/// already-added property (Edit/Delete overflow menu), a draft form
-/// below it for adding the next one, "Add property", and "Next".
-///
-/// Only this step's design was provided — steps 4-5 aren't specified
-/// yet, so "Next" persists the list and returns to Home; chain the next
-/// route here once those designs arrive.
 class PropertiesPage extends ConsumerStatefulWidget {
   const PropertiesPage({super.key});
 

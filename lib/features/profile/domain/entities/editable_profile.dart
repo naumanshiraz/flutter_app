@@ -1,9 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-/// The full editable profile shown on the Edit Profile screen. A
-/// superset of `auth`'s onboarding `UserProfile` (adds country,
-/// pronouns, avatar) — kept as its own entity so this module stays
-/// self-contained and doesn't reach into another feature's domain layer.
 class EditableProfile extends Equatable {
   final String name;
   final String email;

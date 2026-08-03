@@ -4,11 +4,6 @@ import 'package:pms_app/core/error/exceptions.dart';
 import 'package:pms_app/core/services/local_storage_service.dart';
 import 'package:pms_app/features/vehicles/data/models/vehicle_model.dart';
 
-/// Reads/writes the vehicles list into the same cached-profile JSON
-/// blob every other profile-adjacent module uses
-/// (`LocalStorageService.cachedUserProfileJson`), under a nested
-/// `vehicles` array — merges rather than overwrites so fields other
-/// modules own are preserved.
 abstract class VehiclesLocalDataSource {
   List<VehicleModel> getVehicles();
   Future<void> saveVehicles(List<VehicleModel> vehicles);

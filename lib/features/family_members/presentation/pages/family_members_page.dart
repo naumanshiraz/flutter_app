@@ -12,15 +12,6 @@ import 'package:pms_app/features/family_members/presentation/providers/family_me
 import 'package:pms_app/features/family_members/presentation/widgets/family_member_form_fields.dart';
 import 'package:pms_app/features/family_members/presentation/widgets/family_member_summary_card.dart';
 
-/// Matches the design's "Please identify your affiliates" screens:
-/// step 2 of the multi-step flow (back arrow + dots), a summary card
-/// per already-added affiliate (with an Edit/Delete overflow menu), a
-/// draft form below it for adding the next one, "Add an affiliate",
-/// and "Next".
-///
-/// Only this step's design was provided — steps 3-5 aren't specified
-/// yet, so "Next" persists whatever's in the list and returns to Home;
-/// chain the next route here once those designs arrive.
 class FamilyMembersPage extends ConsumerStatefulWidget {
   const FamilyMembersPage({super.key});
 

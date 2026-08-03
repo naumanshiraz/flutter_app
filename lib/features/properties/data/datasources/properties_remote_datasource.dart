@@ -2,9 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:pms_app/core/error/exceptions.dart';
 import 'package:pms_app/features/properties/data/models/property_model.dart';
 
-/// **There is no backend yet.** Every method simulates a network
-/// round-trip; the real REST calls are written and commented directly
-/// below each — flip them once a backend exists.
 abstract class PropertiesRemoteDataSource {
   Future<void> addProperty(PropertyModel property);
   Future<void> updateProperty(PropertyModel property);

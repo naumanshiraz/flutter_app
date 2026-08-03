@@ -12,15 +12,6 @@ import 'package:pms_app/features/vehicles/presentation/providers/vehicles_provid
 import 'package:pms_app/features/vehicles/presentation/widgets/vehicle_form_fields.dart';
 import 'package:pms_app/features/vehicles/presentation/widgets/vehicle_summary_card.dart';
 
-/// Matches the design's "Please share details of your vehicles"
-/// screens: step 4 of the multi-step flow (back arrow + dots), a
-/// summary card per already-added vehicle (Edit/Delete overflow menu),
-/// a draft form below it for adding the next one, "Add vehicle", and
-/// "Next".
-///
-/// Only this step's design was provided — step 5 isn't specified yet,
-/// so "Next" persists the list and returns to Home; chain the final
-/// route here once that design arrives.
 class VehiclesPage extends ConsumerStatefulWidget {
   const VehiclesPage({super.key});
 

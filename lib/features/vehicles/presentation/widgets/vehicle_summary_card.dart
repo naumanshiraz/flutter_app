@@ -4,10 +4,6 @@ import 'package:pms_app/features/vehicles/domain/entities/vehicle.dart';
 
 typedef VehicleCardAction = EntitySummaryCardAction;
 
-/// Matches the design's summary card: License plate number/Brand on
-/// one row, Type/Engine type on the next, inside a grey card — with
-/// "Vehicle X of N" and the Edit/Delete overflow menu on their own row
-/// below the card.
 class VehicleSummaryCard extends StatelessWidget {
   final Vehicle vehicle;
   final int index;

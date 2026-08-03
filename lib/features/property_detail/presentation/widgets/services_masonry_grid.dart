@@ -3,19 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pms_app/features/property_detail/domain/entities/service_listing.dart';
 import 'package:pms_app/features/property_detail/presentation/widgets/service_card.dart';
 
-/// Renders "Available services" in whichever of the 3 design variants
-/// [layout] selects — a single screen-level value that comes from the
-/// API (`PropertyDetail.servicesLayout`), not something this widget or
-/// any individual [ServiceListing] decides. Changing that one API field
-/// is what flips the whole grid between the 3 "Detailed view" designs:
-///
-///  - [ServicesGridLayout.horizontal]: view 01 — first service as a
-///    full-width banner, everything after in a plain 2-column grid.
-///  - [ServicesGridLayout.vertical]: view 02 — first service as a tall
-///    tile on the left, next two services stacked normally on the
-///    right, everything after in a plain 2-column grid.
-///  - [ServicesGridLayout.grid]: view 03 — plain 2-column grid, no
-///    special-cased tiles at all.
 class ServicesMasonryGrid extends StatelessWidget {
   final List<ServiceListing> services;
   final ServicesGridLayout layout;

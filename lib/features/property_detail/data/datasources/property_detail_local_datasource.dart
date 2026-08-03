@@ -2,13 +2,6 @@ import 'package:pms_app/core/error/exceptions.dart';
 import 'package:pms_app/features/property_detail/data/models/property_detail_model.dart';
 import 'package:pms_app/features/property_detail/data/models/service_listing_model.dart';
 
-/// Fallback source used when the remote (mocked) call fails — same
-/// "remote-first, local-fallback" shape as `MainHomeLocalDataSource`.
-/// This screen shows a read-only catalog (property header + service
-/// directory), not user-owned data, so there is nothing to persist here
-/// and — deliberately — no read/write into the shared
-/// `LocalStorageService.cachedUserProfileJson` blob (see note on that
-/// blob in `properties_local_datasource.dart`).
 abstract class PropertyDetailLocalDataSource {
   Future<PropertyDetailModel> fetchPropertyDetail(String propertyId);
   Future<List<ServiceListingModel>> fetchServices(String propertyId);

@@ -4,10 +4,6 @@ import 'package:pms_app/core/widgets/labeled_form_field.dart';
 import 'package:pms_app/core/widgets/single_select_sheet.dart';
 import 'package:pms_app/features/family_members/presentation/widgets/family_member_options.dart';
 
-/// The Name/Email/Phone number/Relationship/Birth year/Gender field
-/// group shown on both the add-affiliate form and the Edit-affiliate
-/// screen — kept as one reusable widget so the two screens can't drift
-/// out of sync with each other.
 class FamilyMemberFormFields extends StatelessWidget {
   final TextEditingController nameController;
   final TextEditingController emailController;

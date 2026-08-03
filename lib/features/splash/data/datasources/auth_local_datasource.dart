@@ -3,10 +3,6 @@ import 'package:pms_app/core/services/local_storage_service.dart';
 import 'package:pms_app/core/services/secure_storage_service.dart';
 import 'package:pms_app/features/splash/data/models/auth_session_model.dart';
 
-/// Reads the mocked/local auth state. This is the ONLY thing Module 1
-/// actually needs (there's no backend yet). It combines:
-///  - `flutter_secure_storage` -> auth token existence
-///  - Hive `user_box`           -> isLoggedIn flag + cached profile
 abstract class AuthLocalDataSource {
   Future<AuthSessionModel> getLocalSession();
   Future<void> persistSession(AuthSessionModel session);

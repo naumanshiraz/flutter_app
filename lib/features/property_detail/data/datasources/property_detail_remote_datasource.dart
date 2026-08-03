@@ -3,10 +3,6 @@ import 'package:pms_app/core/error/exceptions.dart';
 import 'package:pms_app/features/property_detail/data/models/property_detail_model.dart';
 import 'package:pms_app/features/property_detail/data/models/service_listing_model.dart';
 
-/// **There is no backend yet.** Both methods simulate a network
-/// round-trip against fixed mock data; the real REST calls are written
-/// and commented directly below each, so flipping to a live API later
-/// is a one-line change.
 abstract class PropertyDetailRemoteDataSource {
   Future<PropertyDetailModel> getPropertyDetail(String propertyId);
   Future<List<ServiceListingModel>> getServices(String propertyId);
@@ -17,10 +13,6 @@ class PropertyDetailRemoteDataSourceImpl implements PropertyDetailRemoteDataSour
 
   PropertyDetailRemoteDataSourceImpl(this._dio);
 
-  /// **This is the one field to flip to see all 3 "Detailed view"
-  /// variants from the design** — 'horizontal' | 'vertical' | 'grid'.
-  /// It's a single screen-level value, not per-service, because a real
-  /// backend would send one layout decision for the whole grid.
   static const String _mockServicesLayout = 'vertical';
 
   static const Map<String, dynamic> _mockPropertyDetail = {

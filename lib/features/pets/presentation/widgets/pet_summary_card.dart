@@ -6,9 +6,6 @@ import 'package:pms_app/features/pets/domain/entities/pet.dart';
 
 enum PetCardAction { edit, delete }
 
-/// Matches the design's "Pets X of N" summary card: Species / Number of
-/// pets on the top row, Breed on the bottom row, with the "Pets X of N"
-/// label and ⋮ menu BELOW the grey container.
 class PetSummaryCard extends StatelessWidget {
   final Pet pet;
   final int index;

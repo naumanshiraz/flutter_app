@@ -4,8 +4,6 @@ import 'package:pms_app/features/vehicles/domain/entities/vehicle.dart';
 part 'vehicle_model.freezed.dart';
 part 'vehicle_model.g.dart';
 
-/// Data-layer shape — exactly the body a real `POST/PATCH /user/vehicles`
-/// would send once a backend exists.
 @freezed
 class VehicleModel with _$VehicleModel {
   const VehicleModel._();

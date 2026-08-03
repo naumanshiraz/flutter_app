@@ -3,11 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 
-/// The outline "Report" + gradient "Invoice" buttons shown under the
-/// property header. Presentational only — the page supplies the
-/// callbacks (both currently no-ops until a Report/Invoice module
-/// exists, same "wire the UI, stub the destination" approach used for
-/// unbuilt bottom-nav tabs).
 class ActionButtonsRow extends StatelessWidget {
   final VoidCallback onReportPressed;
   final VoidCallback onInvoicePressed;

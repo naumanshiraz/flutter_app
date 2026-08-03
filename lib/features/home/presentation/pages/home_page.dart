@@ -4,10 +4,6 @@ import 'package:pms_app/core/widgets/bottom_nav_bar.dart';
 import 'package:pms_app/core/widgets/placeholder_page.dart';
 import 'package:pms_app/features/home/presentation/widgets/home_content.dart';
 
-/// Owns the 4-tab bottom navigation shell. Only the Home tab has a real
-/// module behind it today; Chat/Cart/Community render a shared
-/// [PlaceholderPage] until those modules are built — swap each entry in
-/// `_tabs` for its real page then, nothing else here needs to change.
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 

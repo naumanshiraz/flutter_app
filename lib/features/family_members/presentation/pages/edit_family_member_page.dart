@@ -10,9 +10,6 @@ import 'package:pms_app/features/family_members/domain/entities/family_member.da
 import 'package:pms_app/features/family_members/presentation/providers/family_members_provider.dart';
 import 'package:pms_app/features/family_members/presentation/widgets/family_member_form_fields.dart';
 
-/// Matches the design's "Edit" screen exactly: X to close (discards),
-/// checkmark to save, same field group as the add form, pre-filled
-/// with the affiliate being edited.
 class EditFamilyMemberPage extends ConsumerStatefulWidget {
   final FamilyMember member;
 

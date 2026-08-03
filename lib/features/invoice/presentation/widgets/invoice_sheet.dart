@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
-import 'package:pms_app/features/invoice/presentation/pages/invoice_payment_page.dart';
+import 'package:pms_app/core/router/route_names.dart';
 
 enum _InvoiceStatus { pending, overdue, none }
 
@@ -85,7 +86,8 @@ class InvoiceSheet extends StatelessWidget {
   }
 
   void _openPayment(BuildContext context, String invoiceId) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => InvoicePaymentPage(invoiceId: invoiceId)));
+    Navigator.of(context).pop();
+    context.push(RouteNames.invoicePayment, extra: invoiceId);
   }
 
   Widget _buildRow(_InvoiceRow row) {

@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-/// Groups payment methods into the sections shown on `PaymentPage`.
 enum PaymentMethodCategory { bankApplication, onlineWallet, cardPayment, other }
 
 class PaymentMethod extends Equatable {
@@ -8,7 +7,7 @@ class PaymentMethod extends Equatable {
   final String name;
   final String subtitle;
   final PaymentMethodCategory category;
-  final String iconAsset; // Material icon name, mapped in the widget layer
+  final String iconAsset;
 
   const PaymentMethod({
     required this.id,

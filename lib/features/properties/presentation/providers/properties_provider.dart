@@ -10,10 +10,6 @@ class PropertiesState {
   final List<Property> properties;
   final Property draft;
   final String? errorMessage;
-
-  /// The Residence name and "District, City" string saved during the
-  /// Residency Identification step — shown on each summary card as
-  /// "Residency" / "Place", matching the design.
   final String residencyName;
   final String place;
 

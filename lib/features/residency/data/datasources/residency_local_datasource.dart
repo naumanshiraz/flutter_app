@@ -4,11 +4,6 @@ import 'package:pms_app/core/error/exceptions.dart';
 import 'package:pms_app/core/services/local_storage_service.dart';
 import 'package:pms_app/features/residency/data/models/residency_address_model.dart';
 
-/// Reads/writes into the same cached-profile JSON blob every other
-/// profile-adjacent module uses (`LocalStorageService.cachedUserProfileJson`),
-/// under a nested `residency` key — merges rather than overwrites so
-/// fields other modules own (name, email, gender, avatarPath, ...) are
-/// preserved.
 abstract class ResidencyLocalDataSource {
   ResidencyAddressModel getCachedAddress();
   Future<void> saveAddress(ResidencyAddressModel address);

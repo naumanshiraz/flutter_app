@@ -1,18 +1,9 @@
 import 'package:equatable/equatable.dart';
 
-/// The condensed profile shown at the top of Home — not the full
-/// onboarding [UserProfile], just what's needed for this header.
 class ProfileSummary extends Equatable {
   final String name;
   final String email;
   final String phone;
-
-  /// Either a real `https://` URL (once a backend serves uploaded
-  /// avatars) or, today, a local device file path — the profile picture
-  /// picker has no backend to upload to yet, so it stores the picked
-  /// image's on-device path here directly. `ProfileHeader` inspects the
-  /// value and renders local paths with `Image.file`, remote URLs with
-  /// `CachedNetworkImage`.
   final String? avatarUrl;
 
   const ProfileSummary({

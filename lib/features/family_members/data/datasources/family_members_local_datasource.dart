@@ -4,11 +4,6 @@ import 'package:pms_app/core/error/exceptions.dart';
 import 'package:pms_app/core/services/local_storage_service.dart';
 import 'package:pms_app/features/family_members/data/models/family_member_model.dart';
 
-/// Reads/writes the family-members list into the same cached-profile
-/// JSON blob every other profile-adjacent module uses
-/// (`LocalStorageService.cachedUserProfileJson`), under a nested
-/// `familyMembers` array — merges rather than overwrites so fields
-/// other modules own are preserved.
 abstract class FamilyMembersLocalDataSource {
   List<FamilyMemberModel> getMembers();
   Future<void> saveMembers(List<FamilyMemberModel> members);

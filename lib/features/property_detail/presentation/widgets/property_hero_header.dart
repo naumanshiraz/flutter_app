@@ -3,10 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 
-/// Full-width hero image at the top of the Property Detail screen, with
-/// a back-button overlay (matching the "<" shown in the design) — the
-/// page itself decides what "back" means (`Navigator.pop` vs
-/// `context.pop`), this widget just reports the tap.
 class PropertyHeroHeader extends StatelessWidget {
   final List<String> imageUrls;
   final VoidCallback onBackPressed;

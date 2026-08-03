@@ -5,11 +5,6 @@ import 'package:pms_app/features/properties/presentation/widgets/property_option
 
 typedef PropertyCardAction = EntitySummaryCardAction;
 
-/// Matches the design's summary card: Suite/Floor/Residency on one
-/// row, Building/Type/Place on the next, inside a grey card — with
-/// "Property X of N" and the Edit/Delete overflow menu on their own
-/// row *below* the card (Residency + Place come from the Residency
-/// Identification step, not this form).
 class PropertySummaryCard extends StatelessWidget {
   final Property property;
   final int index;

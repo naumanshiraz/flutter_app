@@ -10,9 +10,6 @@ import 'package:pms_app/features/properties/domain/entities/property.dart';
 import 'package:pms_app/features/properties/presentation/providers/properties_provider.dart';
 import 'package:pms_app/features/properties/presentation/widgets/property_form_fields.dart';
 
-/// Matches the design's "Edit" screen exactly: X to close (discards),
-/// checkmark to save, same field group as the add form, pre-filled
-/// with the property being edited.
 class EditPropertyPage extends ConsumerStatefulWidget {
   final Property property;
 

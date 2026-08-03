@@ -2,9 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:pms_app/core/error/exceptions.dart';
 import 'package:pms_app/features/family_members/data/models/family_member_model.dart';
 
-/// **There is no backend yet.** Every method simulates a network
-/// round-trip; the real REST calls are written and commented directly
-/// below each — flip them once a backend exists.
 abstract class FamilyMembersRemoteDataSource {
   Future<void> addMember(FamilyMemberModel member);
   Future<void> updateMember(FamilyMemberModel member);

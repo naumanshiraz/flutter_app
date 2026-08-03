@@ -4,8 +4,6 @@ import 'package:pms_app/features/profile/domain/entities/editable_profile.dart';
 part 'editable_profile_model.freezed.dart';
 part 'editable_profile_model.g.dart';
 
-/// Data-layer shape of the editable profile — exactly the body a real
-/// `PATCH /user/profile` would send once a backend exists.
 @freezed
 class EditableProfileModel with _$EditableProfileModel {
   const EditableProfileModel._();

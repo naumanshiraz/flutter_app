@@ -1,6 +1,3 @@
-/// Static picker options for the property form. No backend for this
-/// yet, so these are hand-picked common values — swap for a real
-/// building/unit lookup once one exists.
 class PropertyOptions {
   PropertyOptions._();
 

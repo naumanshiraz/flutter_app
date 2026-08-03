@@ -4,11 +4,6 @@ import 'package:pms_app/core/error/exceptions.dart';
 import 'package:pms_app/core/services/local_storage_service.dart';
 import 'package:pms_app/features/profile/data/models/editable_profile_model.dart';
 
-/// Reads/writes the same cached-profile JSON blob that `auth`'s
-/// onboarding flow writes (`LocalStorageService.cachedUserProfileJson`).
-/// Deliberately merges rather than overwrites on save, so fields this
-/// module doesn't know about (e.g. onboarding's `gender`/`location`)
-/// are preserved instead of being dropped.
 abstract class ProfileLocalDataSource {
   EditableProfileModel getCachedProfile();
   Future<void> saveProfile(EditableProfileModel profile);

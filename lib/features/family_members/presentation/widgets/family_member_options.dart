@@ -1,6 +1,3 @@
-/// Static picker options for the family-member form. No backend for
-/// this yet, so these are hand-picked common values — swap for a real
-/// lookup (e.g. localized relationship types) if one becomes available.
 class FamilyMemberOptions {
   FamilyMemberOptions._();
 

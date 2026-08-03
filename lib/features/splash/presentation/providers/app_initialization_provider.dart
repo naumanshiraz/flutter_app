@@ -5,15 +5,6 @@ import 'package:pms_app/core/services/logger_service.dart';
 import 'package:pms_app/features/splash/domain/entities/app_destination.dart';
 import 'package:pms_app/features/splash/presentation/providers/splash_providers.dart';
 
-/// Drives the entire app-initialization sequence:
-///  1. Enforce a minimum splash duration (avoids a jarring flash).
-///  2. Check connectivity (logged; non-blocking — app is offline-capable).
-///  3. Run the mocked auth-session check.
-///  4. Resolve to [AppDestination.login] or [AppDestination.home].
-///
-/// Exposed as an [AsyncNotifierProvider] so the router's `redirect` can
-/// simply watch `.isLoading` / `.value` / `.hasError` — no manual
-/// FutureBuilder wiring needed anywhere.
 class AppInitializationNotifier extends AsyncNotifier<AppDestination> {
   @override
   Future<AppDestination> build() async {

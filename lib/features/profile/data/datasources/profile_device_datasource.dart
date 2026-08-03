@@ -3,13 +3,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:pms_app/core/error/exceptions.dart';
 import 'package:pms_app/features/profile/domain/entities/editable_profile.dart';
 
-/// Wraps `image_picker` + `permission_handler`. Kept separate from
-/// [ProfileRemoteDataSource]/[ProfileLocalDataSource] since it talks to
-/// the device (camera/gallery), not the network or Hive.
 abstract class ProfileDeviceDataSource {
-  /// Requests the relevant permission, then launches the camera or
-  /// gallery per [source]. Returns the picked image's local file path.
-  /// Throws a [PermissionException] if the user denies access.
   Future<String> pickImage(ProfilePictureSource source);
 }
 

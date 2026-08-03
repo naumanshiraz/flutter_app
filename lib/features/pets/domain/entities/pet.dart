@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-/// A single pet — Species, Breed, Number of pets,
-/// as shown on "Do you have any pets?".
 class Pet extends Equatable {
   final String id;
   final String? species;

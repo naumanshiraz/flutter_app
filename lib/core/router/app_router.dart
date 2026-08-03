@@ -29,11 +29,13 @@ import 'package:pms_app/features/pets/domain/entities/pet.dart';
 import 'package:pms_app/features/pets/presentation/pages/edit_pet_page.dart';
 import 'package:pms_app/features/pets/presentation/pages/pets_page.dart';
 import 'package:pms_app/features/residency_terms/presentation/pages/term_screen_page.dart';
-import 'package:pms_app/features/main_home/presentation/pages/main_home_page.dart';
+import 'package:pms_app/features/main_home//presentation/pages/main_home_page.dart';
 import 'package:pms_app/features/property_detail/presentation/pages/property_detail_page.dart';
 import 'package:pms_app/features/invoice/presentation/pages/invoice_payment_page.dart';
 import 'package:pms_app/features/billing_account/presentation/pages/billing_account_page.dart';
 import 'package:pms_app/features/payment/presentation/pages/payment_page.dart';
+import 'package:pms_app/features/bank_transaction/presentation/pages/bank_transaction_page.dart';
+import 'package:pms_app/features/service_profile/presentation/pages/service_profile_page.dart';
 import 'package:pms_app/features/splash/domain/entities/app_destination.dart';
 import 'package:pms_app/features/splash/presentation/pages/splash_page.dart';
 import 'package:pms_app/features/splash/presentation/providers/app_initialization_provider.dart';
@@ -78,7 +80,11 @@ String? _routeGuard(BuildContext context, GoRouterState state, Ref ref) {
           currentPath == RouteNames.pets ||
           currentPath == RouteNames.editPet ||
           currentPath == RouteNames.residencyTerms ||
-          currentPath == RouteNames.propertyDetail;
+          currentPath == RouteNames.propertyDetail ||
+          currentPath == RouteNames.invoicePayment ||
+          currentPath == RouteNames.billingAccount ||
+          currentPath == RouteNames.payment ||
+          currentPath == RouteNames.bankTransaction;
 
       if (isSplashRoute) {
         return isAuthenticated ? RouteNames.home : RouteNames.login;
@@ -248,11 +254,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           return PropertyDetailPage(propertyId: propertyId);
         },
       ),
-       GoRoute(
+      GoRoute(
         path: RouteNames.invoicePayment,
         name: RouteNames.invoicePayment,
         builder: (context, state) {
-          // `extra` carries the invoice id tapped in InvoiceSheet.
           final invoiceId = state.extra as String? ?? 'inv-2024-05';
           return InvoicePaymentPage(invoiceId: invoiceId);
         },
@@ -266,6 +271,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: RouteNames.payment,
         name: RouteNames.payment,
         builder: (context, state) => const PaymentPage(),
+      ),
+      GoRoute(
+        path: RouteNames.bankTransaction,
+        name: RouteNames.bankTransaction,
+        builder: (context, state) => BankTransactionPage(paymentMethodId: state.extra as String? ?? 'trade_dev_bank'),
+      ),
+      GoRoute(
+        path: RouteNames.serviceProfile,
+        name: RouteNames.serviceProfile,
+        builder: (context, state) => ServiceProfilePage(serviceId: state.extra as String? ?? 'california_bakery'),
       ),
     ],
     errorBuilder: (context, state) => PlaceholderPage(

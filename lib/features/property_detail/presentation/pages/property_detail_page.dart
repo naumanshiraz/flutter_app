@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pms_app/core/router/route_names.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 import 'package:pms_app/features/property_detail/presentation/providers/property_detail_provider.dart';
 import 'package:pms_app/features/property_detail/presentation/widgets/action_buttons_row.dart';
-import 'package:pms_app/features/property_detail/presentation/widgets/invoice_sheet.dart';
+import 'package:pms_app/features/invoice/presentation/widgets/invoice_sheet.dart';
 import 'package:pms_app/features/property_detail/presentation/widgets/property_access_config_sheet.dart';
 import 'package:pms_app/features/property_detail/presentation/widgets/report_sheet.dart';
 import 'package:pms_app/features/property_detail/presentation/widgets/property_hero_header.dart';
@@ -107,6 +108,7 @@ class PropertyDetailPage extends ConsumerWidget {
               ServicesMasonryGrid(
                 services: state.services,
                 layout: detail.servicesLayout,
+                onServiceTap: (service) => context.push(RouteNames.serviceProfile, extra: service.id),
               ),
             SizedBox(height: 16.h),
           ],

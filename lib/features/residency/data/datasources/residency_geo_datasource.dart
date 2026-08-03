@@ -1,14 +1,3 @@
-/// **There is no geo/places backend yet.** This is a small hand-built
-/// mock of the address hierarchy shown in the design (Mongolia /
-/// Ulaanbaatar / Khan Uul / 15th khoroo / Gerlug Vista), deep enough to
-/// demonstrate real cascading-selection behavior. Every other country
-/// falls back to a single generic entry per level.
-///
-/// To go live: replace this whole class with a real
-/// `ResidencyRemoteDataSource` that calls a geo/places API — the
-/// [ResidencyFormNotifier] that consumes this only calls plain
-/// synchronous methods, so the swap is a small, contained change; wrap
-/// these calls in `Future`s at that point if the real API is async.
 abstract class ResidencyGeoDataSource {
   List<String> countries();
   List<String> citiesFor(String country);

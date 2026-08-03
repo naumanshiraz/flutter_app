@@ -3,9 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 
-/// Label-above-input field with a small-radius rounded rectangle,
-/// matching the Edit Profile PDF's boxier style (distinct from the
-/// full-pill `AppTextField` used on Login/Onboarding).
 class LabeledFormField extends StatelessWidget {
   final String label;
   final TextEditingController controller;

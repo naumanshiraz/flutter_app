@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 
-/// Reusable brand mark: two interlocking rounded parallelograms
-/// (black + orange), matching the geometric logo shown in the PDF.
-/// Implemented with `CustomPainter` so no binary asset is required and
-/// the mark stays crisp at any size.
 class SplashLogo extends StatelessWidget {
   final double size;
 
@@ -40,7 +36,6 @@ class _LogoPainter extends CustomPainter {
     final w = size.width;
     final h = size.height;
 
-    // Back parallelogram (black) — offset up-right.
     final backPath = Path()
       ..moveTo(w * 0.30, h * 0.10)
       ..lineTo(w * 0.95, h * 0.10)
@@ -48,7 +43,6 @@ class _LogoPainter extends CustomPainter {
       ..lineTo(w * 0.05, h * 0.55)
       ..close();
 
-    // Front parallelogram (orange) — offset down-left, overlapping.
     final frontPath = Path()
       ..moveTo(w * 0.05, h * 0.45)
       ..lineTo(w * 0.70, h * 0.45)

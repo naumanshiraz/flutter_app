@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:pms_app/core/error/exceptions.dart';
 import 'package:pms_app/features/main_home/data/models/control_model.dart';
 
-/// Remote datasource interface. Currently mocked (no backend).
 abstract class MainHomeRemoteDataSource {
   Future<List<ControlModel>> getControls({String? propertyId});
   Future<void> toggleControl(String id, bool newState);

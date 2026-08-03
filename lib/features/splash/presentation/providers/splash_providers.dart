@@ -6,9 +6,6 @@ import 'package:pms_app/features/splash/data/repositories/auth_repository_impl.d
 import 'package:pms_app/features/splash/domain/repositories/auth_repository.dart';
 import 'package:pms_app/features/splash/domain/usecases/check_auth_session_usecase.dart';
 
-/// Feature-scoped DI graph for the Splash / App-Initialization module.
-/// Presentation only ever reads [checkAuthSessionUseCaseProvider].
-
 final authLocalDataSourceProvider = Provider<AuthLocalDataSource>((ref) {
   return AuthLocalDataSourceImpl(
     secureStorage: ref.watch(secureStorageServiceProvider),

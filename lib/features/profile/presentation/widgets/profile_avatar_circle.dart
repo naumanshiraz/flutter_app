@@ -5,11 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 
-/// Shows the picked local avatar image (`Image.file`) if one exists,
-/// otherwise the initials placeholder — used by both the Profile
-/// Picture and Edit Profile screens. Deliberately separate from Home's
-/// `CachedNetworkImage`-based avatar since this one displays a local
-/// device file path, not a remote URL.
 class ProfileAvatarCircle extends StatelessWidget {
   final String? avatarPath;
   final String initials;

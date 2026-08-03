@@ -4,8 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:pms_app/core/error/exceptions.dart';
 import 'package:pms_app/features/main_home/data/models/visitor_model.dart';
 
-/// Remote datasource interface for visitor schedules.
-/// Currently mocked (no real backend).
 abstract class VisitorRemoteDataSource {
   Future<List<VisitorModel>> getSchedules();
   Future<void> addOrUpdateSchedule(VisitorModel model);

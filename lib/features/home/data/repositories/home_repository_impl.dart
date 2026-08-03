@@ -7,8 +7,6 @@ import 'package:pms_app/features/home/domain/entities/profile_summary.dart';
 import 'package:pms_app/features/home/domain/entities/property_listing.dart';
 import 'package:pms_app/features/home/domain/repositories/home_repository.dart';
 
-/// Demo fallback shown only if the user logged in without ever going
-/// through sign-up onboarding (so there's no cached profile to show).
 const ProfileSummary _kDemoProfile = ProfileSummary(
   name: 'Narandelger Dashdorj',
   email: 'naradee@gmail.com',

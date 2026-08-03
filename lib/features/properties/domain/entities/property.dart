@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-/// A single property/unit within the user's residency — Suite, Floor,
-/// Type, Building, as shown on "Please specify your property".
 class Property extends Equatable {
   final String id;
   final String suite;

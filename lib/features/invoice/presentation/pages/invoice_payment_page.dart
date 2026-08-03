@@ -26,15 +26,17 @@ class InvoicePaymentPage extends ConsumerWidget {
           children: [
             Padding(
               padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 8.h),
-              child: Stack(
-                alignment: Alignment.center,
+              child: Row(
                 children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: IconButton(onPressed: () => Navigator.of(context).pop(), icon: const Icon(Icons.close)),
+                  IconButton(onPressed: () => Navigator.of(context).pop(), icon: const Icon(Icons.close)),
+                  Expanded(
+                    child: Text(
+                      state.detail?.label ?? 'Invoice',
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700, fontSize: 15.sp),
+                    ),
                   ),
-                  Text(state.detail?.label ?? 'Invoice',
-                      style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700, fontSize: 15.sp)),
+                  SizedBox(width: 48.w),
                 ],
               ),
             ),
