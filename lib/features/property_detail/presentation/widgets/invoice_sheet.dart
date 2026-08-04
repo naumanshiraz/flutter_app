@@ -21,7 +21,10 @@ class InvoiceSheet extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: AppColors.background,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24.r))),
+      elevation: 0, // Remove shadow
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+      ),
       builder: (context) => const InvoiceSheet(),
     );
   }
@@ -54,23 +57,27 @@ class InvoiceSheet extends StatelessWidget {
                   child: ListView.separated(
                     controller: scrollController,
                     itemCount: _invoices.length,
-                    separatorBuilder: (context, index) => const Divider(height: 20, color: AppColors.border),
+                    separatorBuilder: (_, __) => SizedBox(height: 10.h),
                     itemBuilder: (context, index) => InkWell(
                       onTap: () => _openPayment(context, _invoices[index].id),
-                      child: _buildRow(_invoices[index]),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 4.h),
+                        child: _buildRow(_invoices[index]),
+                      ),
                     ),
-                  ),
+                  )
                 ),
                 SizedBox(height: 12.h),
                 Center(
                   child: SizedBox(
                     width: 120.w,
-                    child: OutlinedButton(
+                     child: ElevatedButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: AppColors.border),
-                        padding: EdgeInsets.symmetric(vertical: 12.h),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.r)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.textGrey,
+                        surfaceTintColor: AppColors.background,
+                        padding: EdgeInsets.symmetric(vertical: 5.h),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
                       ),
                       child: Text('Close', style: AppTextStyles.buttonSecondary.copyWith(color: AppColors.textPrimary)),
                     ),

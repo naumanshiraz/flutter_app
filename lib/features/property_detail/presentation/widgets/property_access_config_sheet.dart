@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
+import 'package:pms_app/features/property_detail/presentation/widgets/access_management_sheet.dart';
+import 'package:pms_app/features/property_detail/presentation/widgets/residential_information_sheet.dart';
 
 class PropertyAccessConfigSheet extends StatelessWidget {
   const PropertyAccessConfigSheet({super.key});
@@ -38,10 +40,18 @@ class PropertyAccessConfigSheet extends StatelessWidget {
                   child: ListView(
                     controller: scrollController,
                     children: [
-                      _row('Access management'),
-                      const Divider(height: 20, color: AppColors.border),
-                      _row('Residential information'),
-                      const Divider(height: 20, color: AppColors.border),
+                      GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () => AccessManagementSheet.show(context),
+                        child: _row('Access management'),
+                      ),
+                      SizedBox(height: 20),
+                      GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () => ResidentialInformationSheet.show(context),
+                        child: _row('Residential information'),
+                      ),
+                      SizedBox(height: 20),
                       _row('Property management agreement', showDownload: true),
                     ],
                   ),
@@ -49,13 +59,14 @@ class PropertyAccessConfigSheet extends StatelessWidget {
                 SizedBox(height: 12.h),
                 Center(
                   child: SizedBox(
-                    width: 120.w,
-                    child: OutlinedButton(
+                    width: 100.w,
+                    child: ElevatedButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: AppColors.border),
-                        padding: EdgeInsets.symmetric(vertical: 12.h),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.r)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.textGrey,
+                        surfaceTintColor: AppColors.background,
+                        padding: EdgeInsets.symmetric(vertical: 5.h),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
                       ),
                       child: Text('Close', style: AppTextStyles.buttonSecondary.copyWith(color: AppColors.textPrimary)),
                     ),

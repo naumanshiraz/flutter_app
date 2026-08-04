@@ -40,7 +40,7 @@ class ReportSheet extends StatelessWidget {
                   child: ListView.separated(
                     controller: scrollController,
                     itemCount: _reports.length,
-                    separatorBuilder: (context, index) => const Divider(height: 20, color: AppColors.border),
+                    separatorBuilder: (context, index) => const SizedBox(height: 20),
                     itemBuilder: (context, index) => Row(
                       children: [
                         Expanded(
@@ -56,12 +56,13 @@ class ReportSheet extends StatelessWidget {
                 Center(
                   child: SizedBox(
                     width: 120.w,
-                    child: OutlinedButton(
+                     child: ElevatedButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: AppColors.border),
-                        padding: EdgeInsets.symmetric(vertical: 12.h),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.r)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.textGrey,
+                        surfaceTintColor: AppColors.background,
+                        padding: EdgeInsets.symmetric(vertical: 5.h),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
                       ),
                       child: Text('Close', style: AppTextStyles.buttonSecondary.copyWith(color: AppColors.textPrimary)),
                     ),

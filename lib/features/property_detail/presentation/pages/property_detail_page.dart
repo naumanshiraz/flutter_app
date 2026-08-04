@@ -7,7 +7,7 @@ import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 import 'package:pms_app/features/property_detail/presentation/providers/property_detail_provider.dart';
 import 'package:pms_app/features/property_detail/presentation/widgets/action_buttons_row.dart';
-import 'package:pms_app/features/invoice/presentation/widgets/invoice_sheet.dart';
+import 'package:pms_app/features/property_detail/presentation/widgets/invoice_sheet.dart';
 import 'package:pms_app/features/property_detail/presentation/widgets/property_access_config_sheet.dart';
 import 'package:pms_app/features/property_detail/presentation/widgets/report_sheet.dart';
 import 'package:pms_app/features/property_detail/presentation/widgets/property_hero_header.dart';
@@ -77,7 +77,7 @@ class PropertyDetailPage extends ConsumerWidget {
                 ),
                 InkWell(
                   onTap: () => PropertyAccessConfigSheet.show(context),
-                  child: Icon(Icons.settings_outlined, size: 20.sp, color: AppColors.textSecondary),
+                  child: Icon(Icons.settings_outlined, size: 20.sp, color: AppColors.textBlack),
                 ),
               ],
             ),
