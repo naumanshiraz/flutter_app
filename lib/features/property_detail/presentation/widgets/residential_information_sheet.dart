@@ -64,7 +64,11 @@ class ResidentialInformationSheet extends StatelessWidget {
                     ),
                     SizedBox(height: 12.h),
                     _sectionLabel('Account'),
-                    _row('Admin account modification'),
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => _navigate(context, RouteNames.adminAccountModification),
+                      child: _row('Admin account modification'),
+                    ),
                     _row('Account termination'),
                   ],
                 ),

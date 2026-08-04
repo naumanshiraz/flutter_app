@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 /// Distinguishes an OTP requested to sign an *existing* user in from one
 /// requested to verify a *new* user during sign-up — the verification
 /// screen is shared, but what happens after Confirm differs.
-enum OtpPurpose { login, signup }
+enum OtpPurpose { login, signup, adminAccountModification }
 
 enum IdentifierType { email, phone }
 

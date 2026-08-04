@@ -10,9 +10,6 @@ import 'package:pms_app/features/auth/presentation/providers/signup_profile_prov
 import 'package:pms_app/core/widgets/step_scaffold.dart';
 import 'package:pms_app/features/splash/presentation/providers/app_initialization_provider.dart';
 
-/// Locations are a static list for now (no backend / places API yet) —
-/// swap `_kLocations` for a real lookup once one exists; nothing else
-/// on this page needs to change.
 const List<String> _kLocations = [
   'United States',
   'United Kingdom',

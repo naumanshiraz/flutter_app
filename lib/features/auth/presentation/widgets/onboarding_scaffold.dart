@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 
-/// The 5-dot step indicator shown at the top of every onboarding screen
-/// ("What is your email?", "...phone number?", "...name?", "...gender?",
-/// "Where do you live?").
 class OnboardingProgressDots extends StatelessWidget {
   final int totalSteps;
   final int currentStep; // 0-based

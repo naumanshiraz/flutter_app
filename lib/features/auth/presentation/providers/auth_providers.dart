@@ -8,9 +8,6 @@ import 'package:pms_app/features/auth/domain/usecases/complete_auth_usecases.dar
 import 'package:pms_app/features/auth/domain/usecases/request_otp_usecase.dart';
 import 'package:pms_app/features/auth/domain/usecases/verify_otp_usecase.dart';
 
-/// Feature-scoped DI graph for Login / OTP / Sign-up-onboarding.
-/// Presentation only ever reads the four `*UseCaseProvider`s below.
-
 final authLocalDataSourceProvider = Provider<AuthLocalDataSource>((ref) {
   return AuthLocalDataSourceImpl(
     secureStorage: ref.watch(secureStorageServiceProvider),

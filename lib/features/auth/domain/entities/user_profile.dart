@@ -2,9 +2,6 @@ import 'package:equatable/equatable.dart';
 
 enum Gender { female, male, other }
 
-/// The profile collected across the 5 onboarding steps (email, phone,
-/// name + birthdate, gender, location). Immutable — every step produces
-/// a new copy via [copyWith].
 class UserProfile extends Equatable {
   final String email;
   final String phone;

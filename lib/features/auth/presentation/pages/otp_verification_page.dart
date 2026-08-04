@@ -14,10 +14,6 @@ import 'package:pms_app/features/auth/presentation/providers/otp_verification_pr
 import 'package:pms_app/features/auth/presentation/widgets/otp_input_boxes.dart';
 import 'package:pms_app/features/splash/presentation/providers/app_initialization_provider.dart';
 
-/// Matches the PDF's OTP screens: countdown timer, masked
-/// email/phone target, 6-box code entry, Confirm CTA, and a
-/// "Click to re-send" link that shows the Success! modal once a fresh
-/// code goes out.
 class OtpVerificationPage extends ConsumerWidget {
   final OtpVerificationArgs args;
 
@@ -50,6 +46,13 @@ class OtpVerificationPage extends ConsumerWidget {
           // ignore: unused_result
           ref.read(appInitializationProvider.notifier).refresh();
           if (context.mounted) context.go(RouteNames.home);
+        } else if (next.purpose == OtpPurpose.adminAccountModification) {
+          await SuccessDialog.show(
+            context,
+            title: 'Success!',
+            message: 'Information have been saved.',
+          );
+          if (context.mounted) context.go(RouteNames.propertyDetail);
         } else {
           if (context.mounted) context.go(RouteNames.onboardingEmail);
         }

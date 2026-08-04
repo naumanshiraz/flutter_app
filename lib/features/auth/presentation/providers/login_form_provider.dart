@@ -3,9 +3,6 @@ import 'package:pms_app/core/utils/validators.dart';
 import 'package:pms_app/features/auth/domain/entities/otp_session.dart';
 import 'package:pms_app/features/auth/presentation/providers/auth_providers.dart';
 
-/// UI state for the Login screen (phone/email entry). Deliberately a
-/// plain immutable class rather than Freezed — it's presentation-only
-/// state with a single `copyWith`, so the codegen overhead isn't worth it.
 class LoginFormState {
   final String identifier;
   final bool isSubmitting;

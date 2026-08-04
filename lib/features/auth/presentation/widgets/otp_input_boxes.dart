@@ -4,9 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 
-/// Six individually-boxed digit inputs, matching the OTP screens in the
-/// PDF. Handles auto-advance on entry, auto-back on delete, and reports
-/// the assembled code via [onChanged]/[onCompleted].
 class OtpInputBoxes extends StatefulWidget {
   static const int length = 6;
 

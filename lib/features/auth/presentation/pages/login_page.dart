@@ -14,11 +14,6 @@ import 'package:pms_app/features/auth/presentation/providers/login_form_provider
 import 'package:pms_app/features/auth/presentation/providers/otp_verification_provider.dart';
 import 'package:pms_app/features/splash/presentation/widgets/splash_logo.dart';
 
-/// Matches the PDF's first onboarding frame: logo + app name, an
-/// email/phone field, and Log in / Sign up CTAs, both of which request
-/// an OTP for the same identifier — the OTP screen decides afterwards
-/// whether to go straight Home (Log in) or into profile onboarding
-/// (Sign up) based on the `purpose` it was launched with.
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
