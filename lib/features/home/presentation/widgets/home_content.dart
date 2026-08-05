@@ -63,10 +63,7 @@ class HomeContent extends ConsumerWidget {
             sliver: SliverToBoxAdapter(
               child: SearchAddBar(
                 onSearchChanged: listingsNotifier.onSearchChanged,
-                onAddTap: () {
-                  // Add-listing flow isn't built yet — wired for the
-                  // module that owns it.
-                },
+                onAddTap: () => context.push(RouteNames.properties)
               ),
             ),
           ),
@@ -100,9 +97,9 @@ class HomeContent extends ConsumerWidget {
               sliver: SliverGrid(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  crossAxisSpacing: 16.w,
+                  crossAxisSpacing: 18.w,
                   mainAxisSpacing: 20.h,
-                  childAspectRatio: 0.78,
+                  childAspectRatio: 1.08,
                 ),
                 delegate: SliverChildBuilderDelegate(
                   (context, index) => PropertyCard(

@@ -20,7 +20,7 @@ class PropertyCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AspectRatio(
-            aspectRatio: 4 / 3,
+            aspectRatio: 4 / 2.5,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(16.r),
               child: CachedNetworkImage(

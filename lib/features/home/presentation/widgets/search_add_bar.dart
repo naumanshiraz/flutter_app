@@ -30,7 +30,7 @@ class SearchAddBar extends StatelessWidget {
                 prefixIcon: const Icon(Icons.search, color: AppColors.textSecondary),
                 contentPadding: EdgeInsets.symmetric(vertical: 12.h),
                 enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24.r),
+                  borderRadius: BorderRadius.circular(10.r),
                   borderSide: const BorderSide(color: AppColors.border),
                 ),
                 focusedBorder: OutlineInputBorder(
