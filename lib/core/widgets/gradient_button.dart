@@ -7,31 +7,38 @@ class GradientButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
   final bool isLoading;
+  final double? height;
+  final double? borderRadius;
 
   const GradientButton({
     super.key,
     required this.label,
     required this.onPressed,
     this.isLoading = false,
+    this.height,
+    this.borderRadius,
   });
 
   @override
   Widget build(BuildContext context) {
     final bool enabled = onPressed != null && !isLoading;
 
+    final buttonHeight = height ?? 56.h;
+    final radius = borderRadius ?? 28.r;
+
     return Opacity(
       opacity: enabled ? 1 : 0.5,
       child: Container(
-        height: 56.h,
+        height: buttonHeight,
         width: double.infinity,
         decoration: BoxDecoration(
           gradient: AppColors.primaryGradient,
-          borderRadius: BorderRadius.circular(28.r),
+          borderRadius: BorderRadius.circular(radius),
         ),
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            borderRadius: BorderRadius.circular(28.r),
+            borderRadius: BorderRadius.circular(radius),
             onTap: enabled ? onPressed : null,
             child: Center(
               child: isLoading

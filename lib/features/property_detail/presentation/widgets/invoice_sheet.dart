@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 import 'package:pms_app/features/invoice/presentation/pages/invoice_payment_page.dart';
+import 'package:pms_app/core/widgets/grey_button.dart';
 
 enum _InvoiceStatus { pending, overdue, none }
 
@@ -71,15 +72,11 @@ class InvoiceSheet extends StatelessWidget {
                 Center(
                   child: SizedBox(
                     width: 120.w,
-                     child: ElevatedButton(
+                     child: GreyButton(
+                      label: 'Close',
                       onPressed: () => Navigator.of(context).pop(),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.textGrey,
-                        surfaceTintColor: AppColors.background,
-                        padding: EdgeInsets.symmetric(vertical: 5.h),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
-                      ),
-                      child: Text('Close', style: AppTextStyles.buttonSecondary.copyWith(color: AppColors.textPrimary)),
+                      height: 44.h,
+                      borderRadius: 10.r,
                     ),
                   ),
                 ),

@@ -1,16 +1,9 @@
 import 'package:equatable/equatable.dart';
 
-/// Distinguishes an OTP requested to sign an *existing* user in from one
-/// requested to verify a *new* user during sign-up — the verification
-/// screen is shared, but what happens after Confirm differs.
-enum OtpPurpose { login, signup, adminAccountModification }
+enum OtpPurpose { login, signup, adminAccountModification, accountTermination }
 
 enum IdentifierType { email, phone }
 
-/// Domain entity describing a live (unexpired) OTP challenge. The actual
-/// numeric code is generated client-side today (no backend); see
-/// `OtpRemoteDataSource` for exactly where that will be replaced by a
-/// real `/auth/request-otp` call.
 class OtpSession extends Equatable {
   final String identifier;
   final IdentifierType identifierType;

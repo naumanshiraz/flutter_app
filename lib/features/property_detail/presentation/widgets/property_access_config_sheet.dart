@@ -4,6 +4,7 @@ import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 import 'package:pms_app/features/property_detail/presentation/widgets/access_management_sheet.dart';
 import 'package:pms_app/features/property_detail/presentation/widgets/residential_information_sheet.dart';
+import 'package:pms_app/core/widgets/grey_button.dart';
 
 class PropertyAccessConfigSheet extends StatelessWidget {
   const PropertyAccessConfigSheet({super.key});
@@ -60,15 +61,11 @@ class PropertyAccessConfigSheet extends StatelessWidget {
                 Center(
                   child: SizedBox(
                     width: 100.w,
-                    child: ElevatedButton(
+                    child: GreyButton(
+                      label: 'Close',
                       onPressed: () => Navigator.of(context).pop(),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.textGrey,
-                        surfaceTintColor: AppColors.background,
-                        padding: EdgeInsets.symmetric(vertical: 5.h),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
-                      ),
-                      child: Text('Close', style: AppTextStyles.buttonSecondary.copyWith(color: AppColors.textPrimary)),
+                      height: 44.h,
+                      borderRadius: 10.r,
                     ),
                   ),
                 ),

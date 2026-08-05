@@ -37,6 +37,7 @@ import 'package:pms_app/features/payment/presentation/pages/payment_page.dart';
 import 'package:pms_app/features/bank_transaction/presentation/pages/bank_transaction_page.dart';
 import 'package:pms_app/features/service_profile/presentation/pages/service_profile_page.dart';
 import 'package:pms_app/features/account_modification/presentation/pages/admin_account_modification_page.dart';
+import 'package:pms_app/features/account_termination/presentation/pages/account_termination_page.dart';
 import 'package:pms_app/features/splash/domain/entities/app_destination.dart';
 import 'package:pms_app/features/splash/presentation/pages/splash_page.dart';
 import 'package:pms_app/features/splash/presentation/providers/app_initialization_provider.dart';
@@ -87,7 +88,8 @@ String? _routeGuard(BuildContext context, GoRouterState state, Ref ref) {
           currentPath == RouteNames.payment ||
           currentPath == RouteNames.bankTransaction || 
           currentPath == RouteNames.serviceProfile ||
-          currentPath == RouteNames.adminAccountModification;
+          currentPath == RouteNames.adminAccountModification || 
+          currentPath == RouteNames.accountTermination;
 
       if (isSplashRoute) {
         return isAuthenticated ? RouteNames.home : RouteNames.login;
@@ -289,6 +291,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: RouteNames.adminAccountModification,
         name: RouteNames.adminAccountModification,
         builder: (context, state) => const AdminAccountModificationPage(),
+      ),
+      GoRoute(
+        path: RouteNames.accountTermination,
+        name: RouteNames.accountTermination,
+        builder: (context, state) => const AccountTerminationPage(),
       ),
     ],
     errorBuilder: (context, state) => PlaceholderPage(

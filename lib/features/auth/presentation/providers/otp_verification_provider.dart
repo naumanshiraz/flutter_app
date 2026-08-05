@@ -68,11 +68,13 @@ class OtpVerificationArgs {
   final String identifier;
   final IdentifierType identifierType;
   final OtpPurpose purpose;
+  final Map<String, String>? metadata;
 
   const OtpVerificationArgs({
     required this.identifier,
     required this.identifierType,
     required this.purpose,
+    this.metadata,
   });
 
   @override

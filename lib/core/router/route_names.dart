@@ -30,4 +30,5 @@ class RouteNames {
   static const String bankTransaction = '/main-home/payment/bank-transaction';
   static const String serviceProfile = '/main-home/service-profile';
   static const String adminAccountModification = '/main-home/property-detail/admin-account-modification';
+  static const String accountTermination = '/main-home/property-detail/account-termination';
 }

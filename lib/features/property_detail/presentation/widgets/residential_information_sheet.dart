@@ -5,8 +5,6 @@ import 'package:pms_app/core/router/route_names.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 
-/// Bottom sheet listing ownership/affiliate links and account actions.
-/// Opened from [PropertyAccessConfigSheet]'s "Residential information" row.
 class ResidentialInformationSheet extends StatelessWidget {
   const ResidentialInformationSheet({super.key});
 
@@ -69,7 +67,11 @@ class ResidentialInformationSheet extends StatelessWidget {
                       onTap: () => _navigate(context, RouteNames.adminAccountModification),
                       child: _row('Admin account modification'),
                     ),
-                    _row('Account termination'),
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => _navigate(context, RouteNames.accountTermination),
+                      child: _row('Account termination'),
+                    ),
                   ],
                 ),
               ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pms_app/core/di/injection.dart';
 import 'package:pms_app/core/router/route_names.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
@@ -9,6 +10,8 @@ import 'package:pms_app/core/utils/validators.dart';
 import 'package:pms_app/core/widgets/gradient_button.dart';
 import 'package:pms_app/core/widgets/legal_footer.dart';
 import 'package:pms_app/core/widgets/success_dialog.dart';
+import 'package:pms_app/features/account_modification/presentation/providers/account_modification_di_providers.dart';
+import 'package:pms_app/features/account_termination/presentation/providers/account_termination_di_providers.dart';
 import 'package:pms_app/features/auth/domain/entities/otp_session.dart';
 import 'package:pms_app/features/auth/presentation/providers/otp_verification_provider.dart';
 import 'package:pms_app/features/auth/presentation/widgets/otp_input_boxes.dart';
@@ -47,12 +50,45 @@ class OtpVerificationPage extends ConsumerWidget {
           ref.read(appInitializationProvider.notifier).refresh();
           if (context.mounted) context.go(RouteNames.home);
         } else if (next.purpose == OtpPurpose.adminAccountModification) {
+          final updateResult = await ref.read(updateAdminIdentifierUseCaseProvider)(
+            currentIdentifier: args.metadata?['currentIdentifier'] ?? '',
+            newIdentifier: args.metadata?['newIdentifier'] ?? args.identifier,
+          );
+          if (updateResult.isFailure) {
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(updateResult.failureOrNull?.message ?? 'Failed to save changes.')),
+              );
+            }
+            return;
+          }
           await SuccessDialog.show(
             context,
             title: 'Success!',
             message: 'Information have been saved.',
           );
           if (context.mounted) context.go(RouteNames.propertyDetail);
+        } else if (next.purpose == OtpPurpose.accountTermination) {
+          final terminateResult = await ref.read(terminateAccountUseCaseProvider)(
+            reason: args.metadata?['reason'] ?? '',
+            feedback: args.metadata?['feedback'] ?? '',
+          );
+          if (terminateResult.isFailure) {
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(terminateResult.failureOrNull?.message ?? 'Failed to terminate account.')),
+              );
+            }
+            return;
+          }
+          await ref.read(secureStorageServiceProvider).clearAll();
+          await ref.read(localStorageServiceProvider).clearUserData();
+          await SuccessDialog.show(
+            context,
+            title: 'Success!',
+            message: 'Account terminated.',
+          );
+          if (context.mounted) context.go(RouteNames.login);
         } else {
           if (context.mounted) context.go(RouteNames.onboardingEmail);
         }
@@ -109,6 +145,8 @@ class OtpVerificationPage extends ConsumerWidget {
                 label: 'Confirm',
                 isLoading: state.status == OtpVerifyStatus.verifying,
                 onPressed: state.code.length == 6 ? notifier.verify : null,
+                height: 44.h,
+                borderRadius: 10.r,
               ),
               SizedBox(height: 20.h),
               Center(

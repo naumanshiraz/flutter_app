@@ -84,6 +84,13 @@ class _MainHomePageState extends ConsumerState<MainHomePage> {
                           _sectionChip('Campus gates', selected: true),
                           _sectionChip('Elevator', selected: false),
                           _sectionChip('Vehicle', selected: false),
+                          _sectionChip(
+                            'Services', 
+                            selected: false,
+                            onTap: () => context.push(
+                              RouteNames.propertyDetail,
+                              extra: 'gerlug-vista',
+                            ),),
                         ],
                       ),
                     ),
@@ -107,15 +114,6 @@ class _MainHomePageState extends ConsumerState<MainHomePage> {
                               ),
                             ],
                           ),
-                        ),
-                        IconButton(
-                          // Opens the full Property Detail screen (hero
-                          // image, Report/Invoice, Available services).
-                          onPressed: () => context.push(
-                            RouteNames.propertyDetail,
-                            extra: 'gerlug-vista',
-                          ),
-                          icon: const Icon(Icons.settings_outlined),
                         ),
                       ],
                     ),
@@ -187,17 +185,29 @@ class _MainHomePageState extends ConsumerState<MainHomePage> {
             );
   }
 
-  Widget _sectionChip(String label, {bool selected = false}) {
-    return Container(
-      margin: EdgeInsets.only(right: 8.w),
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-      decoration: BoxDecoration(
-        color: selected ? AppColors.textBlack : AppColors.border,
-        borderRadius: BorderRadius.circular(10.r),
+  Widget _sectionChip(String label, {bool selected = false, VoidCallback? onTap}) {
+    return Padding(
+      padding: EdgeInsets.only(right: 8.w),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(10.r),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+            decoration: BoxDecoration(
+              color: selected ? AppColors.textBlack : AppColors.border,
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+            child: Text(
+              label,
+              style: TextStyle(
+                color: selected ? Colors.white : AppColors.textPrimary,
+              ),
+            ),
+          ),
+        ),
       ),
-      child: Text(label,
-          style: TextStyle(
-              color: selected ? Colors.white : AppColors.textPrimary)),
     );
   }
 }

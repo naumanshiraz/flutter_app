@@ -9,45 +9,61 @@ import 'package:pms_app/core/widgets/gradient_button.dart';
 import 'package:pms_app/features/auth/domain/entities/otp_session.dart';
 import 'package:pms_app/features/auth/presentation/providers/auth_providers.dart';
 import 'package:pms_app/features/auth/presentation/providers/otp_verification_provider.dart';
-import 'package:pms_app/features/profile/presentation/widgets/labeled_form_field.dart';
+import 'package:pms_app/features/profile/presentation/providers/profile_di_providers.dart';
 
-class AdminAccountModificationPage extends ConsumerStatefulWidget {
-  const AdminAccountModificationPage({super.key});
+const _reasons = [
+  'Transferred ownership',
+  'Moving out',
+  'No longer using the app',
+  'Other',
+];
+
+class AccountTerminationPage extends ConsumerStatefulWidget {
+  const AccountTerminationPage({super.key});
 
   @override
-  ConsumerState<AdminAccountModificationPage> createState() => _AdminAccountModificationPageState();
+  ConsumerState<AccountTerminationPage> createState() => _AccountTerminationPageState();
 }
 
-class _AdminAccountModificationPageState extends ConsumerState<AdminAccountModificationPage> {
-  final _currentController = TextEditingController();
-  final _newController = TextEditingController();
+class _AccountTerminationPageState extends ConsumerState<AccountTerminationPage> {
+  final _feedbackController = TextEditingController();
+  String _reason = _reasons.first;
   bool _isSubmitting = false;
   String? _errorMessage;
 
   @override
   void dispose() {
-    _currentController.dispose();
-    _newController.dispose();
+    _feedbackController.dispose();
     super.dispose();
   }
 
   Future<void> _onConfirm() async {
-    final newValue = _newController.text.trim();
-    if (newValue.isEmpty) {
-      setState(() => _errorMessage = 'Please enter a new phone number or email address.');
-      return;
-    }
     setState(() {
       _isSubmitting = true;
       _errorMessage = null;
     });
 
-    final identifierType = newValue.contains('@') ? IdentifierType.email : IdentifierType.phone;
+    final profileResult = await ref.read(getEditableProfileUseCaseProvider)();
+    final identifier = profileResult.when(
+      onSuccess: (profile) => profile.email.isNotEmpty ? profile.email : profile.phone,
+      onFailure: (_) => '',
+    );
+
+    if (identifier.isEmpty) {
+      if (!mounted) return;
+      setState(() {
+        _isSubmitting = false;
+        _errorMessage = 'Could not load your account details. Please try again.';
+      });
+      return;
+    }
+
+    final identifierType = identifier.contains('@') ? IdentifierType.email : IdentifierType.phone;
     final useCase = ref.read(requestOtpUseCaseProvider);
     final result = await useCase(
-      identifier: newValue,
+      identifier: identifier,
       identifierType: identifierType,
-      purpose: OtpPurpose.adminAccountModification,
+      purpose: OtpPurpose.accountTermination,
     );
 
     if (!mounted) return;
@@ -58,12 +74,12 @@ class _AdminAccountModificationPageState extends ConsumerState<AdminAccountModif
         context.push(
           RouteNames.otpVerification,
           extra: OtpVerificationArgs(
-            identifier: newValue,
+            identifier: identifier,
             identifierType: identifierType,
-            purpose: OtpPurpose.adminAccountModification,
+            purpose: OtpPurpose.accountTermination,
             metadata: {
-              'currentIdentifier': _currentController.text.trim(),
-              'newIdentifier': newValue,
+              'reason': _reason,
+              'feedback': _feedbackController.text.trim(),
             },
           ),
         );
@@ -90,7 +106,7 @@ class _AdminAccountModificationPageState extends ConsumerState<AdminAccountModif
                   ),
                   Expanded(
                     child: Text(
-                      'Admin account modification',
+                      'Account termination',
                       textAlign: TextAlign.center,
                       style: AppTextStyles.pageTitle.copyWith(fontSize: 16.sp),
                     ),
@@ -100,25 +116,37 @@ class _AdminAccountModificationPageState extends ConsumerState<AdminAccountModif
               ),
               SizedBox(height: 8.h),
               Text(
-                'Keep your private data secure. As you intend to pass on your '
-                'admin rights, please ensure the accuracy of the following '
-                'information.',
+                "Please let us know why you're terminating your account. "
+                'Your feedback is essential for us to enhance our service.',
                 textAlign: TextAlign.center,
                 style: AppTextStyles.bodySecondary.copyWith(fontSize: 12.sp),
               ),
               SizedBox(height: 24.h),
-              LabeledFormField(
-                label: 'Your phone number or email address',
-                controller: _currentController,
-                hintText: 'dtulgabtr@gmail.com',
-                keyboardType: TextInputType.emailAddress,
+              Text('Reason', style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w600, fontSize: 14.sp)),
+              SizedBox(height: 8.h),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 12.w),
+                decoration: BoxDecoration(border: Border.all(color: AppColors.border), borderRadius: BorderRadius.circular(10.r)),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: _reason,
+                    isExpanded: true,
+                    icon: Icon(Icons.keyboard_arrow_down, color: AppColors.textSecondary, size: 20.sp),
+                    items: _reasons.map((r) => DropdownMenuItem(value: r, child: Text(r))).toList(),
+                    onChanged: (value) => setState(() => _reason = value ?? _reason),
+                  ),
+                ),
               ),
               SizedBox(height: 16.h),
-              LabeledFormField(
-                label: 'New phone number or email address',
-                controller: _newController,
-                hintText: 'internine@gmail.com',
-                keyboardType: TextInputType.emailAddress,
+              TextField(
+                controller: _feedbackController,
+                maxLines: 4,
+                decoration: InputDecoration(
+                  hintText: 'Tell us about your experience as a resident at this property.',
+                  hintStyle: AppTextStyles.bodySecondary.copyWith(fontSize: 13.sp),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.r), borderSide: BorderSide(color: AppColors.border)),
+                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10.r), borderSide: BorderSide(color: AppColors.border)),
+                ),
               ),
               if (_errorMessage != null) ...[
                 SizedBox(height: 12.h),

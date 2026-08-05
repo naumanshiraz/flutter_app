@@ -5,6 +5,7 @@ import 'package:pms_app/core/router/route_names.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 import 'package:pms_app/core/widgets/settings_sheet.dart';
+import 'package:pms_app/core/widgets/grey_button.dart';
 
 class MenuSheet extends StatelessWidget {
   const MenuSheet({super.key});
@@ -59,14 +60,11 @@ class MenuSheet extends StatelessWidget {
             Center(
               child: SizedBox(
                 width: 120.w,
-                child: OutlinedButton(
+                child: GreyButton(
+                  label: 'Close',
                   onPressed: () => Navigator.of(context).pop(),
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: AppColors.border),
-                    padding: EdgeInsets.symmetric(vertical: 12.h),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.r)),
-                  ),
-                  child: Text('Close', style: AppTextStyles.buttonSecondary.copyWith(color: AppColors.textPrimary)),
+                  height: 44.h,
+                  borderRadius: 10.r,
                 ),
               ),
             ),
