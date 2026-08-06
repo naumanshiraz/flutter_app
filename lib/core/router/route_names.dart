@@ -10,6 +10,10 @@ class RouteNames {
   static const String onboardingGender = '/onboarding/gender';
   static const String onboardingLocation = '/onboarding/location';
   static const String home = '/home';
+  static const String chat = '/home/chat';
+  static const String chatAnnouncement = '/home/chat/announcement';
+  static const String chatPostDetail = '/home/chat/announcement/post';
+  static const String chatPublicGroup = '/home/chat/public';
   static const String editProfile = '/profile/edit';
   static const String profilePicture = '/profile/picture';
   static const String residencyIdentification = '/profile/residency';

@@ -4,25 +4,60 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
+import 'package:pms_app/core/widgets/bottom_nav_bar.dart';
+import 'package:pms_app/core/widgets/placeholder_page.dart';
+import 'package:pms_app/features/chat/presentation/pages/chat_list_page.dart';
 import 'package:pms_app/features/service_profile/domain/entities/service_profile.dart';
 import 'package:pms_app/features/service_profile/presentation/providers/service_profile_provider.dart';
 import 'package:pms_app/features/profile/presentation/providers/edit_profile_provider.dart';
 import 'package:pms_app/features/service_profile/presentation/widgets/reply_sheet.dart';
 import 'package:pms_app/features/service_profile/presentation/widgets/add_comment_sheet.dart';
 
-class ServiceProfilePage extends ConsumerWidget {
+class ServiceProfilePage extends ConsumerStatefulWidget {
   final String serviceId;
 
   const ServiceProfilePage({super.key, required this.serviceId});
 
+    @override
+  ConsumerState<ServiceProfilePage> createState() => _ServiceProfilePageState();
+}
+
+class _ServiceProfilePageState extends ConsumerState<ServiceProfilePage> {
+  int _selectedIndex = 0;
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(serviceProfileNotifierProvider(serviceId));
-    final notifier = ref.read(serviceProfileNotifierProvider(serviceId).notifier);
+  
+  Widget build(BuildContext context) {
+    final state = ref.watch(serviceProfileNotifierProvider(widget.serviceId));
+    final notifier = ref.read(serviceProfileNotifierProvider(widget.serviceId).notifier);
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: SafeArea(child: _buildBody(context, state, notifier, ref.watch(editProfileProvider).profile.initials)),
+      body: SafeArea(
+        bottom: false,
+        child: IndexedStack(
+          index: _selectedIndex,
+          children: [
+            _buildBody(context, state, notifier, ref.watch(editProfileProvider).profile.initials),
+            const ChatListPage(),
+            const PlaceholderPage(
+              title: 'Cart',
+              routeName: '/main-home/service-profile (tab: cart)',
+            ),
+            const PlaceholderPage(
+              title: 'Community',
+              routeName: '/main-home/service-profile (tab: community)',
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: SafeArea(
+        top: false,
+        child: BottomNavBar(
+          selectedIndex: _selectedIndex,
+          onTap: (index) => setState(() => _selectedIndex = index),
+        ),
+      ),
     );
   }
 
@@ -100,7 +135,7 @@ class ServiceProfilePage extends ConsumerWidget {
                   CircleAvatar(
                     radius: 18.r,
                     backgroundColor: AppColors.border,
-                    child: Text(profile.name.substring(0, 2).toUpperCase(), style: AppTextStyles.caption),
+                    child: Text(profile.name.substring(0, 2).toUpperCase(), style: AppTextStyles.avatarInitials),
                   ),
                   SizedBox(width: 10.w),
                   Expanded(
@@ -204,13 +239,13 @@ class ServiceProfilePage extends ConsumerWidget {
               for (final comment in profile.comments) _commentRow(context, comment),
               SizedBox(height: 16.h),
               InkWell(
-                onTap: () => AddCommentSheet.show(context, serviceId: serviceId),
+                onTap: () => AddCommentSheet.show(context, serviceId: widget.serviceId),
                 child: Row(
                 children: [
                   CircleAvatar(
                     radius: 16.r,
                     backgroundColor: AppColors.border,
-                    child: Text(currentUserInitials, style: AppTextStyles.caption),
+                    child: Text(currentUserInitials, style: AppTextStyles.avatarInitials),
                   ),
                   SizedBox(width: 12.w),
                   Expanded(
@@ -263,7 +298,7 @@ class ServiceProfilePage extends ConsumerWidget {
             backgroundColor: AppColors.border,
             child: Text(
               comment.authorInitial,
-              style: AppTextStyles.caption,
+              style: AppTextStyles.avatarInitials,
             ),
           ),
           SizedBox(width: 10.w),
@@ -286,7 +321,7 @@ class ServiceProfilePage extends ConsumerWidget {
                 InkWell(
                   onTap: () => ReplySheet.show(
                     context,
-                    serviceId: serviceId,
+                    serviceId: widget.serviceId,
                     commentId: comment.id,
                     authorName: comment.authorName,
                   ),
@@ -314,7 +349,7 @@ class ServiceProfilePage extends ConsumerWidget {
                 backgroundColor: AppColors.border,
                 child: Text(
                   reply.authorInitial,
-                  style: AppTextStyles.caption,
+                  style: AppTextStyles.avatarInitials,
                 ),
               ),
               SizedBox(width: 10.w),

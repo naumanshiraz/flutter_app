@@ -11,8 +11,10 @@ import 'package:pms_app/core/widgets/placeholder_page.dart';
 import 'package:pms_app/features/main_home/presentation/widgets/visitor_vehicle_signup_card.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pms_app/core/router/route_names.dart';
+import 'package:pms_app/core/utils/greeting.dart';
 import 'package:pms_app/core/widgets/menu_sheet.dart';
 import 'package:pms_app/features/activity_log/presentation/pages/activity_log_page.dart';
+import 'package:pms_app/features/chat/presentation/widgets/chat_conversations_view.dart';
 
 class MainHomePage extends ConsumerStatefulWidget {
   final String? propertyId;
@@ -37,7 +39,7 @@ class _MainHomePageState extends ConsumerState<MainHomePage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         foregroundColor: AppColors.textPrimary,
-        title: Text('Good morning!', style: AppTextStyles.pageTitle),
+        title: Text(timeOfDayGreeting(), style: AppTextStyles.pageTitle),
         actions: [
           IconButton(
               onPressed: () => ActivityLogSheet.show(context),
@@ -49,7 +51,7 @@ class _MainHomePageState extends ConsumerState<MainHomePage> {
         index: _selectedIndex,
         children: [
           _buildMainHomeTab(state, notifier),
-          const PlaceholderPage(title: 'Chat', routeName: '/main-home (tab: chat)'),
+          const ChatConversationsView(),
           const PlaceholderPage(title: 'Cart', routeName: '/main-home (tab: cart)'),
           const PlaceholderPage(title: 'Community', routeName: '/main-home (tab: community)'),
         ],

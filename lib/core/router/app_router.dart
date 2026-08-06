@@ -12,6 +12,10 @@ import 'package:pms_app/features/auth/presentation/pages/onboarding_phone_page.d
 import 'package:pms_app/features/auth/presentation/pages/onboarding_profile_page.dart';
 import 'package:pms_app/features/auth/presentation/pages/otp_verification_page.dart';
 import 'package:pms_app/features/auth/presentation/providers/otp_verification_provider.dart';
+import 'package:pms_app/features/chat/presentation/pages/chat_list_page.dart';
+import 'package:pms_app/features/chat/presentation/pages/announcement_feed_page.dart';
+import 'package:pms_app/features/chat/presentation/pages/post_detail_page.dart';
+import 'package:pms_app/features/chat/presentation/pages/public_chat_page.dart';
 import 'package:pms_app/features/family_members/domain/entities/family_member.dart';
 import 'package:pms_app/features/family_members/presentation/pages/edit_family_member_page.dart';
 import 'package:pms_app/features/family_members/presentation/pages/family_members_page.dart';
@@ -70,6 +74,10 @@ String? _routeGuard(BuildContext context, GoRouterState state, Ref ref) {
       final isAuthenticated = destination == AppDestination.home;
       final isLoginRoute = currentPath == RouteNames.login;
       final isProtectedRoute = currentPath == RouteNames.home ||
+          currentPath == RouteNames.chat ||
+          currentPath == RouteNames.chatAnnouncement ||
+          currentPath == RouteNames.chatPostDetail ||
+          currentPath == RouteNames.chatPublicGroup ||
           currentPath == RouteNames.editProfile ||
           currentPath == RouteNames.profilePicture ||
           currentPath == RouteNames.residencyIdentification ||
@@ -167,6 +175,53 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: RouteNames.home,
         name: RouteNames.home,
         builder: (context, state) => const HomePage(),
+      ),
+      GoRoute(
+        path: RouteNames.chat,
+        name: RouteNames.chat,
+        builder: (context, state) => const ChatListPage(),
+      ),
+      GoRoute(
+        path: RouteNames.chatAnnouncement,
+        name: RouteNames.chatAnnouncement,
+        builder: (context, state) {
+          final args = state.extra as AnnouncementFeedArgs?;
+          if (args == null) {
+            return const PlaceholderPage(
+              title: 'Group Announcement',
+              routeName: RouteNames.chatAnnouncement,
+            );
+          }
+          return AnnouncementFeedPage(args: args);
+        },
+      ),
+      GoRoute(
+        path: RouteNames.chatPostDetail,
+        name: RouteNames.chatPostDetail,
+        builder: (context, state) {
+          final args = state.extra as PostDetailArgs?;
+          if (args == null) {
+            return const PlaceholderPage(
+              title: 'Group Announcement Comment',
+              routeName: RouteNames.chatPostDetail,
+            );
+          }
+          return PostDetailPage(args: args);
+        },
+      ),
+      GoRoute(
+        path: RouteNames.chatPublicGroup,
+        name: RouteNames.chatPublicGroup,
+        builder: (context, state) {
+          final args = state.extra as PublicChatArgs?;
+          if (args == null) {
+            return const PlaceholderPage(
+              title: 'Public Chat Group',
+              routeName: RouteNames.chatPublicGroup,
+            );
+          }
+          return PublicChatPage(args: args);
+        },
       ),
       GoRoute(
         path: RouteNames.editProfile,

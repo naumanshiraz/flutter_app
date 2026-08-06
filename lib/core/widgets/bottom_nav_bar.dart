@@ -46,7 +46,7 @@ class BottomNavBar extends StatelessWidget {
               child: Icon(
                 isSelected ? _filledIcons[index] : _outlineIcons[index],
                 size: 26.sp,
-                color: isSelected ? AppColors.textPrimary : AppColors.textSecondary,
+                color: isSelected ? AppColors.textPrimary : AppColors.textPrimary,
               ),
             ),
           );

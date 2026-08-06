@@ -5,6 +5,9 @@ import 'package:go_router/go_router.dart';
 import 'package:pms_app/core/router/route_names.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
+import 'package:pms_app/core/widgets/bottom_nav_bar.dart';
+import 'package:pms_app/core/widgets/placeholder_page.dart';
+import 'package:pms_app/features/chat/presentation/pages/chat_list_page.dart';
 import 'package:pms_app/features/property_detail/presentation/providers/property_detail_provider.dart';
 import 'package:pms_app/features/property_detail/presentation/widgets/action_buttons_row.dart';
 import 'package:pms_app/features/property_detail/presentation/widgets/invoice_sheet.dart';
@@ -13,20 +16,49 @@ import 'package:pms_app/features/property_detail/presentation/widgets/report_she
 import 'package:pms_app/features/property_detail/presentation/widgets/property_hero_header.dart';
 import 'package:pms_app/features/property_detail/presentation/widgets/services_masonry_grid.dart';
 
-class PropertyDetailPage extends ConsumerWidget {
+class PropertyDetailPage extends ConsumerStatefulWidget {
   final String propertyId;
 
   const PropertyDetailPage({super.key, required this.propertyId});
-
+  
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(propertyDetailNotifierProvider(propertyId));
-    final notifier = ref.read(propertyDetailNotifierProvider(propertyId).notifier);
+  ConsumerState<PropertyDetailPage> createState() => _PropertyDetailPageState();
+}
+
+class _PropertyDetailPageState extends ConsumerState<PropertyDetailPage> {
+  int _selectedIndex = 0;
+  
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(propertyDetailNotifierProvider(widget.propertyId));
+    final notifier = ref.read(propertyDetailNotifierProvider(widget.propertyId).notifier);
 
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
-        child: _buildBody(context, state, notifier),
+        bottom: false,
+        child: IndexedStack(
+          index: _selectedIndex,
+          children: [
+            _buildBody(context, state, notifier),
+            const ChatListPage(),
+            const PlaceholderPage(
+              title: 'Cart',
+              routeName: '/main-home/property-detail (tab: cart)',
+            ),
+            const PlaceholderPage(
+              title: 'Community',
+              routeName: '/main-home/property-detail (tab: community)',
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: SafeArea(
+        top: false,
+        child: BottomNavBar(
+          selectedIndex: _selectedIndex,
+          onTap: (index) => setState(() => _selectedIndex = index),
+        ),
       ),
     );
   }

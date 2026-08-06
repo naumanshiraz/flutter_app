@@ -1,0 +1,4 @@
+enum ConversationType {
+  announcement,
+  publicGroup,
+}

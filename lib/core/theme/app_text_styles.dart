@@ -65,4 +65,10 @@ class AppTextStyles {
         fontWeight: FontWeight.w400,
         color: AppColors.textSecondary,
       );
+
+  static TextStyle get avatarInitials => TextStyle(
+        fontSize: 12.sp,
+        fontWeight: FontWeight.w700,
+        color: AppColors.textBlack,
+      );    
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/widgets/bottom_nav_bar.dart';
 import 'package:pms_app/core/widgets/placeholder_page.dart';
+import 'package:pms_app/features/chat/presentation/pages/chat_list_page.dart';
 import 'package:pms_app/features/home/presentation/widgets/home_content.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,7 +17,7 @@ class _HomePageState extends State<HomePage> {
 
   static const List<Widget> _tabs = [
     HomeContent(),
-    PlaceholderPage(title: 'Chat', routeName: '/home (tab: chat)'),
+    ChatListPage(),
     PlaceholderPage(title: 'Cart', routeName: '/home (tab: cart)'),
     PlaceholderPage(title: 'Community', routeName: '/home (tab: community)'),
   ];
