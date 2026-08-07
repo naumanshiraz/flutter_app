@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:pms_app/core/router/route_names.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
+import 'package:pms_app/features/chat/presentation/pages/group_info_page.dart';
 import 'package:pms_app/features/chat/presentation/providers/chat_thread_provider.dart';
 import 'package:pms_app/features/chat/presentation/widgets/chat_composer.dart';
 import 'package:pms_app/features/chat/presentation/widgets/chat_message_bubble.dart';
@@ -11,11 +14,13 @@ import 'package:pms_app/features/chat/presentation/widgets/chat_thread_header.da
 class PublicChatArgs {
   final String conversationId;
   final String title;
+  final String avatarInitials;
   final int subscriberCount;
 
   const PublicChatArgs({
     required this.conversationId,
     required this.title,
+    this.avatarInitials = '',
     this.subscriberCount = 0,
   });
 }
@@ -33,7 +38,19 @@ class PublicChatPage extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: ChatThreadHeader(title: args.title, subscriberCount: args.subscriberCount),
+      appBar: ChatThreadHeader(
+        title: args.title,
+        subscriberCount: args.subscriberCount,
+        onInfoTap: () => context.push(
+          RouteNames.chatGroupInfo,
+          extra: GroupInfoArgs(
+            conversationId: args.conversationId,
+            title: args.title,
+            avatarInitials: args.avatarInitials,
+            subscriberCount: args.subscriberCount,
+          ),
+        ),
+    ),
       body: SafeArea(
         top: false,
         child: Column(

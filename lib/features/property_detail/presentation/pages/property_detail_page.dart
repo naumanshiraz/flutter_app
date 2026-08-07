@@ -57,7 +57,15 @@ class _PropertyDetailPageState extends ConsumerState<PropertyDetailPage> {
         top: false,
         child: BottomNavBar(
           selectedIndex: _selectedIndex,
-          onTap: (index) => setState(() => _selectedIndex = index),
+          onTap: (index) {
+            if (index == 0) {
+              context.go(RouteNames.mainHome);
+            } else if (index == 3) {
+              context.go(RouteNames.home);
+            } else {
+              setState(() => _selectedIndex = index);
+            }
+          },
         ),
       ),
     );

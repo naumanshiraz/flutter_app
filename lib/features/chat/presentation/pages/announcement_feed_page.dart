@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pms_app/core/router/route_names.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
+import 'package:pms_app/features/chat/presentation/pages/group_info_page.dart';
 import 'package:pms_app/features/chat/presentation/pages/post_detail_page.dart';
 import 'package:pms_app/features/chat/presentation/providers/announcement_feed_provider.dart';
 import 'package:pms_app/features/chat/presentation/widgets/announcement_post_card.dart';
@@ -13,11 +14,13 @@ import 'package:pms_app/features/chat/presentation/widgets/chat_thread_header.da
 class AnnouncementFeedArgs {
   final String conversationId;
   final String title;
+  final String avatarInitials;
   final int subscriberCount;
 
   const AnnouncementFeedArgs({
     required this.conversationId,
     required this.title,
+    this.avatarInitials = '',
     this.subscriberCount = 0,
   });
 }
@@ -34,7 +37,19 @@ class AnnouncementFeedPage extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: ChatThreadHeader(title: args.title, subscriberCount: args.subscriberCount),
+      appBar: ChatThreadHeader(
+        title: args.title, 
+        subscriberCount: args.subscriberCount,
+        onInfoTap: () => context.push(
+          RouteNames.chatGroupInfo,
+          extra: GroupInfoArgs(
+            conversationId: args.conversationId,
+            title: args.title,
+            avatarInitials: args.avatarInitials,
+            subscriberCount: args.subscriberCount,
+          ),
+        ),
+      ),
       body: SafeArea(
         top: false,
         child: _buildBody(context, state, notifier),

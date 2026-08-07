@@ -14,6 +14,7 @@ class RouteNames {
   static const String chatAnnouncement = '/home/chat/announcement';
   static const String chatPostDetail = '/home/chat/announcement/post';
   static const String chatPublicGroup = '/home/chat/public';
+  static const String chatGroupInfo = '/home/chat/group-info';
   static const String editProfile = '/profile/edit';
   static const String profilePicture = '/profile/picture';
   static const String residencyIdentification = '/profile/residency';

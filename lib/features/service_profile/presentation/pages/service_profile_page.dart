@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:go_router/go_router.dart';
+import 'package:pms_app/core/router/route_names.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 import 'package:pms_app/core/widgets/bottom_nav_bar.dart';
@@ -26,7 +28,6 @@ class _ServiceProfilePageState extends ConsumerState<ServiceProfilePage> {
   int _selectedIndex = 0;
 
   @override
-  
   Widget build(BuildContext context) {
     final state = ref.watch(serviceProfileNotifierProvider(widget.serviceId));
     final notifier = ref.read(serviceProfileNotifierProvider(widget.serviceId).notifier);
@@ -55,7 +56,15 @@ class _ServiceProfilePageState extends ConsumerState<ServiceProfilePage> {
         top: false,
         child: BottomNavBar(
           selectedIndex: _selectedIndex,
-          onTap: (index) => setState(() => _selectedIndex = index),
+          onTap: (index) {
+            if (index == 0) {
+              context.go(RouteNames.mainHome);
+            } else if (index == 3) {
+              context.go(RouteNames.home);
+            } else {
+              setState(() => _selectedIndex = index);
+            }
+          },
         ),
       ),
     );

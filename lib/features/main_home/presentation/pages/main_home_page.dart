@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
-import 'package:pms_app/core/theme/app_text_styles.dart';
-import 'package:pms_app/features/main_home/presentation/providers/main_home_provider.dart';
-import 'package:pms_app/features/main_home/presentation/widgets/control_card.dart';
-import 'package:pms_app/features/main_home/presentation/widgets/image_carousel.dart';
 import 'package:pms_app/core/widgets/bottom_nav_bar.dart';
 import 'package:pms_app/core/widgets/placeholder_page.dart';
-import 'package:pms_app/features/main_home/presentation/widgets/visitor_vehicle_signup_card.dart';
-import 'package:go_router/go_router.dart';
-import 'package:pms_app/core/router/route_names.dart';
-import 'package:pms_app/core/utils/greeting.dart';
-import 'package:pms_app/core/widgets/menu_sheet.dart';
-import 'package:pms_app/features/activity_log/presentation/pages/activity_log_page.dart';
 import 'package:pms_app/features/chat/presentation/widgets/chat_conversations_view.dart';
+import 'package:pms_app/features/home/presentation/widgets/home_content.dart';
+import 'package:pms_app/features/main_home/presentation/widgets/main_home_content_view.dart';
 
+/// The Main Home screen — also the shared bottom-nav shell used by every
+/// screen with a bottom nav. All four tabs are rendered inline (no
+/// cross-route navigation), so tapping Home/Chat/Cart/Community is always
+/// a plain, instant local tab switch:
+///  0 Home      -> [MainHomeContentView]
+///  1 Chat      -> [ChatConversationsView]
+///  2 Cart      -> placeholder (not built yet)
+///  3 Community -> [HomeContent] (Home Screen; Community isn't built yet)
 class MainHomePage extends ConsumerStatefulWidget {
   final String? propertyId;
 
@@ -28,186 +27,26 @@ class MainHomePage extends ConsumerStatefulWidget {
 class _MainHomePageState extends ConsumerState<MainHomePage> {
   int _selectedIndex = 0;
 
+  static const List<Widget> _tabs = [
+    MainHomeContentView(),
+    ChatConversationsView(),
+    PlaceholderPage(title: 'Cart', routeName: '/main-home (tab: cart)'),
+    HomeContent(),
+  ];
+
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(mainHomeNotifierProvider);
-    final notifier = ref.read(mainHomeNotifierProvider.notifier);
-
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        foregroundColor: AppColors.textPrimary,
-        title: Text(timeOfDayGreeting(), style: AppTextStyles.pageTitle),
-        actions: [
-          IconButton(
-              onPressed: () => ActivityLogSheet.show(context),
-              icon: const Icon(Icons.notifications_none)),
-          IconButton(onPressed: () => MenuSheet.show(context), icon: const Icon(Icons.menu)),
-        ],
-      ),
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: [
-          _buildMainHomeTab(state, notifier),
-          const ChatConversationsView(),
-          const PlaceholderPage(title: 'Cart', routeName: '/main-home (tab: cart)'),
-          const PlaceholderPage(title: 'Community', routeName: '/main-home (tab: community)'),
-        ],
+      body: SafeArea(
+        bottom: false,
+        child: IndexedStack(index: _selectedIndex, children: _tabs),
       ),
       bottomNavigationBar: SafeArea(
         top: false,
         child: BottomNavBar(
           selectedIndex: _selectedIndex,
           onTap: (index) => setState(() => _selectedIndex = index),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMainHomeTab(MainHomeState state, MainHomeNotifier notifier) {
-    return state.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : RefreshIndicator(
-              onRefresh: notifier.refresh,
-              color: AppColors.primary,
-              child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 40.h,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          _sectionChip('Main entrance', selected: false),
-                          _sectionChip('Campus gates', selected: true),
-                          _sectionChip('Elevator', selected: false),
-                          _sectionChip('Vehicle', selected: false),
-                          _sectionChip(
-                            'Services', 
-                            selected: false,
-                            onTap: () => context.push(
-                              RouteNames.propertyDetail,
-                              extra: 'gerlug-vista',
-                            ),),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 12.h),
-
-                    // Use AppTextStyles.body (exists) instead of a non-existent `title`
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Gerlug vista',
-                                  style: AppTextStyles.body.copyWith(
-                                      fontWeight: FontWeight.w700, fontSize: 16.sp)),
-                              Text(
-                                '15th Khoroo, Khan Uul District, Ulaanbaatar, Mongolia 13146',
-                                style: AppTextStyles.caption,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 8.h),
-
-                    ImageCarousel(imageUrls: [
-                      'https://picsum.photos/800/400?image=10',
-                      'https://picsum.photos/800/400?image=20',
-                      'https://picsum.photos/800/400?image=30',
-                    ]),
-
-                    SizedBox(height: 18.h),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        RichText(
-                          text: TextSpan(
-                            text: 'Available',
-                            style: AppTextStyles.body.copyWith(
-                                fontWeight: FontWeight.w700,
-                                color: AppColors.textPrimary,
-                                fontSize: 16.sp),
-                            children: [
-                              TextSpan(
-                                  text: '  controls',
-                                  style: AppTextStyles.body
-                                      .copyWith(fontWeight: FontWeight.w400)),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 8.h),
-
-                    if (state.error != null) ...[
-                      Text(
-                        state.error!,
-                        style: AppTextStyles.caption.copyWith(color: AppColors.error),
-                      ),
-                      SizedBox(height: 8.h),
-                    ],
-
-                    GridView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: state.controls.length,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 5.w,
-                        mainAxisSpacing: 5.h,
-                        mainAxisExtent: 138.h,
-                      ),
-                      itemBuilder: (context, index) {
-                        final c = state.controls[index];
-                        return ControlCard(
-                            control: c, onToggle: () => notifier.toggle(c.id));
-                      },
-                    ),
-
-                    SizedBox(height: 20.h),
-
-                    const VisitorVehicleSignupCard(),
-
-                    SizedBox(height: 16.h),
-                  ],
-                ),
-              ),
-            );
-  }
-
-  Widget _sectionChip(String label, {bool selected = false, VoidCallback? onTap}) {
-    return Padding(
-      padding: EdgeInsets.only(right: 8.w),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(10.r),
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-            decoration: BoxDecoration(
-              color: selected ? AppColors.textBlack : AppColors.border,
-              borderRadius: BorderRadius.circular(10.r),
-            ),
-            child: Text(
-              label,
-              style: TextStyle(
-                color: selected ? Colors.white : AppColors.textPrimary,
-              ),
-            ),
-          ),
         ),
       ),
     );

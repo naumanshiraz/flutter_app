@@ -16,6 +16,7 @@ import 'package:pms_app/features/chat/presentation/pages/chat_list_page.dart';
 import 'package:pms_app/features/chat/presentation/pages/announcement_feed_page.dart';
 import 'package:pms_app/features/chat/presentation/pages/post_detail_page.dart';
 import 'package:pms_app/features/chat/presentation/pages/public_chat_page.dart';
+import 'package:pms_app/features/chat/presentation/pages/group_info_page.dart';
 import 'package:pms_app/features/family_members/domain/entities/family_member.dart';
 import 'package:pms_app/features/family_members/presentation/pages/edit_family_member_page.dart';
 import 'package:pms_app/features/family_members/presentation/pages/family_members_page.dart';
@@ -74,10 +75,12 @@ String? _routeGuard(BuildContext context, GoRouterState state, Ref ref) {
       final isAuthenticated = destination == AppDestination.home;
       final isLoginRoute = currentPath == RouteNames.login;
       final isProtectedRoute = currentPath == RouteNames.home ||
+          currentPath == RouteNames.mainHome ||
           currentPath == RouteNames.chat ||
           currentPath == RouteNames.chatAnnouncement ||
           currentPath == RouteNames.chatPostDetail ||
           currentPath == RouteNames.chatPublicGroup ||
+          currentPath == RouteNames.chatGroupInfo ||
           currentPath == RouteNames.editProfile ||
           currentPath == RouteNames.profilePicture ||
           currentPath == RouteNames.residencyIdentification ||
@@ -221,6 +224,20 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             );
           }
           return PublicChatPage(args: args);
+        },
+      ),
+      GoRoute(
+        path: RouteNames.chatGroupInfo,
+        name: RouteNames.chatGroupInfo,
+        builder: (context, state) {
+          final args = state.extra as GroupInfoArgs?;
+          if (args == null) {
+            return const PlaceholderPage(
+              title: 'Chat Details',
+              routeName: RouteNames.chatGroupInfo,
+            );
+          }
+          return GroupInfoPage(args: args);
         },
       ),
       GoRoute(
