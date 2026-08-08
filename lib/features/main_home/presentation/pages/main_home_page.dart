@@ -4,6 +4,7 @@ import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/widgets/bottom_nav_bar.dart';
 import 'package:pms_app/core/widgets/placeholder_page.dart';
 import 'package:pms_app/features/chat/presentation/widgets/chat_conversations_view.dart';
+import 'package:pms_app/features/concierge/presentation/pages/concierge_page.dart';
 import 'package:pms_app/features/home/presentation/widgets/home_content.dart';
 import 'package:pms_app/features/main_home/presentation/widgets/main_home_content_view.dart';
 
@@ -30,7 +31,7 @@ class _MainHomePageState extends ConsumerState<MainHomePage> {
   static const List<Widget> _tabs = [
     MainHomeContentView(),
     ChatConversationsView(),
-    PlaceholderPage(title: 'Cart', routeName: '/main-home (tab: cart)'),
+    ConciergePage(),
     HomeContent(),
   ];
 

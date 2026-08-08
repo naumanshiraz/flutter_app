@@ -9,6 +9,7 @@ import 'package:pms_app/core/theme/app_text_styles.dart';
 import 'package:pms_app/core/widgets/bottom_nav_bar.dart';
 import 'package:pms_app/core/widgets/placeholder_page.dart';
 import 'package:pms_app/features/chat/presentation/pages/chat_list_page.dart';
+import 'package:pms_app/features/concierge/presentation/pages/concierge_page.dart';
 import 'package:pms_app/features/service_profile/domain/entities/service_profile.dart';
 import 'package:pms_app/features/service_profile/presentation/providers/service_profile_provider.dart';
 import 'package:pms_app/features/profile/presentation/providers/edit_profile_provider.dart';
@@ -41,10 +42,7 @@ class _ServiceProfilePageState extends ConsumerState<ServiceProfilePage> {
           children: [
             _buildBody(context, state, notifier, ref.watch(editProfileProvider).profile.initials),
             const ChatListPage(),
-            const PlaceholderPage(
-              title: 'Cart',
-              routeName: '/main-home/service-profile (tab: cart)',
-            ),
+            const ConciergePage(),
             const PlaceholderPage(
               title: 'Community',
               routeName: '/main-home/service-profile (tab: community)',

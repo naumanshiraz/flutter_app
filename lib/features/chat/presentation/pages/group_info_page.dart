@@ -7,6 +7,7 @@ import 'package:pms_app/core/theme/app_text_styles.dart';
 import 'package:pms_app/core/widgets/bottom_nav_bar.dart';
 import 'package:pms_app/core/widgets/placeholder_page.dart';
 import 'package:pms_app/features/chat/presentation/pages/chat_list_page.dart';
+import 'package:pms_app/features/concierge/presentation/pages/concierge_page.dart';
 
 class GroupInfoArgs {
   final String conversationId;
@@ -60,14 +61,7 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
           children: [
             _buildInfoTab(context),
             const ChatListPage(),
-            const PlaceholderPage(
-              title: 'Cart',
-              routeName: '/home/chat/group-info (tab: cart)',
-            ),
-            const PlaceholderPage(
-              title: 'Community',
-              routeName: '/home/chat/group-info (tab: community)',
-            ),
+            const ConciergePage(),
           ],
         ),
       ),

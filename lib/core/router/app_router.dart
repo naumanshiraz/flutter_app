@@ -17,6 +17,7 @@ import 'package:pms_app/features/chat/presentation/pages/announcement_feed_page.
 import 'package:pms_app/features/chat/presentation/pages/post_detail_page.dart';
 import 'package:pms_app/features/chat/presentation/pages/public_chat_page.dart';
 import 'package:pms_app/features/chat/presentation/pages/group_info_page.dart';
+import 'package:pms_app/features/concierge/presentation/pages/concierge_page.dart';
 import 'package:pms_app/features/family_members/domain/entities/family_member.dart';
 import 'package:pms_app/features/family_members/presentation/pages/edit_family_member_page.dart';
 import 'package:pms_app/features/family_members/presentation/pages/family_members_page.dart';
@@ -81,6 +82,7 @@ String? _routeGuard(BuildContext context, GoRouterState state, Ref ref) {
           currentPath == RouteNames.chatPostDetail ||
           currentPath == RouteNames.chatPublicGroup ||
           currentPath == RouteNames.chatGroupInfo ||
+          currentPath == RouteNames.concierge ||
           currentPath == RouteNames.editProfile ||
           currentPath == RouteNames.profilePicture ||
           currentPath == RouteNames.residencyIdentification ||
@@ -239,6 +241,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           }
           return GroupInfoPage(args: args);
         },
+      ),
+      GoRoute(
+        path: RouteNames.concierge,
+        name: RouteNames.concierge,
+        builder: (context, state) => const ConciergePage(),
       ),
       GoRoute(
         path: RouteNames.editProfile,

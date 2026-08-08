@@ -8,6 +8,7 @@ import 'package:pms_app/core/theme/app_text_styles.dart';
 import 'package:pms_app/core/widgets/bottom_nav_bar.dart';
 import 'package:pms_app/core/widgets/placeholder_page.dart';
 import 'package:pms_app/features/chat/presentation/pages/chat_list_page.dart';
+import 'package:pms_app/features/concierge/presentation/pages/concierge_page.dart';
 import 'package:pms_app/features/property_detail/presentation/providers/property_detail_provider.dart';
 import 'package:pms_app/features/property_detail/presentation/widgets/action_buttons_row.dart';
 import 'package:pms_app/features/property_detail/presentation/widgets/invoice_sheet.dart';
@@ -42,10 +43,7 @@ class _PropertyDetailPageState extends ConsumerState<PropertyDetailPage> {
           children: [
             _buildBody(context, state, notifier),
             const ChatListPage(),
-            const PlaceholderPage(
-              title: 'Cart',
-              routeName: '/main-home/property-detail (tab: cart)',
-            ),
+            const ConciergePage(),
             const PlaceholderPage(
               title: 'Community',
               routeName: '/main-home/property-detail (tab: community)',
