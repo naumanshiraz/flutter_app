@@ -3,9 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 
-/// Rounded pill-shaped text field matching every input in the PDF
-/// ("Enter your phone number or email address", "Enter your email
-/// address", "Enter your name", ...).
 class AppTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
@@ -15,6 +12,7 @@ class AppTextField extends StatelessWidget {
   final bool obscureText;
   final Widget? suffixIcon;
   final bool enabled;
+  final double? height;
 
   const AppTextField({
     super.key,
@@ -26,46 +24,59 @@ class AppTextField extends StatelessWidget {
     this.obscureText = false,
     this.suffixIcon,
     this.enabled = true,
+    this.height,
   });
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      enabled: enabled,
-      keyboardType: keyboardType,
-      obscureText: obscureText,
-      onChanged: onChanged,
-      style: AppTextStyles.inputText,
-      decoration: InputDecoration(
-        hintText: hintText,
-        errorText: errorText,
-        suffixIcon: suffixIcon,
-        contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 18.h),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(28.r),
-          borderSide: const BorderSide(color: AppColors.border),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(28.r),
-          borderSide: const BorderSide(color: AppColors.primary, width: 1.4),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(28.r),
-          borderSide: const BorderSide(color: AppColors.error),
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(28.r),
-          borderSide: const BorderSide(color: AppColors.border),
+    return SizedBox(
+      height: height ?? 56.h,
+      child: TextField(
+        controller: controller,
+        enabled: enabled,
+        keyboardType: keyboardType,
+        obscureText: obscureText,
+        onChanged: onChanged,
+        style: AppTextStyles.inputText,
+        decoration: InputDecoration(
+          hintText: hintText,
+          errorText: errorText,
+          suffixIcon: suffixIcon,
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: 20.w,
+            vertical: 14.h,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.r),
+            borderSide: const BorderSide(
+              color: AppColors.border,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.r),
+            borderSide: const BorderSide(
+              color: AppColors.primary,
+              width: 1.4,
+            ),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.r),
+            borderSide: const BorderSide(
+              color: AppColors.error,
+            ),
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.r),
+            borderSide: const BorderSide(
+              color: AppColors.border,
+            ),
+          ),
         ),
       ),
     );
   }
 }
 
-/// Rounded dropdown field ("Date", "Choose") used on the onboarding
-/// screens. Kept generic so both the birthdate picker and the location
-/// picker can reuse it.
 class AppDropdownField<T> extends StatelessWidget {
   final String hintText;
   final T? value;
@@ -86,7 +97,7 @@ class AppDropdownField<T> extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.border),
-        borderRadius: BorderRadius.circular(28.r),
+        borderRadius: BorderRadius.circular(10.r),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<T>(

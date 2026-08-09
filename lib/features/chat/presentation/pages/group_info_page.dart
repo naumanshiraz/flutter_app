@@ -200,12 +200,18 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label, style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w600, fontSize: 14.sp)),
-          Switch(
-            value: value,
-            onChanged: onChanged,
-            activeColor: Colors.white,
-            activeTrackColor: AppColors.primary,
-          ),
+          Transform.scale(
+            scale: 0.65,
+            child: Switch(
+              value: value,
+              onChanged: onChanged,
+              activeColor: Colors.white,
+              activeTrackColor: AppColors.primary,
+              inactiveThumbColor: Colors.white,
+              inactiveTrackColor: const Color(0xFF6B7280),
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+          ),  
         ],
       ),
     );

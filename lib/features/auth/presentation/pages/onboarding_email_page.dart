@@ -49,7 +49,12 @@ class _OnboardingEmailPageState extends ConsumerState<OnboardingEmailPage> {
     return StepScaffold(
       currentStep: 0,
       totalSteps: 5,
-      bottomButton: GradientButton(label: 'Next', onPressed: _onNext),
+      bottomButton: GradientButton(
+        label: 'Next', 
+        onPressed: _onNext,
+        height: 48.h,
+        borderRadius: 10.r,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

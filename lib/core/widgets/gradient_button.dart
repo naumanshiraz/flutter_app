@@ -64,26 +64,35 @@ class SecondaryButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
   final bool isLoading;
+  final double? height;
+  final double? borderRadius;
 
   const SecondaryButton({
     super.key,
     required this.label,
     required this.onPressed,
     this.isLoading = false,
+    this.height,
+    this.borderRadius,
   });
 
   @override
   Widget build(BuildContext context) {
     final bool enabled = onPressed != null && !isLoading;
 
+    final buttonHeight = height ?? 56.h;
+    final radius = borderRadius ?? 28.r;
+
     return SizedBox(
-      height: 56.h,
+      height: buttonHeight,
       width: double.infinity,
       child: OutlinedButton(
         onPressed: enabled ? onPressed : null,
         style: OutlinedButton.styleFrom(
           side: const BorderSide(color: AppColors.primary, width: 1.4),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28.r)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(radius),
+          ),
         ),
         child: isLoading
             ? SizedBox(

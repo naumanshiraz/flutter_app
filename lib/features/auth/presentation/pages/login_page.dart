@@ -58,7 +58,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SizedBox(height: 60.h),
+              SizedBox(height: 200.h),
               Center(child: SplashLogo(size: 88.w)),
               SizedBox(height: 20.h),
               Text(
@@ -70,6 +70,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               AppTextField(
                 controller: _controller,
                 hintText: 'Enter your phone number or email address',
+                height: 48.h,
                 keyboardType: TextInputType.emailAddress,
                 errorText: formState.errorMessage,
                 onChanged: ref.read(loginFormProvider.notifier).onIdentifierChanged,
@@ -91,6 +92,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         ref.read(loginFormProvider.notifier).submit(OtpPurpose.login);
                       }
                     : null,
+                height: 48.h,    
+                borderRadius: 10.r,    
               ),
               SizedBox(height: 12.h),
               SecondaryButton(
@@ -101,6 +104,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         ref.read(loginFormProvider.notifier).submit(OtpPurpose.signup);
                       }
                     : null,
+                height: 48.h,
+                borderRadius: 10.r,    
               ),
               SizedBox(height: 24.h),
               const LegalFooter(),

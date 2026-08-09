@@ -59,7 +59,7 @@ class _OnboardingGenderPageState extends ConsumerState<OnboardingGenderPage> {
     return Padding(
       padding: EdgeInsets.only(bottom: 12.h),
       child: InkWell(
-        borderRadius: BorderRadius.circular(28.r),
+        borderRadius: BorderRadius.circular(10.r),
         onTap: () => setState(() => _selected = value),
         child: Container(
           width: double.infinity,
@@ -67,7 +67,7 @@ class _OnboardingGenderPageState extends ConsumerState<OnboardingGenderPage> {
           decoration: BoxDecoration(
             color: isSelected ? const Color(0xFFFFF1EC) : Colors.transparent,
             border: Border.all(color: AppColors.primary, width: 1.2),
-            borderRadius: BorderRadius.circular(28.r),
+            borderRadius: BorderRadius.circular(10.r),
           ),
           child: Text(
             label,
@@ -84,7 +84,12 @@ class _OnboardingGenderPageState extends ConsumerState<OnboardingGenderPage> {
     return StepScaffold(
       currentStep: 3,
       totalSteps: 5,
-      bottomButton: GradientButton(label: 'Next', onPressed: _canProceed ? _onNext : null),
+      bottomButton: GradientButton(
+        label: 'Next', 
+        onPressed: _canProceed ? _onNext : null,
+        height: 48.h,
+        borderRadius: 10.r,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

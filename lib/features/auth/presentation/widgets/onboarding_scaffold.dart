@@ -33,8 +33,6 @@ class OnboardingProgressDots extends StatelessWidget {
   }
 }
 
-/// Shared page chrome for every onboarding step: back chevron + progress
-/// dots header, scrollable body, and a pinned bottom "Next" button.
 class OnboardingScaffold extends StatelessWidget {
   final int currentStep;
   final int totalSteps;

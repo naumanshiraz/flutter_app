@@ -77,11 +77,17 @@ class _OnboardingLocationPageState extends ConsumerState<OnboardingLocationPage>
         label: 'Next',
         isLoading: _isSubmitting,
         onPressed: _selectedLocation != null ? _onNext : null,
+        height: 48.h,
+        borderRadius: 10.r,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text('Where do you live?', textAlign: TextAlign.center, style: AppTextStyles.pageTitle),
+          Text(
+            'Where do you live?', 
+            textAlign: TextAlign.center, 
+            style: AppTextStyles.pageTitle
+          ),
           SizedBox(height: 12.h),
           Text(
             "This helps us find you more relevant content. It won't be "

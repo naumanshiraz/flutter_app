@@ -65,7 +65,12 @@ class _OnboardingProfilePageState extends ConsumerState<OnboardingProfilePage> {
     return StepScaffold(
       currentStep: 2,
       totalSteps: 5,
-      bottomButton: GradientButton(label: 'Next', onPressed: _onNext),
+      bottomButton: GradientButton(
+        label: 'Next', 
+        onPressed: _onNext,
+        height: 48.h,
+        borderRadius: 10.r,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -92,12 +97,12 @@ class _OnboardingProfilePageState extends ConsumerState<OnboardingProfilePage> {
           SizedBox(height: 20.h),
           InkWell(
             onTap: _pickBirthDate,
-            borderRadius: BorderRadius.circular(28.r),
+            borderRadius: BorderRadius.circular(10.r),
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 18.h),
               decoration: BoxDecoration(
                 border: Border.all(color: AppColors.border),
-                borderRadius: BorderRadius.circular(28.r),
+                borderRadius: BorderRadius.circular(10.r),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

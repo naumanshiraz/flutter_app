@@ -49,7 +49,12 @@ class _OnboardingPhonePageState extends ConsumerState<OnboardingPhonePage> {
     return StepScaffold(
       currentStep: 1,
       totalSteps: 5,
-      bottomButton: GradientButton(label: 'Next', onPressed: _onNext),
+      bottomButton: GradientButton(
+        label: 'Next', 
+        onPressed: _onNext,
+        height: 48.h,
+        borderRadius: 10.r,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
