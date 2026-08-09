@@ -32,7 +32,7 @@ class AccessManagementSheet extends StatelessWidget {
             children: [
               SizedBox(height: 12.h),
               _header(context),
-              Divider(height: 1, color: AppColors.border),
+              const Divider(height: 1, color: AppColors.border),
               Expanded(
                 child: ListView(
                   controller: scrollController,

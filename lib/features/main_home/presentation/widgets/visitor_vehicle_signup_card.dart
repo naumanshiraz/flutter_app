@@ -24,12 +24,12 @@ class VisitorVehicleSignupCard extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Visitor vehicle sign-up',
-            style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700, fontSize: 16.sp)),
+            style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700, fontSize: 16.sp),),
         SizedBox(height: 8.h),
         Container(
           padding: EdgeInsets.all(12.w),
           decoration:
-          BoxDecoration(color: AppColors.border.withOpacity(0.35), borderRadius: BorderRadius.circular(10.r)),
+          BoxDecoration(color: AppColors.border.withValues(alpha: 0.35), borderRadius: BorderRadius.circular(10.r)),
           child: has
               ? Column(
             children: [
@@ -58,7 +58,7 @@ class VisitorVehicleSignupCard extends ConsumerWidget {
           children: [
             Expanded(
               child: Text(has ? 'Visitor schedule 1 of ${state.schedules.length}' : 'No schedules',
-                  style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary)),
+                  style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary),),
             ),
             if (has)
               PopupMenuButton<VisitorAction>(
@@ -96,7 +96,7 @@ class VisitorVehicleSignupCard extends ConsumerWidget {
                   final created = await _openScheduleSheet(context);
                   if (created != null) await notifier.addOrUpdate(created);
                 },
-                icon: Icon(Icons.add_circle_outline, color: AppColors.primary),
+                icon: const Icon(Icons.add_circle_outline, color: AppColors.primary),
               ),
           ],
         ),
@@ -110,12 +110,12 @@ class VisitorVehicleSignupCard extends ConsumerWidget {
             },
             style: OutlinedButton.styleFrom(
               foregroundColor: AppColors.primary,
-              side: BorderSide(color: AppColors.primary),
+              side: const BorderSide(color: AppColors.primary),
               padding: EdgeInsets.symmetric(vertical: 14.h),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
             ),
             child: Text('Set up a new schedule',
-                style: AppTextStyles.body.copyWith(color: AppColors.primary, fontWeight: FontWeight.w600)),
+                style: AppTextStyles.body.copyWith(color: AppColors.primary, fontWeight: FontWeight.w600),),
           ),
         ),
       ],
@@ -147,6 +147,6 @@ class _InfoItem extends StatelessWidget {
       Text(title, style: AppTextStyles.caption),
       SizedBox(height: 6.h),
       Text(value, style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700)),
-    ]);
+    ],);
   }
 }

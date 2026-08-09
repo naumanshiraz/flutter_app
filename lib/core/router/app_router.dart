@@ -179,7 +179,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: RouteNames.home,
         name: RouteNames.home,
-        builder: (context, state) => HomePage(),
+        builder: (context, state) => const HomePage(),
       ),
       GoRoute(
         path: RouteNames.chat,

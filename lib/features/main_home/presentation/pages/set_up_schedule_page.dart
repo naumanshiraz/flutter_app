@@ -8,7 +8,7 @@ import 'package:pms_app/features/main_home/domain/entities/visitor_schedule.dart
 class SetUpSchedulePage extends StatefulWidget {
   final VisitorSchedule? initial;
 
-  const SetUpSchedulePage({Key? key, this.initial}) : super(key: key);
+  const SetUpSchedulePage({super.key, this.initial});
 
   @override
   State<SetUpSchedulePage> createState() => _SetUpSchedulePageState();
@@ -96,7 +96,7 @@ class _SetUpSchedulePageState extends State<SetUpSchedulePage> {
                   decoration: const InputDecoration(labelText: 'Time'),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [Text('${_time.format(context)}'), const Icon(Icons.keyboard_arrow_down)],
+                    children: [Text(_time.format(context)), const Icon(Icons.keyboard_arrow_down)],
                   ),
                 ),
               ),

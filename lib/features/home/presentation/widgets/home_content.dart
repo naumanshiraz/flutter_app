@@ -86,7 +86,7 @@ class HomeContent extends ConsumerWidget {
             sliver: SliverToBoxAdapter(
               child: SearchAddBar(
                 onSearchChanged: listingsNotifier.onSearchChanged,
-                onAddTap: () => context.push(RouteNames.properties)
+                onAddTap: () => context.push(RouteNames.properties),
               ),
             ),
           ),

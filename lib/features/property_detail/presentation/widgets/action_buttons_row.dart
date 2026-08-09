@@ -53,7 +53,7 @@ class ActionButtonsRow extends StatelessWidget {
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }

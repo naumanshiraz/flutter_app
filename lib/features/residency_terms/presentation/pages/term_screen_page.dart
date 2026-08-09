@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:pms_app/core/router/route_names.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
-import 'package:pms_app/core/widgets/gradient_button.dart';
 import 'package:pms_app/core/widgets/step_scaffold.dart';
 
 class ResidencyTermsPage extends ConsumerStatefulWidget {

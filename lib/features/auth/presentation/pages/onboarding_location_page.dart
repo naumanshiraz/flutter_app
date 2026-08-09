@@ -86,7 +86,7 @@ class _OnboardingLocationPageState extends ConsumerState<OnboardingLocationPage>
           Text(
             'Where do you live?', 
             textAlign: TextAlign.center, 
-            style: AppTextStyles.pageTitle
+            style: AppTextStyles.pageTitle,
           ),
           SizedBox(height: 12.h),
           Text(

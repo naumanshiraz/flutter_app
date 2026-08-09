@@ -30,7 +30,7 @@ class PetSummaryCard extends StatelessWidget {
           width: double.infinity,
           padding: EdgeInsets.all(14.w),
           decoration: BoxDecoration(
-            color: AppColors.border.withOpacity(0.35),
+            color: AppColors.border.withValues(alpha: 0.35),
             borderRadius: BorderRadius.circular(14.r),
           ),
           child: Column(

@@ -31,7 +31,7 @@ class ServiceComment extends Equatable {
     required this.authorInitial, 
     required this.authorName, 
     required this.text,
-    this.replies = const []
+    this.replies = const [],
   });
 
   @override

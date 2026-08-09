@@ -144,8 +144,8 @@ class _AccountTerminationPageState extends ConsumerState<AccountTerminationPage>
                 decoration: InputDecoration(
                   hintText: 'Tell us about your experience as a resident at this property.',
                   hintStyle: AppTextStyles.bodySecondary.copyWith(fontSize: 13.sp),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.r), borderSide: BorderSide(color: AppColors.border)),
-                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10.r), borderSide: BorderSide(color: AppColors.border)),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.r), borderSide: const BorderSide(color: AppColors.border)),
+                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10.r), borderSide: const BorderSide(color: AppColors.border)),
                 ),
               ),
               if (_errorMessage != null) ...[

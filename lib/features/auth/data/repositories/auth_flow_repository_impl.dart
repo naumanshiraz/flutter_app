@@ -5,7 +5,6 @@ import 'package:pms_app/core/services/logger_service.dart';
 import 'package:pms_app/core/utils/result.dart';
 import 'package:pms_app/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:pms_app/features/auth/data/datasources/auth_remote_datasource.dart';
-import 'package:pms_app/features/auth/data/models/otp_session_model.dart';
 import 'package:pms_app/features/auth/data/models/user_profile_model.dart';
 import 'package:pms_app/features/auth/domain/entities/otp_session.dart';
 import 'package:pms_app/features/auth/domain/entities/user_profile.dart';

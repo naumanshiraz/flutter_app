@@ -39,7 +39,7 @@ class ServiceProfileRemoteDataSourceImpl implements ServiceProfileRemoteDataSour
             'authorName': 'Zolbayar Tuvshuu',
             'text': 'Will definitely visit again.',
           }
-        ]},
+        ],},
       ],
     },
   };

@@ -29,7 +29,7 @@ class LogListTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(entry.title,
-                    style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700, fontSize: 14.sp, color: titleColor)),
+                    style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700, fontSize: 14.sp, color: titleColor),),
                 Text(entry.location, style: AppTextStyles.caption),
               ],
             ),

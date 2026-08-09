@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ImageCarousel extends StatefulWidget {
   final List<String> imageUrls;
-  const ImageCarousel({Key? key, required this.imageUrls}) : super(key: key);
+  const ImageCarousel({super.key, required this.imageUrls});
 
   @override
   State<ImageCarousel> createState() => _ImageCarouselState();

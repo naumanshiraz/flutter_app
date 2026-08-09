@@ -91,7 +91,7 @@ class MainHomeContentView extends ConsumerWidget {
                           children: [
                             Text('Gerlug vista',
                                 style: AppTextStyles.body
-                                    .copyWith(fontWeight: FontWeight.w700, fontSize: 16.sp)),
+                                    .copyWith(fontWeight: FontWeight.w700, fontSize: 16.sp),),
                             Text(
                               '15th Khoroo, Khan Uul District, Ulaanbaatar, Mongolia 13146',
                               style: AppTextStyles.caption,
@@ -102,11 +102,11 @@ class MainHomeContentView extends ConsumerWidget {
                     ],
                   ),
                   SizedBox(height: 8.h),
-                  ImageCarousel(imageUrls: [
+                  const ImageCarousel(imageUrls: [
                     'https://picsum.photos/800/400?image=10',
                     'https://picsum.photos/800/400?image=20',
                     'https://picsum.photos/800/400?image=30',
-                  ]),
+                  ],),
                   SizedBox(height: 18.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -115,11 +115,11 @@ class MainHomeContentView extends ConsumerWidget {
                         text: TextSpan(
                           text: 'Available',
                           style: AppTextStyles.body.copyWith(
-                              fontWeight: FontWeight.w700, color: AppColors.textPrimary, fontSize: 16.sp),
+                              fontWeight: FontWeight.w700, color: AppColors.textPrimary, fontSize: 16.sp,),
                           children: [
                             TextSpan(
                                 text: '  controls',
-                                style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w400)),
+                                style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w400),),
                           ],
                         ),
                       ),

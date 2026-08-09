@@ -7,7 +7,7 @@ import 'package:pms_app/features/main_home/domain/entities/visitor_schedule.dart
 class SetUpScheduleSheet extends StatefulWidget {
   final VisitorSchedule? initial;
 
-  const SetUpScheduleSheet({Key? key, this.initial}) : super(key: key);
+  const SetUpScheduleSheet({super.key, this.initial});
 
   @override
   State<SetUpScheduleSheet> createState() => _SetUpScheduleSheetState();
@@ -89,7 +89,7 @@ class _SetUpScheduleSheetState extends State<SetUpScheduleSheet> {
         decoration: BoxDecoration(
           color: Theme.of(context).scaffoldBackgroundColor,
           borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
-          boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 12, offset: const Offset(0, -4))],
+          boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 12, offset: Offset(0, -4))],
         ),
         child: Material(
           color: Colors.transparent,
@@ -157,7 +157,7 @@ class _SetUpScheduleSheetState extends State<SetUpScheduleSheet> {
                           onTap: _pickTime,
                           child: InputDecorator(
                             decoration: const InputDecoration(labelText: 'Time'),
-                            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('${_time.format(context)}'), const Icon(Icons.keyboard_arrow_down)]),
+                            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(_time.format(context)), const Icon(Icons.keyboard_arrow_down)]),
                           ),
                         ),
                         SizedBox(height: 12.h),

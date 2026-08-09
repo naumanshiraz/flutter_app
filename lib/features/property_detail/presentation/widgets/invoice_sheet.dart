@@ -66,7 +66,7 @@ class InvoiceSheet extends StatelessWidget {
                         child: _buildRow(_invoices[index]),
                       ),
                     ),
-                  )
+                  ),
                 ),
                 SizedBox(height: 12.h),
                 Center(

@@ -100,7 +100,7 @@ class _InitialsFallback extends StatelessWidget {
         conversation.avatarInitials,
         style: AppTextStyles.body.copyWith(
           fontWeight: FontWeight.w700, 
-          color: AppColors.textBlack
+          color: AppColors.textBlack,
         ),
       ),
     );

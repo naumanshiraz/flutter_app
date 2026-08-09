@@ -38,7 +38,7 @@ class EntitySummaryCard extends StatelessWidget {
           width: double.infinity,
           padding: EdgeInsets.all(14.w),
           decoration: BoxDecoration(
-            color: AppColors.border.withOpacity(0.35),
+            color: AppColors.border.withValues(alpha: 0.35),
             borderRadius: BorderRadius.circular(14.r),
           ),
           child: Column(
@@ -51,7 +51,7 @@ class EntitySummaryCard extends StatelessWidget {
                       .map((field) => Expanded(
                             flex: field.flex,
                             child: _Field(label: field.label, value: field.value),
-                          ))
+                          ),)
                       .toList(),
                 ),
               ],

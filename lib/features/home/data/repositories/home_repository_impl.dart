@@ -46,7 +46,7 @@ class HomeRepositoryImpl implements HomeRepository {
         listings = listings
             .where((l) =>
                 l.title.toLowerCase().contains(query) ||
-                l.managementCompany.toLowerCase().contains(query))
+                l.managementCompany.toLowerCase().contains(query),)
             .toList();
       }
 

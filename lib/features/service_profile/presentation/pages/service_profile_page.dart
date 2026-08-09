@@ -173,7 +173,7 @@ class _ServiceProfilePageState extends ConsumerState<ServiceProfilePage> {
                         color: AppColors.textBlack,
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
               SizedBox(height: 16.h),

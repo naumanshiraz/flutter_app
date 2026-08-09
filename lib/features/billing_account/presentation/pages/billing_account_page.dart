@@ -153,7 +153,7 @@ class _BillingAccountPageState extends ConsumerState<BillingAccountPage> {
       style: AppTextStyles.body.copyWith(fontSize: 14.sp),
       decoration: InputDecoration(
         filled: !enabled,
-        fillColor: AppColors.border.withOpacity(0.4),
+        fillColor: AppColors.border.withValues(alpha: 0.4),
         contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
         enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10.r), borderSide: const BorderSide(color: AppColors.border)),
         focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10.r), borderSide: const BorderSide(color: AppColors.primary)),

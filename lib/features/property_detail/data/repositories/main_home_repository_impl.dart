@@ -23,7 +23,7 @@ class MainHomeRepositoryImpl implements MainHomeRepository {
       final remoteModels = await remoteDataSource.getControls(propertyId: propertyId);
       final entities = remoteModels.map((m) => m.toEntity()).toList();
       return Success(entities);
-    } on ServerException catch (e) {
+    } on ServerException {
       // Try local fallback
       try {
         final local = await localDataSource.fetchControls();

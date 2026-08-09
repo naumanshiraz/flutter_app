@@ -19,7 +19,7 @@ import 'package:pms_app/features/main_home/presentation/widgets/main_home_conten
 class MainHomePage extends ConsumerStatefulWidget {
   final String? propertyId;
 
-  const MainHomePage({Key? key, this.propertyId}) : super(key: key);
+  const MainHomePage({super.key, this.propertyId});
 
   @override
   ConsumerState<MainHomePage> createState() => _MainHomePageState();

@@ -50,7 +50,7 @@ class _MainGateControlSheetState extends State<MainGateControlSheet> {
             children: [
               SizedBox(height: 12.h),
               _header(context),
-              Divider(height: 1, color: AppColors.border),
+              const Divider(height: 1, color: AppColors.border),
               Expanded(
                 child: ListView(
                   controller: scrollController,
@@ -114,7 +114,7 @@ class _MainGateControlSheetState extends State<MainGateControlSheet> {
             activeThumbColor: Colors.white,
             activeTrackColor: AppColors.primary,
             inactiveThumbColor: Colors.white,
-            inactiveTrackColor: AppColors.textSecondary.withOpacity(0.4),
+            inactiveTrackColor: AppColors.textSecondary.withValues(alpha: 0.4),
           ),
         ],
       ),

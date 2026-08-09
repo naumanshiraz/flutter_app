@@ -62,7 +62,7 @@ class ChatMessageBubble extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
               decoration: BoxDecoration(
-                color: AppColors.success.withOpacity(0.18),
+                color: AppColors.success.withValues(alpha: 0.18),
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: Text(message.text, style: AppTextStyles.body.copyWith(fontSize: 13.sp)),

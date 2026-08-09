@@ -15,7 +15,7 @@ class LogFilterTabs extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
-        color: AppColors.border.withOpacity(0.4),
+        color: AppColors.border.withValues(alpha: 0.4),
         borderRadius: BorderRadius.circular(20.r),
       ),
       child: Row(
@@ -39,7 +39,7 @@ class LogFilterTabs extends StatelessWidget {
           color: isSelected ? AppColors.surface : Colors.transparent,
           borderRadius: BorderRadius.circular(16.r),
           boxShadow: isSelected
-              ? [BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 4, offset: const Offset(0, 1))]
+              ? [BoxShadow(color: Colors.black.withValues(alpha: 0.08), blurRadius: 4, offset: const Offset(0, 1))]
               : null,
         ),
         child: Text(

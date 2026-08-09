@@ -24,10 +24,10 @@ class ControlCard extends StatelessWidget {
   final VoidCallback onToggle;
 
   const ControlCard({
-    Key? key,
+    super.key,
     required this.control,
     required this.onToggle,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

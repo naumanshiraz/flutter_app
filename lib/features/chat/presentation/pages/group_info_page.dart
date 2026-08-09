@@ -77,7 +77,7 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
             } else {
               setState(() => _selectedIndex = index);
             }
-          }
+          },
         ),
       ),
     );
@@ -205,7 +205,7 @@ class _GroupInfoPageState extends State<GroupInfoPage> {
             child: Switch(
               value: value,
               onChanged: onChanged,
-              activeColor: Colors.white,
+              activeThumbColor: Colors.white,
               activeTrackColor: AppColors.primary,
               inactiveThumbColor: Colors.white,
               inactiveTrackColor: const Color(0xFF6B7280),

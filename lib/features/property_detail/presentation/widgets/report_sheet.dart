@@ -46,7 +46,7 @@ class ReportSheet extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(_reports[index],
-                              style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w600, fontSize: 14.sp)),
+                              style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w600, fontSize: 14.sp),),
                         ),
                         Icon(Icons.file_download_outlined, size: 20.sp, color: AppColors.textSecondary),
                       ],
