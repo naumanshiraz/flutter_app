@@ -2,8 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:pms_app/core/error/exceptions.dart';
 
 abstract class ConciergeRemoteDataSource {
-  /// Returns the raw `{ 'layout': ..., 'services': [...] }` map so the
-  /// repository can parse the grid layout and each item's `isBanner` flag.
   Future<Map<String, dynamic>> getServices(String category);
 }
 

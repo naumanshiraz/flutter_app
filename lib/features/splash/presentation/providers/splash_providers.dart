@@ -13,8 +13,6 @@ final authLocalDataSourceProvider = Provider<AuthLocalDataSource>((ref) {
   );
 });
 
-/// Wired up and ready even though nothing calls it yet — flip the
-/// repository implementation to use it once a real backend exists.
 final authRemoteDataSourceProvider = Provider<AuthRemoteDataSource>((ref) {
   return AuthRemoteDataSourceImpl(ref.watch(dioClientProvider).dio);
 });

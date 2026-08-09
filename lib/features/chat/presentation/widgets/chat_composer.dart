@@ -7,14 +7,6 @@ import 'package:pms_app/core/theme/app_text_styles.dart';
 import 'package:pms_app/features/chat/presentation/widgets/chat_attachment_sheet.dart';
 import 'package:pms_app/features/chat/presentation/widgets/emoji_picker_sheet.dart';
 
-/// Mic (tap-and-hold to record) + text field + emoji/attach/send — reused
-/// by Public Chat Group and the Post Detail comment thread.
-///
-/// There's no audio-recording package wired up yet (no backend to upload
-/// to either), so holding the mic simulates recording with a live timer
-/// and, on release, sends a placeholder "🎤 Voice message (Xs)" text —
-/// swap in a real recorder (e.g. the `record` package) once the voice
-/// message backend exists; the press/release/cancel flow is already here.
 class ChatComposer extends StatefulWidget {
   final ValueChanged<String> onSend;
   final bool isSending;

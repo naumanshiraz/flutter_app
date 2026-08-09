@@ -1,6 +1,3 @@
-/// Static picker options for the vehicle form. No backend for this
-/// yet, so these are hand-picked common values — swap for a real
-/// vehicle-data lookup once one exists.
 class VehicleOptions {
   VehicleOptions._();
 

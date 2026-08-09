@@ -18,8 +18,6 @@ class VehicleSummaryCard extends StatelessWidget {
     required this.onAction,
   });
 
-  /// The design shows "7586 - УБР" on the card even though the field
-  /// itself holds "7586 УБР" — insert the dash for display only.
   String get _formattedPlate {
     final raw = vehicle.licensePlate.trim();
     final spaceIndex = raw.indexOf(' ');

@@ -13,14 +13,10 @@ class SplashPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Listening (not watching) is enough: GoRouter's `refreshListenable`
-    // + `redirect` callback perform the actual navigation once this
-    // provider resolves. We only need to know about hard failures here.
     ref.listen<AsyncValue<AppDestination>>(appInitializationProvider, (previous, next) {
       next.whenOrNull(
         error: (error, stackTrace) {
-          // The notifier already falls back to Login internally, so a
-          // surfaced error here would be truly unexpected. Log-only.
+          // Handle initialization error if needed
         },
       );
     });
