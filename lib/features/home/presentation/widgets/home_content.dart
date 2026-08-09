@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:pms_app/core/router/route_names.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
+import 'package:pms_app/core/widgets/menu_sheet.dart';
+import 'package:pms_app/core/widgets/settings_sheet.dart';
 import 'package:pms_app/features/home/presentation/providers/profile_summary_provider.dart';
 import 'package:pms_app/features/home/presentation/providers/property_listings_provider.dart';
 import 'package:pms_app/features/home/presentation/widgets/profile_header.dart';
@@ -31,6 +33,27 @@ class HomeContent extends ConsumerWidget {
         slivers: [
           SliverPadding(
             padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 0),
+            sliver: SliverToBoxAdapter(
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      onPressed: () => SettingsSheet.show(context),
+                      icon: Icon(Icons.settings_outlined, size: 22.sp, color: AppColors.textPrimary),
+                    ),
+                    IconButton(
+                      onPressed: () => MenuSheet.show(context),
+                      icon: Icon(Icons.menu, size: 22.sp, color: AppColors.textPrimary),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 0),
             sliver: SliverToBoxAdapter(
               child: profileAsync.when(
                 data: (profile) => ProfileHeader(
