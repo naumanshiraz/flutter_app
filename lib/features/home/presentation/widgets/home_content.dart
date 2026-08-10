@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pms_app/core/router/route_names.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
@@ -12,6 +13,7 @@ import 'package:pms_app/features/home/presentation/providers/property_listings_p
 import 'package:pms_app/features/home/presentation/widgets/profile_header.dart';
 import 'package:pms_app/features/home/presentation/widgets/property_card.dart';
 import 'package:pms_app/features/home/presentation/widgets/search_add_bar.dart';
+import 'package:pms_app/core/utils/svg_icons.dart';
 
 class HomeContent extends ConsumerWidget {
   const HomeContent({super.key});
@@ -41,11 +43,11 @@ class HomeContent extends ConsumerWidget {
                   children: [
                     IconButton(
                       onPressed: () => SettingsSheet.show(context),
-                      icon: Icon(Icons.settings_outlined, size: 22.sp, color: AppColors.textPrimary),
+                      icon: SvgIcons.gear(),
                     ),
                     IconButton(
                       onPressed: () => MenuSheet.show(context),
-                      icon: Icon(Icons.menu, size: 22.sp, color: AppColors.textPrimary),
+                      icon: SvgIcons.menu(),
                     ),
                   ],
                 ),

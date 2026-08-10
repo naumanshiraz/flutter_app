@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 import 'package:pms_app/core/utils/greeting.dart';
+import 'package:pms_app/core/utils/svg_icons.dart';
 
 class ChatHeader extends StatelessWidget {
   final VoidCallback? onNotificationsTap;
@@ -15,7 +15,7 @@ class ChatHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(timeOfDayGreeting(), style: AppTextStyles.appTitle),
+        Text(timeOfDayGreeting(), style: AppTextStyles.pageTitle),
         Row(
           children: [
             InkWell(
@@ -23,15 +23,16 @@ class ChatHeader extends StatelessWidget {
               customBorder: const CircleBorder(),
               child: Padding(
                 padding: EdgeInsets.all(8.w),
-                child: Icon(Icons.notifications_none, size: 24.sp, color: AppColors.textPrimary),
+                child: SvgIcons.bell()
               ),
             ),
+            SizedBox(width: 5.w),
             InkWell(
               onTap: onMenuTap,
               customBorder: const CircleBorder(),
               child: Padding(
                 padding: EdgeInsets.all(8.w),
-                child: Icon(Icons.menu, size: 24.sp, color: AppColors.textPrimary),
+                child: SvgIcons.menu(),
               ),
             ),
           ],

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
+import 'package:pms_app/core/utils/svg_icons.dart';
 
 class ChatThreadHeader extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -41,7 +42,7 @@ class ChatThreadHeader extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         IconButton(
           onPressed: onInfoTap,
-          icon: Icon(Icons.info_outline, size: 20.sp, color: AppColors.textBlack),
+          icon: SvgIcons.info(),
         ),
       ],
     );

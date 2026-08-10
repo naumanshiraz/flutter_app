@@ -9,20 +9,13 @@ class ConciergePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         bottom: false,
         child: Column(
           children: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 0),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text('Concierge', style: AppTextStyles.appTitle),
-              ),
-            ),
-            const Expanded(child: ConciergeContentView()),
+            Expanded(child: ConciergeContentView()),
           ],
         ),
       ),

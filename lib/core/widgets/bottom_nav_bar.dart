@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
+import 'package:pms_app/core/utils/svg_icons.dart';
 
 class BottomNavBar extends StatelessWidget {
   final int selectedIndex;
@@ -12,18 +13,18 @@ class BottomNavBar extends StatelessWidget {
     required this.onTap,
   });
 
-  static const List<IconData> _outlineIcons = [
-    Icons.home_outlined,
-    Icons.chat_bubble_outline,
-    Icons.shopping_cart_outlined,
-    Icons.people_alt_outlined,
+  static final List<Widget> _outlineIcons = [
+    SvgIcons.home(),
+    SvgIcons.chat(),
+    SvgIcons.cart(),
+    SvgIcons.users(),
   ];
 
-  static const List<IconData> _filledIcons = [
-    Icons.home_filled,
-    Icons.chat_bubble,
-    Icons.shopping_cart,
-    Icons.people_alt,
+  static final List<Widget> _filledIcons = [
+    SvgIcons.home_filled(),
+    SvgIcons.chat_filled(),
+    SvgIcons.cart_filled(),
+    SvgIcons.users_filled(),
   ];
 
   @override
@@ -43,11 +44,7 @@ class BottomNavBar extends StatelessWidget {
             customBorder: const CircleBorder(),
             child: Padding(
               padding: EdgeInsets.all(10.w),
-              child: Icon(
-                isSelected ? _filledIcons[index] : _outlineIcons[index],
-                size: 26.sp,
-                color: isSelected ? AppColors.textPrimary : AppColors.textPrimary,
-              ),
+              child: isSelected ? _filledIcons[index] : _outlineIcons[index],
             ),
           );
         }),

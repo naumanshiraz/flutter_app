@@ -5,7 +5,6 @@ import 'package:pms_app/core/router/route_names.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 import 'package:pms_app/core/widgets/bottom_nav_bar.dart';
-import 'package:pms_app/core/widgets/placeholder_page.dart';
 import 'package:pms_app/features/chat/presentation/pages/chat_list_page.dart';
 import 'package:pms_app/features/concierge/presentation/pages/concierge_page.dart';
 

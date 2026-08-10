@@ -12,6 +12,7 @@ import 'package:pms_app/features/main_home/presentation/providers/main_home_prov
 import 'package:pms_app/features/main_home/presentation/widgets/control_card.dart';
 import 'package:pms_app/features/main_home/presentation/widgets/image_carousel.dart';
 import 'package:pms_app/features/main_home/presentation/widgets/visitor_vehicle_signup_card.dart';
+import 'package:pms_app/core/utils/svg_icons.dart';
 
 class MainHomeContentView extends ConsumerWidget {
   const MainHomeContentView({super.key});
@@ -24,7 +25,7 @@ class MainHomeContentView extends ConsumerWidget {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 0),
+          padding: EdgeInsets.fromLTRB(12.w, 12.h, 16.w, 0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -33,11 +34,12 @@ class MainHomeContentView extends ConsumerWidget {
                 children: [
                   IconButton(
                     onPressed: () => ActivityLogSheet.show(context),
-                    icon: Icon(Icons.notifications_none, size: 24.sp, color: AppColors.textPrimary),
+                    icon: SvgIcons.bell(),
                   ),
+                  SizedBox(width: 0.w),
                   IconButton(
                     onPressed: () => MenuSheet.show(context),
-                    icon: Icon(Icons.menu, size: 24.sp, color: AppColors.textPrimary),
+                    icon: SvgIcons.menu(),
                   ),
                 ],
               ),

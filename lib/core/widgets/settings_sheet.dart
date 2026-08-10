@@ -113,9 +113,9 @@ class SettingsSheet extends ConsumerWidget {
               child: Text(label, style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700, fontSize: 15.sp)),
             ),
             if (external)
-              Icon(Icons.north_east, size: 18.sp, color: AppColors.textSecondary)
+              Icon(Icons.north_east, size: 18.sp, color: AppColors.textBlack)
             else if (showChevron)
-              Icon(Icons.chevron_right, size: 20.sp, color: AppColors.textSecondary),
+              Icon(Icons.chevron_right, size: 20.sp, color: AppColors.textBlack),
           ],
         ),
       ),

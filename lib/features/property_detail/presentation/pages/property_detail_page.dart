@@ -16,6 +16,7 @@ import 'package:pms_app/features/property_detail/presentation/widgets/property_a
 import 'package:pms_app/features/property_detail/presentation/widgets/report_sheet.dart';
 import 'package:pms_app/features/property_detail/presentation/widgets/property_hero_header.dart';
 import 'package:pms_app/features/property_detail/presentation/widgets/services_masonry_grid.dart';
+import 'package:pms_app/core/utils/svg_icons.dart';
 
 class PropertyDetailPage extends ConsumerStatefulWidget {
   final String propertyId;
@@ -115,7 +116,7 @@ class _PropertyDetailPageState extends ConsumerState<PropertyDetailPage> {
                 ),
                 InkWell(
                   onTap: () => PropertyAccessConfigSheet.show(context),
-                  child: Icon(Icons.settings_outlined, size: 20.sp, color: AppColors.textBlack),
+                  child: SvgIcons.gear(),
                 ),
               ],
             ),

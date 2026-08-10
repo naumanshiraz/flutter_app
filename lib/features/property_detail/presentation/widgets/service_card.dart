@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
+import 'package:pms_app/core/utils/svg_icons.dart';
 import 'package:pms_app/features/property_detail/domain/entities/service_listing.dart';
 
 class ServiceCard extends StatelessWidget {
@@ -43,13 +44,6 @@ class ServiceCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          // `imageHeight` (used for the tall left tile in vertical-mode
-          // layout) is an explicit pixel value computed by the grid so
-          // it lines up exactly with the two stacked tiles beside it.
-          // Deliberately NOT `IntrinsicHeight` + `Expanded` — that
-          // combo is unreliable once a network image is in the tree
-          // (intrinsic-height passes can't resolve a flexible child),
-          // which is what collapsed the right column to one tile.
           imageHeight != null
               ? SizedBox(height: imageHeight, width: double.infinity, child: image)
               : AspectRatio(aspectRatio: imageAspectRatio!, child: image),
@@ -67,7 +61,7 @@ class ServiceCard extends StatelessWidget {
               ),
               InkWell(
                 onTap: onMorePressed,
-                child: Icon(Icons.more_horiz, size: 18.sp, color: AppColors.textSecondary),
+                child: SvgIcons.more(size: 22, color: AppColors.textBlack),
               ),
             ],
           ),

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 import 'package:pms_app/features/chat/domain/entities/chat_conversation.dart';
+import 'package:pms_app/core/utils/svg_icons.dart';
 
 class ChatConversationTile extends StatelessWidget {
   final ChatConversation conversation;
@@ -53,7 +54,7 @@ class ChatConversationTile extends StatelessWidget {
               children: [
                 Text(conversation.timeLabel, style: AppTextStyles.caption),
                 SizedBox(height: 10.h),
-                Icon(Icons.info_outline, size: 18.sp, color: AppColors.textSecondary),
+                SvgIcons.check_rounded(size: 20, color: AppColors.textLightGrey),
               ],
             ),
           ],

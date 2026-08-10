@@ -6,6 +6,7 @@ import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 import 'package:pms_app/features/chat/presentation/widgets/chat_attachment_sheet.dart';
 import 'package:pms_app/features/chat/presentation/widgets/emoji_picker_sheet.dart';
+import 'package:pms_app/core/utils/svg_icons.dart';
 
 class ChatComposer extends StatefulWidget {
   final ValueChanged<String> onSend;
@@ -116,7 +117,7 @@ class _ChatComposerState extends State<ChatComposer> {
           onTap: () => _stopRecording(send: true),
           child: Padding(
             padding: EdgeInsets.all(4.w),
-            child: Icon(Icons.send, size: 22.sp, color: AppColors.primary),
+            child: SvgIcons.plane(),
           ),
         ),
       ],
@@ -132,7 +133,7 @@ class _ChatComposerState extends State<ChatComposer> {
           onLongPressCancel: () => _stopRecording(send: false),
           child: Padding(
             padding: EdgeInsets.all(4.w),
-            child: Icon(Icons.mic_none, size: 22.sp, color: AppColors.textSecondary),
+            child: SvgIcons.microphone()
           ),
         ),
         SizedBox(width: 8.w),
@@ -146,7 +147,7 @@ class _ChatComposerState extends State<ChatComposer> {
               hintText: 'Message',
               hintStyle: AppTextStyles.inputHint,
               isDense: true,
-              contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+              contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 5.h),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(24.r),
                 borderSide: const BorderSide(color: AppColors.border),
@@ -162,7 +163,12 @@ class _ChatComposerState extends State<ChatComposer> {
               suffixIcon: InkWell(
                 onTap: _showEmojiPicker,
                 customBorder: const CircleBorder(),
-                child: Icon(Icons.emoji_emotions_outlined, size: 20.sp, color: AppColors.textSecondary),
+                child: SvgIcons.emoji(size: 22, color: AppColors.textLightGrey),
+              ),
+              suffixIconConstraints: BoxConstraints(
+                minWidth: 30.w,
+                minHeight: 32.h,
+                maxHeight: 32.h,
               ),
             ),
           ),
@@ -173,7 +179,7 @@ class _ChatComposerState extends State<ChatComposer> {
           customBorder: const CircleBorder(),
           child: Padding(
             padding: EdgeInsets.all(4.w),
-            child: Icon(Icons.add_circle_outline, size: 22.sp, color: AppColors.textSecondary),
+            child: SvgIcons.plus_rounded(),
           ),
         ),
         SizedBox(width: 8.w),
@@ -186,9 +192,9 @@ class _ChatComposerState extends State<ChatComposer> {
                 ? SizedBox(
                     width: 20.sp,
                     height: 20.sp,
-                    child: const CircularProgressIndicator(strokeWidth: 2, color: AppColors.primary),
+                    child: const CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF111928)),
                   )
-                : Icon(Icons.send, size: 22.sp, color: AppColors.primary),
+                : SvgIcons.plane(),
           ),
         ),
       ],

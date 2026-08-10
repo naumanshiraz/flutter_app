@@ -53,9 +53,6 @@ class ConciergeServicesGrid extends StatelessWidget {
     );
   }
 
-  /// items[0] tall (left, or right when [tallOnRight]), sized to match
-  /// the combined height of items[1]/items[2] stacked on the other side;
-  /// anything beyond the first 3 falls into the mixed banner/grid section.
   Widget _buildVerticalFirst(List<ConciergeServiceItem> items, {required bool tallOnRight}) {
     final tall = items.first.service;
     final stack = items.skip(1).take(2).toList();
@@ -102,10 +99,6 @@ class ConciergeServicesGrid extends StatelessWidget {
     );
   }
 
-  /// Walks [items] in order: an `isBanner: true` item always renders
-  /// full-width on its own row; consecutive `isBanner: false` items pair
-  /// up two at a time into a plain 2-column grid row (a trailing odd one
-  /// gets a half-width slot rather than stretching full width).
   Widget _buildMixedGrid(List<ConciergeServiceItem> items) {
     if (items.isEmpty) return const SizedBox.shrink();
 
