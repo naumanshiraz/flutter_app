@@ -18,35 +18,91 @@ class ChatMessageBubble extends StatelessWidget {
   Widget _buildTheirs() {
     return Padding(
       padding: EdgeInsets.only(bottom: 14.h),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CircleAvatar(
-            radius: 16.r,
-            backgroundColor: AppColors.border,
-            child: Text(message.senderInitials, style: AppTextStyles.avatarInitials),
-          ),
-          SizedBox(width: 10.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      message.senderName,
-                      style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700, fontSize: 13.sp),
-                    ),
-                    SizedBox(width: 8.w),
-                    Text(message.timeLabel, style: AppTextStyles.caption),
-                  ],
+      child: LayoutBuilder(
+        builder: (_, constraints) {
+          final bubbleWidth = constraints.maxWidth * 0.75;
+
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              CircleAvatar(
+                radius: 21.r,
+                child: Text(
+                  message.senderInitials,
+                  style: AppTextStyles.avatarInitials.copyWith(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-                SizedBox(height: 2.h),
-                Text(message.text, style: AppTextStyles.body.copyWith(fontSize: 13.sp)),
-              ],
-            ),
-          ),
-        ],
+              ),
+
+              SizedBox(width: 6.w),
+
+              SizedBox(
+                width: bubbleWidth,
+                child: Container(
+                  padding: EdgeInsets.fromLTRB(
+                    8.w,
+                    8.h,
+                    8.w,
+                    8.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10.r),
+                    border: Border.all(
+                      color: const Color(0xFFE0E0E0),
+                      width: 1,
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        message.senderName,
+                        style: AppTextStyles.body.copyWith(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 15.sp,
+                        ),
+                      ),
+
+                      SizedBox(height: 10.h),
+
+                      Stack(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(
+                              right: 42.w,
+                            ),
+                            
+                            child: Text(
+                              message.text,
+                              style: AppTextStyles.body.copyWith(
+                                fontSize: 13.sp,
+                              ),
+                            ),
+                          ),
+
+                          Positioned(
+                            right: 0,
+                            bottom: 0,
+                            child: Text(
+                              message.timeLabel,
+                              style: AppTextStyles.caption.copyWith(
+                                fontSize: 13.sp,
+                                color: const Color(0xFF718096),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

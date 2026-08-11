@@ -37,7 +37,7 @@ class PublicChatPage extends ConsumerWidget {
     final notifier = ref.read(chatThreadProvider(threadKey).notifier);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.greyBackground,
       appBar: ChatThreadHeader(
         title: args.title,
         subscriberCount: args.subscriberCount,
@@ -50,7 +50,7 @@ class PublicChatPage extends ConsumerWidget {
             subscriberCount: args.subscriberCount,
           ),
         ),
-    ),
+      ),
       body: SafeArea(
         top: false,
         child: Column(

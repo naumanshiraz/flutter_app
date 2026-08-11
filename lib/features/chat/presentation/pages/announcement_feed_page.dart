@@ -36,7 +36,7 @@ class AnnouncementFeedPage extends ConsumerWidget {
     final notifier = ref.read(announcementFeedProvider(args.conversationId).notifier);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.greyBackground,
       appBar: ChatThreadHeader(
         title: args.title, 
         subscriberCount: args.subscriberCount,

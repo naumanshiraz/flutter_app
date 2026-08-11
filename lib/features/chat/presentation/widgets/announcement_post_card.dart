@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
+import 'package:pms_app/core/utils/svg_icons.dart';
 import 'package:pms_app/features/chat/domain/entities/announcement_post.dart';
 
 class AnnouncementPostCard extends StatelessWidget {
@@ -20,13 +21,24 @@ class AnnouncementPostCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(highlighted ? 12.w : 0),
-      decoration: highlighted
-          ? BoxDecoration(
-              border: Border.all(color: AppColors.primary, width: 1.4),
-              borderRadius: BorderRadius.circular(12.r),
-            )
-          : null,
+      padding: EdgeInsets.all(12.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(
+          color: highlighted
+              ? AppColors.primary
+              : const Color(0xFFE0E0E0),
+          width: highlighted ? 1.4 : 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 4,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -58,7 +70,6 @@ class AnnouncementPostCard extends StatelessWidget {
           if (post.imageUrl != null) ...[
             SizedBox(height: 10.h),
             ClipRRect(
-              borderRadius: BorderRadius.circular(10.r),
               child: AspectRatio(
                 aspectRatio: 1.4,
                 child: CachedNetworkImage(
@@ -72,16 +83,17 @@ class AnnouncementPostCard extends StatelessWidget {
           ],
           SizedBox(height: 10.h),
           Row(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Icon(Icons.thumb_up_alt_outlined, size: 16.sp, color: AppColors.textSecondary),
-              SizedBox(width: 16.w),
-              Icon(Icons.share_outlined, size: 16.sp, color: AppColors.textSecondary),
-              const Spacer(),
+              SvgIcons.thumbs_up(size: 19, color: AppColors.textBlack),
+              SizedBox(width: 10.w),
+              SvgIcons.share(size: 19, color: AppColors.textBlack),
+              SizedBox(width: 10.w),
               InkWell(
                 onTap: onCommentsTap,
                 child: Text(
                   '${post.likeCount} likes, ${post.commentCount} comments',
-                  style: AppTextStyles.caption,
+                  style: AppTextStyles.avatarInitials,
                 ),
               ),
             ],

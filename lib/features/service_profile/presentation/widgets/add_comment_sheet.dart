@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
+import 'package:pms_app/core/utils/svg_icons.dart';
 import 'package:pms_app/features/service_profile/presentation/providers/comment_form_provider.dart';
 
 class AddCommentSheet extends ConsumerStatefulWidget {
@@ -110,11 +111,7 @@ class _AddCommentSheetState extends ConsumerState<AddCommentSheet> {
             SizedBox(height: 8.h),
             Row(
               children: [
-                Icon(
-                  Icons.link,
-                  size: 18.sp,
-                  color: AppColors.textSecondary,
-                ),
+                SvgIcons.link(size: 19, color: AppColors.textDarkGrey),
                 SizedBox(width: 8.w),
                 const Spacer(),
                 OutlinedButton(

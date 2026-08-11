@@ -22,29 +22,52 @@ class ChatThreadHeader extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      backgroundColor: AppColors.background,
-      elevation: 0,
-      leadingWidth: 44.w,
-      leading: IconButton(
-        onPressed: () => context.pop(),
-        icon: Icon(Icons.arrow_back_ios_new, size: 18.sp, color: AppColors.textPrimary),
-      ),
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(title, style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700, fontSize: 15.sp)),
-          if (subscriberCount > 0)
-            Text('$subscriberCount subscribers', style: AppTextStyles.caption),
-        ],
-      ),
-      actions: [
-        IconButton(
-          onPressed: onInfoTap,
-          icon: SvgIcons.info(),
+    return Container(
+      decoration: const BoxDecoration(
+        color: AppColors.background,
+        border: Border(
+          bottom: BorderSide(
+            color: Color(0xFFE0E0E0),
+            width: 1,
+          ),
         ),
-      ],
+      ),
+      child: AppBar(
+        backgroundColor: AppColors.background,
+        elevation: 0,
+        centerTitle: true,
+        leadingWidth: 44.w,
+        leading: IconButton(
+          onPressed: () => context.pop(),
+          icon: Icon(Icons.arrow_back_ios_new, size: 18.sp, color: AppColors.textPrimary),
+        ),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: AppTextStyles.body.copyWith(
+                fontWeight: FontWeight.w700,
+                fontSize: 15.sp,
+              ),
+            ),
+          if (subscriberCount > 0)
+            Text(
+              '$subscriberCount subscribers',
+              textAlign: TextAlign.center,
+              style: AppTextStyles.caption,
+            ),
+          ],
+        ),
+        actions: [
+          IconButton(
+            onPressed: onInfoTap,
+            icon: SvgIcons.info(),
+          ),
+        ],
+      )
     );
   }
 }

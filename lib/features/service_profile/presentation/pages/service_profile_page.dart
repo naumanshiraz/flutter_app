@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pms_app/core/router/route_names.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
+import 'package:pms_app/core/utils/svg_icons.dart';
 import 'package:pms_app/core/widgets/bottom_nav_bar.dart';
 import 'package:pms_app/core/widgets/placeholder_page.dart';
 import 'package:pms_app/features/chat/presentation/pages/chat_list_page.dart';
@@ -270,11 +271,7 @@ class _ServiceProfilePageState extends ConsumerState<ServiceProfilePage> {
                               style: AppTextStyles.caption,
                             ),
                           ),
-                          Icon(
-                            Icons.link_rounded,
-                            size: 18.sp,
-                            color: const Color(0xFF9CA3AF),
-                          ),
+                          SvgIcons.link(size: 12, color: AppColors.textDarkGrey),
                         ],
                       ),
                     ),
