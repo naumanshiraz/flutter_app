@@ -472,7 +472,7 @@ class SvgIcons {
           ),
         ),
       ),
-    );    
+    );
   }
 
   static Widget thumbs_up({
@@ -503,7 +503,7 @@ class SvgIcons {
           ),
         ),
       ),
-    );    
+    );
   }
 
   static Widget share({
@@ -534,7 +534,7 @@ class SvgIcons {
           ),
         ),
       ),
-    );    
+    );
   }
 
   static Widget link({
@@ -565,6 +565,6 @@ class SvgIcons {
           ),
         ),
       ),
-    );    
+    );
   }
 }
