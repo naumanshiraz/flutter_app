@@ -3,7 +3,6 @@ import 'package:pms_app/core/error/failures.dart';
 import 'package:pms_app/core/utils/result.dart';
 import 'package:pms_app/features/main_home/data/datasources/main_home_local_datasource.dart';
 import 'package:pms_app/features/main_home/data/datasources/main_home_remote_datasource.dart';
-import 'package:pms_app/features/main_home/data/models/control_model.dart';
 import 'package:pms_app/features/main_home/domain/entities/control.dart';
 import 'package:pms_app/features/main_home/domain/repositories/main_home_repository.dart';
 

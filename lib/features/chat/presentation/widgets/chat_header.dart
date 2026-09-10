@@ -23,7 +23,7 @@ class ChatHeader extends StatelessWidget {
               customBorder: const CircleBorder(),
               child: Padding(
                 padding: EdgeInsets.all(8.w),
-                child: SvgIcons.bell()
+                child: SvgIcons.bell(),
               ),
             ),
             SizedBox(width: 5.w),

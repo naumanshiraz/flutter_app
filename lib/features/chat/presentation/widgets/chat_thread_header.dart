@@ -67,7 +67,7 @@ class ChatThreadHeader extends StatelessWidget implements PreferredSizeWidget {
             icon: SvgIcons.info(),
           ),
         ],
-      )
+      ),
     );
   }
 }

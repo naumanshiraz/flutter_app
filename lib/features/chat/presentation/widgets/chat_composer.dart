@@ -133,7 +133,7 @@ class _ChatComposerState extends State<ChatComposer> {
           onLongPressCancel: () => _stopRecording(send: false),
           child: Padding(
             padding: EdgeInsets.all(4.w),
-            child: SvgIcons.microphone()
+            child: SvgIcons.microphone(),
           ),
         ),
         SizedBox(width: 8.w),
