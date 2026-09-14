@@ -6,7 +6,7 @@ class CompleteLoginUseCase {
   final AuthFlowRepository _repository;
   const CompleteLoginUseCase(this._repository);
 
-  Future<Result<void>> call(String identifier) => _repository.completeLogin(identifier);
+  Future<Result<void>> call() => _repository.completeLogin();
 }
 
 class CompleteSignupUseCase {

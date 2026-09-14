@@ -24,19 +24,22 @@ class SplashPage extends ConsumerWidget {
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SplashLogo(size: 96),
-              const SizedBox(height: 20),
-              Text(
-                AppConstants.appName,
-                textAlign: TextAlign.center,
-                style: AppTextStyles.appTitle,
-              ),
-              const SizedBox(height: 40),
-              const _SplashLoadingIndicator(),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SplashLogo(size: 96),
+                const SizedBox(height: 20),
+                Text(
+                  AppConstants.appName,
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.appTitle,
+                ),
+                const SizedBox(height: 40),
+                const _SplashStatus(),
+              ],
+            ),
           ),
         ),
       ),
@@ -44,14 +47,19 @@ class SplashPage extends ConsumerWidget {
   }
 }
 
-class _SplashLoadingIndicator extends ConsumerWidget {
-  const _SplashLoadingIndicator();
+class _SplashStatus extends ConsumerWidget {
+  const _SplashStatus();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final initState = ref.watch(appInitializationProvider);
 
     return initState.maybeWhen(
+      data: (destination) => destination == AppDestination.offline
+          ? _OfflineMessage(
+              onRetry: () => ref.read(appInitializationProvider.notifier).refresh(),
+            )
+          : const SizedBox(height: 28),
       orElse: () => const SizedBox(
         width: 28,
         height: 28,
@@ -60,7 +68,39 @@ class _SplashLoadingIndicator extends ConsumerWidget {
           valueColor: AlwaysStoppedAnimation(AppColors.primary),
         ),
       ),
-      data: (_) => const SizedBox(height: 28),
+    );
+  }
+}
+
+class _OfflineMessage extends StatelessWidget {
+  final VoidCallback onRetry;
+
+  const _OfflineMessage({required this.onRetry});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Icon(Icons.wifi_off_rounded, size: 32, color: AppColors.textSecondary),
+        const SizedBox(height: 12),
+        Text(
+          'No internet connection',
+          textAlign: TextAlign.center,
+          style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w600),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'Please check your connection and try again.',
+          textAlign: TextAlign.center,
+          style: AppTextStyles.bodySecondary,
+        ),
+        const SizedBox(height: 16),
+        TextButton(
+          onPressed: onRetry,
+          child: Text('Retry', style: AppTextStyles.linkText),
+        ),
+      ],
     );
   }
 }

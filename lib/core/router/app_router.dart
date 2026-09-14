@@ -73,6 +73,9 @@ String? _routeGuard(BuildContext context, GoRouterState state, Ref ref) {
     loading: () => isSplashRoute ? null : RouteNames.splash,
     error: (_, __) => isSplashRoute ? null : RouteNames.splash,
     data: (destination) {
+      if (destination == AppDestination.offline) {
+        return isSplashRoute ? null : RouteNames.splash;
+      }
       final isAuthenticated = destination == AppDestination.home;
       final isLoginRoute = currentPath == RouteNames.login;
       final isProtectedRoute = currentPath == RouteNames.home ||

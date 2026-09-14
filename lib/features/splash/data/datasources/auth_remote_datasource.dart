@@ -1,10 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:pms_app/core/constants/app_constants.dart';
 import 'package:pms_app/core/error/exceptions.dart';
-import 'package:pms_app/features/splash/data/models/auth_session_model.dart';
 
 abstract class AuthRemoteDataSource {
-  Future<AuthSessionModel> validateSession(String token);
+  Future<String> fetchCurrentUserId(String token);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -13,13 +12,18 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl(this._dio);
 
   @override
-  Future<AuthSessionModel> validateSession(String token) async {
+  Future<String> fetchCurrentUserId(String token) async {
     try {
       final response = await _dio.get(
-        AppConstants.endpointProfile,
+        AppConstants.endpointAuthMe,
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
-      return AuthSessionModel.fromJson(response.data as Map<String, dynamic>);
+      final data = response.data as Map<String, dynamic>;
+      final id = data['id'] ?? data['user_id'];
+      if (id == null) {
+        throw const ServerException('Malformed response from /api/auth/me.');
+      }
+      return id.toString();
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
         throw const UnauthorizedException();

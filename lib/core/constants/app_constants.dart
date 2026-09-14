@@ -31,11 +31,14 @@ class AppConstants {
   static const Duration apiTimeout = Duration(seconds: 30);
 
   // ---------------------------------------------------------------------
-  // API (Swap with real backend later)
+  // API — Dobu Mobile API (Estavex), resident surface.
+  // Staging default; local demo stack is http://localhost:3000.
   // ---------------------------------------------------------------------
-  static const String baseUrl = 'https://api.pms-app.example.com/v1';
-  static const String endpointRequestOtp = '/auth/request-otp';
-  static const String endpointVerifyOtp = '/auth/verify-otp';
-  static const String endpointRefreshToken = '/auth/refresh-token';
-  static const String endpointProfile = '/user/profile';
+  static const String baseUrl = 'https://api.estavex.com';
+  static const String endpointOtpRequest = '/api/auth/otp/request';
+  static const String endpointOtpVerify = '/api/auth/otp/verify';
+  static const String endpointAuthMe = '/api/auth/me';
+  static const String endpointAuthRefresh = '/api/auth/refresh';
+  static const String endpointAuthLogout = '/api/auth/logout';
+  static const String endpointProfile = '/api/app/profile';
 }

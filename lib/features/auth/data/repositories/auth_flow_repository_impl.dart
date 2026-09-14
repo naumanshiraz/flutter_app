@@ -1,27 +1,47 @@
+import 'dart:convert';
+
 import 'package:pms_app/core/error/exceptions.dart';
 import 'package:pms_app/core/error/failures.dart';
 import 'package:pms_app/core/services/connectivity_service.dart';
+import 'package:pms_app/core/services/local_storage_service.dart';
 import 'package:pms_app/core/services/logger_service.dart';
+import 'package:pms_app/core/services/secure_storage_service.dart';
 import 'package:pms_app/core/utils/result.dart';
-import 'package:pms_app/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:pms_app/features/auth/data/datasources/auth_remote_datasource.dart';
+import 'package:pms_app/features/auth/data/models/auth_tokens_model.dart';
 import 'package:pms_app/features/auth/data/models/user_profile_model.dart';
+import 'package:pms_app/features/auth/domain/entities/auth_tokens.dart';
 import 'package:pms_app/features/auth/domain/entities/otp_session.dart';
 import 'package:pms_app/features/auth/domain/entities/user_profile.dart';
 import 'package:pms_app/features/auth/domain/repositories/auth_flow_repository.dart';
 
 class AuthFlowRepositoryImpl implements AuthFlowRepository {
   final AuthRemoteDataSource _remoteDataSource;
-  final AuthLocalDataSource _localDataSource;
+  final SecureStorageService _secureStorage;
+  final LocalStorageService _localStorage;
   final ConnectivityService _connectivityService;
+
+  AuthTokensModel? _pendingTokens;
 
   AuthFlowRepositoryImpl({
     required AuthRemoteDataSource remoteDataSource,
-    required AuthLocalDataSource localDataSource,
+    required SecureStorageService secureStorage,
+    required LocalStorageService localStorage,
     required ConnectivityService connectivityService,
   })  : _remoteDataSource = remoteDataSource,
-        _localDataSource = localDataSource,
+        _secureStorage = secureStorage,
+        _localStorage = localStorage,
         _connectivityService = connectivityService;
+
+  String _serverPurpose(OtpPurpose purpose) =>
+      purpose == OtpPurpose.signup ? 'signup' : 'login';
+
+  Future<void> _persistSession(AuthTokensModel tokens) async {
+    await _secureStorage.saveAuthToken(tokens.token);
+    await _secureStorage.saveRefreshToken(tokens.refreshToken);
+    await _localStorage.setLoggedIn(true);
+    await _localStorage.setOnboardingComplete(tokens.onboardingComplete);
+  }
 
   @override
   Future<Result<OtpSession>> requestOtp({
@@ -32,17 +52,15 @@ class AuthFlowRepositoryImpl implements AuthFlowRepository {
     try {
       final isOnline = await _connectivityService.isConnected;
       AppLogger.info('AuthFlowRepository: requestOtp connectivity=$isOnline');
-      // Mocked flow works fully offline today; once real API calls are
-      // enabled above, an explicit `if (!isOnline) return ResultError(NetworkFailure())`
-      // guard belongs here.
+      if (!isOnline) {
+        return const ResultError(NetworkFailure());
+      }
 
       final model = await _remoteDataSource.requestOtp(
         identifier: identifier,
-        identifierType: identifierType,
-        purpose: purpose,
+        purpose: _serverPurpose(purpose),
       );
-      await _localDataSource.savePendingOtpSession(model);
-      return Success(model.toEntity());
+      return Success(model.toEntity(identifierType: identifierType, purpose: purpose));
     } on ServerException catch (e) {
       return ResultError(ServerFailure(e.message));
     } catch (e) {
@@ -51,64 +69,95 @@ class AuthFlowRepositoryImpl implements AuthFlowRepository {
   }
 
   @override
-  Future<Result<bool>> verifyOtp({
+  Future<Result<AuthTokens>> verifyOtp({
     required String identifier,
     required String code,
   }) async {
     try {
-      final pending = _localDataSource.getPendingOtpSession(identifier);
-      if (pending == null) {
-        return const ResultError(
-          ServerFailure('No pending verification for this identifier. Please request a new code.'),
-        );
-      }
-      if (DateTime.now().isAfter(pending.expiresAt)) {
-        return const ResultError(ServerFailure('This code has expired. Please request a new one.'));
-      }
-      if (pending.code != code) {
-        return const ResultError(ServerFailure('Incorrect code. Please try again.'));
-      }
-
-      // Round-trips through the (mocked) remote call too, so the real
-      // API integration point is already exercised end-to-end.
-      await _remoteDataSource.verifyOtp(identifier: identifier, code: code);
-      await _localDataSource.clearPendingOtpSession();
-      return const Success(true);
-    } on ServerException catch (e) {
-      return ResultError(ServerFailure(e.message));
+      final model = await _remoteDataSource.verifyOtp(identifier: identifier, code: code);
+      _pendingTokens = model;
+      return Success(model.toEntity());
     } on UnauthorizedException catch (e) {
       return ResultError(UnauthorizedFailure(e.message));
+    } on ServerException catch (e) {
+      return ResultError(ServerFailure(e.message));
     } catch (e) {
       return ResultError(UnknownFailure('Failed to verify OTP: $e'));
     }
   }
 
   @override
-  Future<Result<void>> completeLogin(String identifier) async {
+  Future<Result<void>> completeLogin() async {
+    final tokens = _pendingTokens;
+    if (tokens == null) {
+      return const ResultError(
+        ServerFailure('No verified session to complete. Please verify the code again.'),
+      );
+    }
     try {
-      await _localDataSource.persistAuthenticatedSession();
+      await _persistSession(tokens);
+      _pendingTokens = null;
       return const Success(null);
-    } on CacheException catch (e) {
-      return ResultError(CacheFailure(e.message));
     } catch (e) {
-      return ResultError(UnknownFailure('Failed to complete login: $e'));
+      return ResultError(CacheFailure('Failed to complete login: $e'));
     }
   }
 
   @override
   Future<Result<void>> completeSignup(UserProfile profile) async {
+    final tokens = _pendingTokens;
+    if (tokens == null) {
+      return const ResultError(
+        ServerFailure('No verified session to complete. Please verify the code again.'),
+      );
+    }
     try {
       final model = UserProfileModel.fromEntity(profile);
       await _remoteDataSource.submitSignupProfile(model);
-      await _localDataSource.persistOnboardingProfile(model);
-      await _localDataSource.persistAuthenticatedSession();
+      await _persistSession(tokens.copyWith(onboardingComplete: true));
+      await _localStorage.setCachedUserProfileJson(jsonEncode(model.toJson()));
+      _pendingTokens = null;
       return const Success(null);
     } on ServerException catch (e) {
       return ResultError(ServerFailure(e.message));
-    } on CacheException catch (e) {
-      return ResultError(CacheFailure(e.message));
     } catch (e) {
-      return ResultError(UnknownFailure('Failed to complete sign up: $e'));
+      return ResultError(CacheFailure('Failed to complete sign up: $e'));
+    }
+  }
+
+  @override
+  Future<Result<AuthTokens>> refreshSession(String refreshToken) async {
+    try {
+      final model = await _remoteDataSource.refreshSession(refreshToken);
+      await _persistSession(model);
+      return Success(model.toEntity());
+    } on UnauthorizedException catch (e) {
+      await _secureStorage.clearAll();
+      await _localStorage.setLoggedIn(false);
+      await _localStorage.clearUserData();
+      return ResultError(UnauthorizedFailure(e.message));
+    } on ServerException catch (e) {
+      return ResultError(ServerFailure(e.message));
+    } catch (e) {
+      return ResultError(UnknownFailure('Failed to refresh session: $e'));
+    }
+  }
+
+  @override
+  Future<Result<void>> logout(String refreshToken) async {
+    try {
+      await _remoteDataSource.logout(refreshToken);
+    } catch (e) {
+      AppLogger.warning('AuthFlowRepository: logout call failed ($e). Clearing session locally.');
+    }
+    try {
+      await _secureStorage.clearAll();
+      await _localStorage.setLoggedIn(false);
+      await _localStorage.clearUserData();
+      _pendingTokens = null;
+      return const Success(null);
+    } catch (e) {
+      return ResultError(CacheFailure('Failed to clear session: $e'));
     }
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pms_app/core/constants/app_constants.dart';
 import 'package:pms_app/core/di/injection.dart';
+import 'package:pms_app/core/error/failures.dart';
 import 'package:pms_app/core/services/logger_service.dart';
 import 'package:pms_app/features/splash/domain/entities/app_destination.dart';
 import 'package:pms_app/features/splash/presentation/providers/splash_providers.dart';
@@ -12,10 +13,6 @@ class AppInitializationNotifier extends AsyncNotifier<AppDestination> {
     AppLogger.info('AppInitialization: starting bootstrap sequence.');
 
     try {
-      final connectivity = ref.read(connectivityServiceProvider);
-      final isOnline = await connectivity.isConnected;
-      AppLogger.info('AppInitialization: connectivity = $isOnline');
-
       final checkAuthSessionUseCase = ref.read(checkAuthSessionUseCaseProvider);
       final result = await checkAuthSessionUseCase();
 
@@ -27,6 +24,10 @@ class AppInitializationNotifier extends AsyncNotifier<AppDestination> {
           return session.isAuthenticated ? AppDestination.home : AppDestination.login;
         },
         onFailure: (failure) {
+          if (failure is NetworkFailure) {
+            AppLogger.warning('AppInitialization: no internet connection.');
+            return AppDestination.offline;
+          }
           AppLogger.warning(
             'AppInitialization: session check failed (${failure.message}). Falling back to Login.',
           );
@@ -39,7 +40,6 @@ class AppInitializationNotifier extends AsyncNotifier<AppDestination> {
     } catch (e, st) {
       AppLogger.error('AppInitialization: unexpected bootstrap failure', e, st);
       await _enforceMinimumSplashDuration(stopwatch);
-      // Fail safe: never strand the user on a broken splash screen.
       return AppDestination.login;
     }
   }
@@ -52,8 +52,6 @@ class AppInitializationNotifier extends AsyncNotifier<AppDestination> {
     }
   }
 
-  /// Allows the Login/OTP flow to force a re-evaluation after a
-  /// successful sign-in (e.g. `ref.invalidate(appInitializationProvider)`).
   Future<void> refresh() async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(build);

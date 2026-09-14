@@ -158,7 +158,7 @@ class OtpVerificationNotifier extends StateNotifier<OtpVerificationState> {
     final verifyResult = await verifyUseCase(identifier: state.identifier, code: state.code);
 
     final verified = verifyResult.when(
-      onSuccess: (ok) => ok,
+      onSuccess: (_) => true,
       onFailure: (failure) {
         state = state.copyWith(status: OtpVerifyStatus.idle, errorMessage: failure.message);
         return false;
@@ -166,14 +166,10 @@ class OtpVerificationNotifier extends StateNotifier<OtpVerificationState> {
     );
 
     if (!verified) return false;
-
-    // Login flow ends here: mark the session authenticated immediately.
-    // Sign-up flow instead proceeds to onboarding — the page decides
-    // that based on `state.purpose`, this notifier just confirms the
-    // code was correct.
+    
     if (state.purpose == OtpPurpose.login) {
       final completeLogin = _ref.read(completeLoginUseCaseProvider);
-      final result = await completeLogin(state.identifier);
+      final result = await completeLogin();
       result.when(
         onSuccess: (_) => state = state.copyWith(status: OtpVerifyStatus.success),
         onFailure: (failure) {

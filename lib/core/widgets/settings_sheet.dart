@@ -6,6 +6,7 @@ import 'package:pms_app/core/di/injection.dart';
 import 'package:pms_app/core/router/route_names.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
+import 'package:pms_app/features/auth/presentation/providers/auth_providers.dart';
 import 'package:pms_app/features/splash/presentation/providers/app_initialization_provider.dart';
 
 /// "Settings" sheet opened from the Menu sheet's Settings row.
@@ -23,7 +24,8 @@ class SettingsSheet extends ConsumerWidget {
   }
 
   Future<void> _logOut(BuildContext context, WidgetRef ref) async {
-    await ref.read(secureStorageServiceProvider).clearAll();
+    final refreshToken = await ref.read(secureStorageServiceProvider).getRefreshToken();
+    await ref.read(logoutUseCaseProvider)(refreshToken ?? '');
     await ref.read(appInitializationProvider.notifier).refresh();
     if (!context.mounted) return;
     Navigator.of(context).pop();
