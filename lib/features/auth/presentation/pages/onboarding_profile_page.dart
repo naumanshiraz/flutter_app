@@ -63,8 +63,8 @@ class _OnboardingProfilePageState extends ConsumerState<OnboardingProfilePage> {
   @override
   Widget build(BuildContext context) {
     return StepScaffold(
-      currentStep: 2,
-      totalSteps: 5,
+      currentStep: 0,
+      totalSteps: 3,
       bottomButton: GradientButton(
         label: 'Next', 
         onPressed: _onNext,

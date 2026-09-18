@@ -112,10 +112,16 @@ class AuthFlowRepositoryImpl implements AuthFlowRepository {
       );
     }
     try {
+      await _persistSession(tokens);
+
       final model = UserProfileModel.fromEntity(profile);
-      await _remoteDataSource.submitSignupProfile(model);
-      await _persistSession(tokens.copyWith(onboardingComplete: true));
-      await _localStorage.setCachedUserProfileJson(jsonEncode(model.toJson()));
+      final saved = await _remoteDataSource.submitSignupProfile(model);
+
+      if (saved.onboardingComplete != tokens.onboardingComplete) {
+        await _persistSession(tokens.copyWith(onboardingComplete: saved.onboardingComplete));
+      }
+
+      await _localStorage.setCachedUserProfileJson(jsonEncode(saved.toJson()));
       _pendingTokens = null;
       return const Success(null);
     } on ServerException catch (e) {

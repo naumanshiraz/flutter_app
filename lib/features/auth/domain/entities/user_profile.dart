@@ -3,8 +3,6 @@ import 'package:equatable/equatable.dart';
 enum Gender { female, male, other }
 
 class UserProfile extends Equatable {
-  final String email;
-  final String phone;
   final String name;
   final DateTime? birthDate;
   final Gender? gender;
@@ -12,8 +10,6 @@ class UserProfile extends Equatable {
   final String? location;
 
   const UserProfile({
-    this.email = '',
-    this.phone = '',
     this.name = '',
     this.birthDate,
     this.gender,
@@ -22,17 +18,9 @@ class UserProfile extends Equatable {
   });
 
   bool get isComplete =>
-      email.isNotEmpty &&
-      phone.isNotEmpty &&
-      name.isNotEmpty &&
-      birthDate != null &&
-      gender != null &&
-      location != null &&
-      location!.isNotEmpty;
+      name.isNotEmpty && birthDate != null && gender != null && location != null && location!.isNotEmpty;
 
   UserProfile copyWith({
-    String? email,
-    String? phone,
     String? name,
     DateTime? birthDate,
     Gender? gender,
@@ -41,8 +29,6 @@ class UserProfile extends Equatable {
     String? location,
   }) {
     return UserProfile(
-      email: email ?? this.email,
-      phone: phone ?? this.phone,
       name: name ?? this.name,
       birthDate: birthDate ?? this.birthDate,
       gender: gender ?? this.gender,
@@ -52,6 +38,5 @@ class UserProfile extends Equatable {
   }
 
   @override
-  List<Object?> get props =>
-      [email, phone, name, birthDate, gender, customGender, location];
+  List<Object?> get props => [name, birthDate, gender, customGender, location];
 }

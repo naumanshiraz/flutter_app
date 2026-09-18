@@ -9,22 +9,19 @@ class UserProfileModel with _$UserProfileModel {
   const UserProfileModel._();
 
   const factory UserProfileModel({
-    required String email,
-    required String phone,
-    required String name,
-    DateTime? birthDate,
+    @JsonKey(name: 'full_name') required String fullName,
+    @JsonKey(name: 'birth_date') DateTime? birthDate,
     String? gender,
-    String? customGender,
+    @JsonKey(name: 'custom_gender') String? customGender,
     String? location,
+    @JsonKey(name: 'onboarding_complete') @Default(false) bool onboardingComplete,
   }) = _UserProfileModel;
 
   factory UserProfileModel.fromJson(Map<String, dynamic> json) =>
       _$UserProfileModelFromJson(json);
 
   factory UserProfileModel.fromEntity(UserProfile entity) => UserProfileModel(
-        email: entity.email,
-        phone: entity.phone,
-        name: entity.name,
+        fullName: entity.name,
         birthDate: entity.birthDate,
         gender: entity.gender?.name,
         customGender: entity.customGender,
@@ -32,17 +29,22 @@ class UserProfileModel with _$UserProfileModel {
       );
 
   UserProfile toEntity() => UserProfile(
-        email: email,
-        phone: phone,
-        name: name,
+        name: fullName,
         birthDate: birthDate,
         gender: gender == null
             ? null
-            : Gender.values.firstWhere(
-                (g) => g.name == gender,
-                orElse: () => Gender.other,
-              ),
+            : Gender.values.firstWhere((g) => g.name == gender, orElse: () => Gender.other),
         customGender: customGender,
         location: location,
       );
+
+  Map<String, dynamic> toRequestJson() => {
+        'full_name': fullName,
+        if (birthDate != null)
+          'birth_date':
+              '${birthDate!.year.toString().padLeft(4, '0')}-${birthDate!.month.toString().padLeft(2, '0')}-${birthDate!.day.toString().padLeft(2, '0')}',
+        if (gender != null) 'gender': gender,
+        if (customGender != null) 'custom_gender': customGender,
+        if (location != null) 'location': location,
+      };
 }

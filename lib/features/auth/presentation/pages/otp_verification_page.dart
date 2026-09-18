@@ -90,7 +90,7 @@ class OtpVerificationPage extends ConsumerWidget {
           );
           if (context.mounted) context.go(RouteNames.login);
         } else {
-          if (context.mounted) context.go(RouteNames.onboardingEmail);
+          if (context.mounted) context.go(RouteNames.onboardingProfile);
         }
       }
     });

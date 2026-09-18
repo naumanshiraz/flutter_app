@@ -82,8 +82,8 @@ class _OnboardingGenderPageState extends ConsumerState<OnboardingGenderPage> {
   @override
   Widget build(BuildContext context) {
     return StepScaffold(
-      currentStep: 3,
-      totalSteps: 5,
+      currentStep: 1,
+      totalSteps: 3,
       bottomButton: GradientButton(
         label: 'Next', 
         onPressed: _canProceed ? _onNext : null,

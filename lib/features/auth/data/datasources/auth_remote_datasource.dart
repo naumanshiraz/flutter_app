@@ -17,7 +17,7 @@ abstract class AuthRemoteDataSource {
 
   Future<void> logout(String refreshToken);
 
-  Future<void> submitSignupProfile(UserProfileModel profile);
+  Future<UserProfileModel> submitSignupProfile(UserProfileModel profile);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -101,14 +101,21 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<void> submitSignupProfile(UserProfileModel profile) async {
+  Future<UserProfileModel> submitSignupProfile(UserProfileModel profile) async {
     try {
-      await Future.delayed(const Duration(milliseconds: 700));
-
-      // ---- REAL API (uncomment once `PATCH /api/app/profile` is wired) --
-      // await _dio.patch(AppConstants.endpointProfile, data: profile.toJson());
+      final response = await _dio.patch(
+        AppConstants.endpointProfile,
+        data: profile.toRequestJson(),
+      );
+      return UserProfileModel.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400) {
+        final serverError = (e.response?.data is Map) ? e.response?.data['error'] : null;
+        throw ServerException(serverError?.toString() ?? 'Invalid profile data.');
+      }
+      throw ServerException(e.message ?? 'Failed to save profile.');
     } catch (e) {
-      throw ServerException('Unexpected error submitting profile: $e');
+      throw ServerException('Unexpected error saving profile: $e');
     }
   }
 }

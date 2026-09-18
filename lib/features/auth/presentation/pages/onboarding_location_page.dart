@@ -71,8 +71,8 @@ class _OnboardingLocationPageState extends ConsumerState<OnboardingLocationPage>
   @override
   Widget build(BuildContext context) {
     return StepScaffold(
-      currentStep: 4,
-      totalSteps: 5,
+      currentStep: 2,
+      totalSteps: 3,
       bottomButton: GradientButton(
         label: 'Next',
         isLoading: _isSubmitting,

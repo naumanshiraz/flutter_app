@@ -5,10 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:pms_app/core/router/route_names.dart';
 import 'package:pms_app/core/widgets/placeholder_page.dart';
 import 'package:pms_app/features/auth/presentation/pages/login_page.dart';
-import 'package:pms_app/features/auth/presentation/pages/onboarding_email_page.dart';
 import 'package:pms_app/features/auth/presentation/pages/onboarding_gender_page.dart';
 import 'package:pms_app/features/auth/presentation/pages/onboarding_location_page.dart';
-import 'package:pms_app/features/auth/presentation/pages/onboarding_phone_page.dart';
 import 'package:pms_app/features/auth/presentation/pages/onboarding_profile_page.dart';
 import 'package:pms_app/features/auth/presentation/pages/otp_verification_page.dart';
 import 'package:pms_app/features/auth/presentation/providers/otp_verification_provider.dart';
@@ -153,16 +151,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           }
           return OtpVerificationPage(args: args);
         },
-      ),
-      GoRoute(
-        path: RouteNames.onboardingEmail,
-        name: RouteNames.onboardingEmail,
-        builder: (context, state) => const OnboardingEmailPage(),
-      ),
-      GoRoute(
-        path: RouteNames.onboardingPhone,
-        name: RouteNames.onboardingPhone,
-        builder: (context, state) => const OnboardingPhonePage(),
       ),
       GoRoute(
         path: RouteNames.onboardingProfile,
