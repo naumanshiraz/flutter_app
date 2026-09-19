@@ -105,6 +105,10 @@ class AuthFlowRepositoryImpl implements AuthFlowRepository {
 
   @override
   Future<Result<void>> completeSignup(UserProfile profile) async {
+    if (profile.name.trim().isEmpty) {
+      return const ResultError(ServerFailure('Full name is required.'));
+    }
+
     final tokens = _pendingTokens;
     if (tokens == null) {
       return const ResultError(

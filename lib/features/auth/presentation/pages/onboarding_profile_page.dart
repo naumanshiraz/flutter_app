@@ -80,8 +80,11 @@ class _OnboardingProfilePageState extends ConsumerState<OnboardingProfilePage> {
             controller: _nameController,
             hintText: 'Enter your name',
             errorText: _nameError,
-            onChanged: (_) {
+            onChanged: (val) {
               if (_nameError != null) setState(() => _nameError = null);
+              ref.read(signupProfileProvider.notifier).update(
+                (p) => p.copyWith(name: val.trim()),
+              );
             },
           ),
           SizedBox(height: 32.h),

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:pms_app/core/constants/app_constants.dart';
 import 'package:pms_app/core/error/exceptions.dart';
+import 'package:pms_app/core/services/logger_service.dart';
 import 'package:pms_app/features/auth/data/models/auth_tokens_model.dart';
 import 'package:pms_app/features/auth/data/models/otp_session_model.dart';
 import 'package:pms_app/features/auth/data/models/user_profile_model.dart';
@@ -103,6 +104,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<UserProfileModel> submitSignupProfile(UserProfileModel profile) async {
     try {
+      final payload = profile.toRequestJson();
+      AppLogger.debug('Signup profile payload: $payload');
+    
       final response = await _dio.patch(
         AppConstants.endpointProfile,
         data: profile.toRequestJson(),

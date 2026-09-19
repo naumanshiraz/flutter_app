@@ -55,7 +55,7 @@ class _OnboardingLocationPageState extends ConsumerState<OnboardingLocationPage>
 
     result.when(
       onSuccess: (_) {
-        // ignore: unused_result
+        ref.read(signupProfileProvider.notifier).reset();
         ref.read(appInitializationProvider.notifier).refresh();
         context.go(RouteNames.home);
       },

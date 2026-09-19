@@ -16,9 +16,12 @@ class SignupProfileNotifier extends StateNotifier<UserProfile> {
     final useCase = _ref.read(completeSignupUseCaseProvider);
     return useCase(state);
   }
+
+  void reset() {
+    state = const UserProfile();
+  }
 }
 
-final signupProfileProvider =
-    StateNotifierProvider.autoDispose<SignupProfileNotifier, UserProfile>(
+final signupProfileProvider = StateNotifierProvider<SignupProfileNotifier, UserProfile>(
   (ref) => SignupProfileNotifier(ref),
 );
