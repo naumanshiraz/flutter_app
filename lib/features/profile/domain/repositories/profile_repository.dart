@@ -7,4 +7,6 @@ abstract class ProfileRepository {
   Future<Result<void>> updateProfile(EditableProfile profile);
 
   Future<Result<String>> pickProfilePicture(ProfilePictureSource source);
+
+  Future<Result<void>> updateContactIdentifier({required String field, required String value});
 }

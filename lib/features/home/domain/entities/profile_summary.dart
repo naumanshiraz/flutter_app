@@ -1,20 +1,32 @@
 import 'package:equatable/equatable.dart';
 
+class Campus extends Equatable {
+  final String id;
+  final String name;
+  final String? description;
+  final String? thumbUrl;
+
+  const Campus({required this.id, required this.name, this.description, this.thumbUrl});
+
+  @override
+  List<Object?> get props => [id, name, description, thumbUrl];
+}
+
 class ProfileSummary extends Equatable {
   final String name;
   final String email;
   final String phone;
   final String? avatarUrl;
+  final List<Campus> campuses;
 
   const ProfileSummary({
     required this.name,
     required this.email,
     required this.phone,
     this.avatarUrl,
+    this.campuses = const [],
   });
 
-  /// "Narandelger Dashdorj" -> "ND", used as the avatar fallback when
-  /// there's no [avatarUrl].
   String get initials {
     final parts = name.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty).toList();
     if (parts.isEmpty) return '';
@@ -23,5 +35,5 @@ class ProfileSummary extends Equatable {
   }
 
   @override
-  List<Object?> get props => [name, email, phone, avatarUrl];
+  List<Object?> get props => [name, email, phone, avatarUrl, campuses];
 }

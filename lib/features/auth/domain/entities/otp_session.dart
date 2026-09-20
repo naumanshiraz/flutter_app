@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-enum OtpPurpose { login, signup, adminAccountModification, accountTermination }
+enum OtpPurpose { login, signup, adminAccountModification, accountTermination, profileContactUpdate }
 
 enum IdentifierType { email, phone }
 

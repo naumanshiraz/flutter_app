@@ -23,3 +23,12 @@ class PickProfilePictureUseCase {
   Future<Result<String>> call(ProfilePictureSource source) =>
       _repository.pickProfilePicture(source);
 }
+
+class UpdateContactIdentifierUseCase {
+  final ProfileRepository _repository;
+  const UpdateContactIdentifierUseCase(this._repository);
+
+  Future<Result<void>> call({required String field, required String value}) =>
+      _repository.updateContactIdentifier(field: field, value: value);
+}
+

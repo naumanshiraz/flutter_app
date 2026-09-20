@@ -5,26 +5,24 @@ import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 import 'package:pms_app/features/home/domain/entities/profile_summary.dart';
 
-class PropertyCard extends StatelessWidget {
+class CampusTile extends StatelessWidget {
   final Campus campus;
-  final VoidCallback? onTap;
 
-  const PropertyCard({super.key, required this.campus, this.onTap});
+  const CampusTile({super.key, required this.campus});
 
   @override
   Widget build(BuildContext context) {
     final thumbUrl = campus.thumbUrl;
 
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16.r),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Padding(
+      padding: EdgeInsets.only(bottom: 12.h),
+      child: Row(
         children: [
-          AspectRatio(
-            aspectRatio: 4 / 2.5,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16.r),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8.r),
+            child: SizedBox(
+              width: 44.w,
+              height: 44.w,
               child: (thumbUrl != null && thumbUrl.isNotEmpty)
                   ? CachedNetworkImage(
                       imageUrl: thumbUrl,
@@ -32,8 +30,7 @@ class PropertyCard extends StatelessWidget {
                       placeholder: (context, _) => Container(color: AppColors.border),
                       errorWidget: (context, _, __) => Container(
                         color: AppColors.border,
-                        child: const Icon(Icons.image_not_supported_outlined,
-                            color: AppColors.textSecondary),
+                        child: const Icon(Icons.apartment, color: AppColors.textSecondary),
                       ),
                     )
                   : Container(
@@ -42,22 +39,23 @@ class PropertyCard extends StatelessWidget {
                     ),
             ),
           ),
-          SizedBox(height: 8.h),
-          Text(
-            campus.name,
-            style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700, fontSize: 14.sp),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          if (campus.description != null && campus.description!.isNotEmpty) ...[
-            SizedBox(height: 2.h),
-            Text(
-              campus.description!,
-              style: AppTextStyles.caption,
+          SizedBox(width: 12.w),
+          Expanded(
+            child: Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: campus.name,
+                    style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700),
+                  ),
+                  if (campus.description != null && campus.description!.isNotEmpty)
+                    TextSpan(text: '  ·  ${campus.description}', style: AppTextStyles.caption),
+                ],
+              ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-          ],
+          ),
         ],
       ),
     );

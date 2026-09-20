@@ -8,6 +8,7 @@ class EditableProfile extends Equatable {
   final DateTime? birthDate;
   final String? pronouns;
   final String? avatarPath;
+  final String? avatarUrl;
 
   const EditableProfile({
     this.name = '',
@@ -17,10 +18,9 @@ class EditableProfile extends Equatable {
     this.birthDate,
     this.pronouns,
     this.avatarPath,
+    this.avatarUrl,
   });
 
-  /// "Narandelger Dashdorj" -> "ND", shown in the placeholder avatar
-  /// circle whenever there's no [avatarPath] yet.
   String get initials {
     final parts = name.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty).toList();
     if (parts.isEmpty) return '';
@@ -36,6 +36,7 @@ class EditableProfile extends Equatable {
     DateTime? birthDate,
     String? pronouns,
     String? avatarPath,
+    String? avatarUrl,
   }) {
     return EditableProfile(
       name: name ?? this.name,
@@ -45,13 +46,13 @@ class EditableProfile extends Equatable {
       birthDate: birthDate ?? this.birthDate,
       pronouns: pronouns ?? this.pronouns,
       avatarPath: avatarPath ?? this.avatarPath,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
     );
   }
 
   @override
-  List<Object?> get props => [name, email, phone, country, birthDate, pronouns, avatarPath];
+  List<Object?> get props =>
+      [name, email, phone, country, birthDate, pronouns, avatarPath, avatarUrl];
 }
 
-/// Where the picked photo comes from — kept in the domain layer as a
-/// plain enum so use cases don't depend on `image_picker`'s own type.
 enum ProfilePictureSource { camera, gallery }

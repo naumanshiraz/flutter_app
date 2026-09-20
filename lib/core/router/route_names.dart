@@ -15,6 +15,7 @@ class RouteNames {
   static const String chatGroupInfo = '/home/chat/group-info';
   static const String concierge = '/home/concierge';
   static const String editProfile = '/profile/edit';
+  static const String updateContact = '/profile/edit/contact';
   static const String profilePicture = '/profile/picture';
   static const String residencyIdentification = '/profile/residency';
   static const String familyMembers = '/profile/family-members';

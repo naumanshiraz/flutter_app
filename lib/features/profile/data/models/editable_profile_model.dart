@@ -16,6 +16,7 @@ class EditableProfileModel with _$EditableProfileModel {
     DateTime? birthDate,
     String? pronouns,
     String? avatarPath,
+    String? avatarUrl,
   }) = _EditableProfileModel;
 
   factory EditableProfileModel.fromJson(Map<String, dynamic> json) =>
@@ -29,6 +30,7 @@ class EditableProfileModel with _$EditableProfileModel {
         birthDate: entity.birthDate,
         pronouns: entity.pronouns,
         avatarPath: entity.avatarPath,
+        avatarUrl: entity.avatarUrl,
       );
 
   EditableProfile toEntity() => EditableProfile(
@@ -39,5 +41,6 @@ class EditableProfileModel with _$EditableProfileModel {
         birthDate: birthDate,
         pronouns: pronouns,
         avatarPath: avatarPath,
+        avatarUrl: avatarUrl,
       );
 }

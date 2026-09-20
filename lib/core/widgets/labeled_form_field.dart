@@ -11,6 +11,8 @@ class LabeledFormField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final bool enabled;
   final String? errorText;
+  final Widget? suffixIcon;
+  final Widget? trailing;
 
   const LabeledFormField({
     super.key,
@@ -21,48 +23,64 @@ class LabeledFormField extends StatelessWidget {
     this.onChanged,
     this.enabled = true,
     this.errorText,
+    this.suffixIcon,
+    this.trailing,
   });
 
   @override
   Widget build(BuildContext context) {
     final hasError = errorText != null;
+    final field = TextField(
+      controller: controller,
+      enabled: enabled,
+      keyboardType: keyboardType,
+      onChanged: onChanged,
+      style: AppTextStyles.inputText,
+      decoration: InputDecoration(
+        hintText: hintText,
+        hintStyle: AppTextStyles.inputHint,
+        errorText: null, // handled manually below
+        suffixIcon: suffixIcon,
+        filled: !enabled,
+        fillColor: AppColors.secondary,
+        contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.r),
+          borderSide: BorderSide(
+            color: hasError ? AppColors.error : AppColors.border,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.r),
+          borderSide: BorderSide(
+            color: hasError ? AppColors.error : AppColors.primary,
+            width: 1.4,
+          ),
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.r),
+          borderSide: BorderSide(
+            color: hasError ? AppColors.error : AppColors.border,
+          ),
+        ),
+      ),
+    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label, style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700)),
         SizedBox(height: 8.h),
-        TextField(
-          controller: controller,
-          enabled: enabled,
-          keyboardType: keyboardType,
-          onChanged: onChanged,
-          style: AppTextStyles.inputText,
-          decoration: InputDecoration(
-            hintText: hintText,
-            hintStyle: AppTextStyles.inputHint,
-            errorText: null, // handled manually below
-            contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(
-                color: hasError ? AppColors.error : AppColors.border,
+        trailing == null
+            ? field
+            : Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(child: field),
+                  SizedBox(width: 0.w),
+                  trailing!,
+                ],
               ),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(
-                color: hasError ? AppColors.error : AppColors.primary,
-                width: 1.4,
-              ),
-            ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(
-                color: hasError ? AppColors.error : AppColors.border,
-              ),
-            ),
-          ),
-        ),
         if (hasError) ...[
           SizedBox(height: 4.h),
           Text(
@@ -104,7 +122,7 @@ class LabeledPickerField extends StatelessWidget {
           borderRadius: BorderRadius.circular(12.r),
           child: Container(
             width: double.infinity,
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
             decoration: BoxDecoration(
               border: Border.all(
                 color: hasError ? AppColors.error : AppColors.border,

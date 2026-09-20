@@ -15,6 +15,7 @@ import 'package:pms_app/features/account_termination/presentation/providers/acco
 import 'package:pms_app/features/auth/domain/entities/otp_session.dart';
 import 'package:pms_app/features/auth/presentation/providers/otp_verification_provider.dart';
 import 'package:pms_app/features/auth/presentation/widgets/otp_input_boxes.dart';
+import 'package:pms_app/features/profile/presentation/providers/profile_di_providers.dart';
 import 'package:pms_app/features/splash/presentation/providers/app_initialization_provider.dart';
 
 class OtpVerificationPage extends ConsumerWidget {
@@ -45,8 +46,6 @@ class OtpVerificationPage extends ConsumerWidget {
 
       if (next.status == OtpVerifyStatus.success && previous?.status != OtpVerifyStatus.success) {
         if (next.purpose == OtpPurpose.login) {
-          // Sync the app-wide session check, then go straight Home.
-          // ignore: unused_result
           ref.read(appInitializationProvider.notifier).refresh();
           if (context.mounted) context.go(RouteNames.home);
         } else if (next.purpose == OtpPurpose.adminAccountModification) {
@@ -89,6 +88,59 @@ class OtpVerificationPage extends ConsumerWidget {
             message: 'Account terminated.',
           );
           if (context.mounted) context.go(RouteNames.login);
+        } else if (next.purpose == OtpPurpose.profileContactUpdate) {
+          final field = args.metadata?['field'] ?? 'email';
+          final updateResult = await ref.read(updateContactIdentifierUseCaseProvider)(
+            field: field,
+            value: args.identifier,
+          );
+          if (updateResult.isFailure) {
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    updateResult.failureOrNull?.message ??
+                        'Failed to update your ${field == 'email' ? 'email address' : 'phone number'}.',
+                  ),
+                ),
+              );
+            }
+            return;
+          }
+          if (context.mounted) {
+            await showDialog<void>(
+              context: context,
+              barrierColor: AppColors.modalScrim,
+              barrierDismissible: false,
+              builder: (dialogContext) => Dialog(
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 28.h),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('Success!', style: AppTextStyles.pageTitle),
+                      SizedBox(height: 12.h),
+                      Text(
+                        'Your ${field == 'email' ? 'email address' : 'phone number'} has been updated.',
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.bodySecondary,
+                      ),
+                      SizedBox(height: 20.h),
+                      GradientButton(
+                        label: 'Go to Profile',
+                        onPressed: () => Navigator.of(dialogContext).pop(),
+                        height: 44.h,
+                        borderRadius: 10.r,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }
+          if (context.mounted) context.go(RouteNames.editProfile);  
         } else {
           if (context.mounted) context.go(RouteNames.onboardingProfile);
         }

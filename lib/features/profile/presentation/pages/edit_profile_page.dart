@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:pms_app/core/router/route_names.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
+import 'package:pms_app/core/utils/svg_icons.dart';
 import 'package:pms_app/core/widgets/labeled_form_field.dart';
 import 'package:pms_app/core/widgets/single_select_sheet.dart';
 import 'package:pms_app/features/profile/presentation/providers/edit_profile_provider.dart';
@@ -25,6 +26,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   late final TextEditingController _pronounsController;
 
   bool _controllersHydrated = false;
+  final Map<String, String> _fieldErrors = {};
 
   @override
   void initState() {
@@ -64,6 +66,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     );
     if (picked != null) {
       ref.read(editProfileProvider.notifier).updateFields(birthDate: picked);
+      setState(() => _fieldErrors.remove('birthDate'));
     }
   }
 
@@ -75,10 +78,32 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     );
     if (selected != null) {
       ref.read(editProfileProvider.notifier).updateFields(country: selected);
+      setState(() => _fieldErrors.remove('country'));
     }
   }
 
+  bool _validate() {
+    final state = ref.read(editProfileProvider);
+    final errors = <String, String>{};
+
+    if (_nameController.text.trim().isEmpty) errors['name'] = 'Please enter your name.';
+    if (_emailController.text.trim().isEmpty) errors['email'] = 'Please enter your email address.';
+    if (_phoneController.text.trim().isEmpty) errors['phone'] = 'Please enter your phone number.';
+    if (state.profile.country == null || state.profile.country!.isEmpty) {
+      errors['country'] = 'Please choose your country.';
+    }
+    if (state.profile.birthDate == null) errors['birthDate'] = 'Please choose your birthdate.';
+    if (_pronounsController.text.trim().isEmpty) errors['pronouns'] = 'Please enter your pronouns.';
+
+    setState(() => _fieldErrors
+      ..clear()
+      ..addAll(errors));
+    return errors.isEmpty;
+  }
+
   Future<void> _onSave() async {
+    if (!_validate()) return;
+
     ref.read(editProfileProvider.notifier).updateFields(
           name: _nameController.text.trim(),
           email: _emailController.text.trim(),
@@ -87,8 +112,39 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
         );
 
     final ok = await ref.read(editProfileProvider.notifier).save();
-  
+
     if (ok && mounted) context.push(RouteNames.residencyIdentification);
+  }
+
+  Future<void> _confirmChangeContact(BuildContext context, {required String field}) async {
+    final label = field == 'email' ? 'email address' : 'phone number';
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Change $label?'),
+        content: Text(
+          'Please double-check your $label before confirming. This action cannot be undone.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('No'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Yes', style: TextStyle(color: AppColors.primary)),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !context.mounted) return;
+
+    final currentValue =
+        field == 'email' ? ref.read(editProfileProvider).profile.email : ref.read(editProfileProvider).profile.phone;
+    context.push(
+      RouteNames.updateContact,
+      extra: {'field': field, 'currentValue': currentValue},
+    );
   }
 
   @override
@@ -146,6 +202,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                         onTap: () => context.push(RouteNames.profilePicture),
                         child: ProfileAvatarCircle(
                           avatarPath: state.profile.avatarPath,
+                          avatarUrl: state.profile.avatarUrl,
                           initials: state.profile.initials,
                           size: 140,
                         ),
@@ -170,6 +227,8 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                       label: 'Name',
                       controller: _nameController,
                       hintText: 'Enter your name',
+                      errorText: _fieldErrors['name'],
+                      onChanged: (_) => setState(() => _fieldErrors.remove('name')),
                     ),
                     SizedBox(height: 20.h),
                     LabeledFormField(
@@ -177,6 +236,12 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                       controller: _emailController,
                       hintText: 'Enter your email address',
                       keyboardType: TextInputType.emailAddress,
+                      enabled: false,
+                      errorText: _fieldErrors['email'],
+                      trailing: IconButton(
+                        icon: SvgIcons.edit(size: 34.sp, color: AppColors.textSecondary),
+                        onPressed: () => _confirmChangeContact(context, field: 'email'),
+                      ),
                     ),
                     SizedBox(height: 20.h),
                     LabeledFormField(
@@ -184,6 +249,12 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                       controller: _phoneController,
                       hintText: 'Enter your phone number',
                       keyboardType: TextInputType.phone,
+                      enabled: false,
+                      errorText: _fieldErrors['phone'],
+                      trailing: IconButton(
+                        icon: SvgIcons.edit(size: 34.sp, color: AppColors.textSecondary),
+                        onPressed: () => _confirmChangeContact(context, field: 'phone'),
+                      ),
                     ),
                     SizedBox(height: 20.h),
                     LabeledPickerField(
@@ -191,6 +262,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                       displayValue: state.profile.country ?? 'Choose',
                       isPlaceholder: state.profile.country == null,
                       onTap: () => _pickCountry(context),
+                      errorText: _fieldErrors['country'],
                     ),
                     SizedBox(height: 20.h),
                     LabeledPickerField(
@@ -200,12 +272,15 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                           : DateFormat.yMMMd().format(state.profile.birthDate!),
                       isPlaceholder: state.profile.birthDate == null,
                       onTap: () => _pickBirthDate(context),
+                      errorText: _fieldErrors['birthDate'],
                     ),
                     SizedBox(height: 20.h),
                     LabeledFormField(
                       label: 'Pronouns',
                       controller: _pronounsController,
                       hintText: 'e.g. she/her, he/him, they/them',
+                      errorText: _fieldErrors['pronouns'],
+                      onChanged: (_) => setState(() => _fieldErrors.remove('pronouns')),
                     ),
                     if (state.errorMessage != null) ...[
                       SizedBox(height: 16.h),

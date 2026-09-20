@@ -22,6 +22,7 @@ import 'package:pms_app/features/family_members/presentation/pages/family_member
 import 'package:pms_app/features/home/presentation/pages/home_page.dart';
 import 'package:pms_app/features/profile/presentation/pages/edit_profile_page.dart';
 import 'package:pms_app/features/profile/presentation/pages/profile_picture_page.dart';
+import 'package:pms_app/features/profile/presentation/pages/update_contact_page.dart';
 import 'package:pms_app/features/properties/domain/entities/property.dart';
 import 'package:pms_app/features/properties/presentation/pages/edit_property_page.dart';
 import 'package:pms_app/features/properties/presentation/pages/properties_page.dart';
@@ -85,6 +86,7 @@ String? _routeGuard(BuildContext context, GoRouterState state, Ref ref) {
           currentPath == RouteNames.chatGroupInfo ||
           currentPath == RouteNames.concierge ||
           currentPath == RouteNames.editProfile ||
+          currentPath == RouteNames.updateContact ||
           currentPath == RouteNames.profilePicture ||
           currentPath == RouteNames.residencyIdentification ||
           currentPath == RouteNames.familyMembers ||
@@ -242,6 +244,17 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: RouteNames.editProfile,
         name: RouteNames.editProfile,
         builder: (context, state) => const EditProfilePage(),
+      ),
+      GoRoute(
+        path: RouteNames.updateContact,
+        name: RouteNames.updateContact,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>? ?? const {};
+          return UpdateContactPage(
+            field: extra['field'] as String? ?? 'email',
+            currentValue: extra['currentValue'] as String? ?? '',
+          );
+        },
       ),
       GoRoute(
         path: RouteNames.profilePicture,
