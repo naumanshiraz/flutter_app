@@ -36,11 +36,6 @@ class FamilyMembersState {
   }
 }
 
-/// Backs the "Please identify your affiliates" screen (list + draft
-/// add-form) *and* the Edit-affiliate screen — both read/write through
-/// this one notifier so the list stays in sync, the same pattern used
-/// for `editProfileProvider` powering both Edit Profile and Profile
-/// Picture.
 class FamilyMembersNotifier extends StateNotifier<FamilyMembersState> {
   final Ref _ref;
   static const _uuid = Uuid();
@@ -62,29 +57,13 @@ class FamilyMembersNotifier extends StateNotifier<FamilyMembersState> {
     );
   }
 
-  void updateDraft({
-    String? name,
-    String? email,
-    String? phone,
-    String? relationship,
-    int? birthYear,
-    String? gender,
-  }) {
+  void updateDraft({String? name, String? contact, String? relationship}) {
     state = state.copyWith(
-      draft: state.draft.copyWith(
-        name: name,
-        email: email,
-        phone: phone,
-        relationship: relationship,
-        birthYear: birthYear,
-        gender: gender,
-      ),
+      draft: state.draft.copyWith(name: name, contact: contact, relationship: relationship),
       clearError: true,
     );
   }
 
-  /// Validates and persists the current draft, then resets the draft
-  /// (with a fresh id) so the form is ready for the next affiliate.
   Future<bool> addDraftAsMember() async {
     if (!state.draft.isValid) {
       state = state.copyWith(errorMessage: 'Please complete every field before adding.');

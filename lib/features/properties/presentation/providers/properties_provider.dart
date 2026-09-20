@@ -45,9 +45,6 @@ class PropertiesState {
   }
 }
 
-/// Backs the "Please specify your property" screen (list + draft
-/// add-form) *and* the Edit-property screen — same shared-notifier
-/// pattern as `familyMembersProvider`.
 class PropertiesNotifier extends StateNotifier<PropertiesState> {
   final Ref _ref;
   static const _uuid = Uuid();
@@ -64,12 +61,12 @@ class PropertiesNotifier extends StateNotifier<PropertiesState> {
     final residencyResult = await residencyUseCase();
 
     final residencyName = residencyResult.when(
-      onSuccess: (address) => address.residence ?? '',
+      onSuccess: (address) => address.campusName ?? '',
       onFailure: (_) => '',
     );
     final place = residencyResult.when(
       onSuccess: (address) {
-        final parts = [address.khoroo, address.district, address.city]
+        final parts = [address.city, address.country]
             .where((p) => p != null && p.isNotEmpty)
             .toList();
         return parts.join(', ');
@@ -104,8 +101,6 @@ class PropertiesNotifier extends StateNotifier<PropertiesState> {
     );
   }
 
-  /// Validates and persists the current draft, then resets the draft
-  /// (with a fresh id) so the form is ready for the next property.
   Future<bool> addDraftAsProperty() async {
     if (!state.draft.isValid) {
       state = state.copyWith(errorMessage: 'Please complete every field before adding.');

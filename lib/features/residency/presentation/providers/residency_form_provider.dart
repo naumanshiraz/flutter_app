@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pms_app/features/residency/domain/entities/campus_option.dart';
 import 'package:pms_app/features/residency/domain/entities/residency_address.dart';
 import 'package:pms_app/features/residency/presentation/providers/residency_di_providers.dart';
 
@@ -6,12 +7,14 @@ class ResidencyFormState {
   final bool isLoading;
   final bool isSaving;
   final ResidencyAddress address;
+  final List<CampusOption> campusOptions;
   final String? errorMessage;
 
   const ResidencyFormState({
     this.isLoading = true,
     this.isSaving = false,
     this.address = const ResidencyAddress(),
+    this.campusOptions = const [],
     this.errorMessage,
   });
 
@@ -19,6 +22,7 @@ class ResidencyFormState {
     bool? isLoading,
     bool? isSaving,
     ResidencyAddress? address,
+    List<CampusOption>? campusOptions,
     String? errorMessage,
     bool clearError = false,
   }) {
@@ -26,20 +30,15 @@ class ResidencyFormState {
       isLoading: isLoading ?? this.isLoading,
       isSaving: isSaving ?? this.isSaving,
       address: address ?? this.address,
+      campusOptions: campusOptions ?? this.campusOptions,
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
     );
   }
 }
 
-/// Defaults shown on first visit — matches the design's pre-filled
-/// example (Mongolia / Ulaanbaatar / Khan Uul / 15th khoroo / Gerlug
-/// Vista) rather than starting blank, consistent with the screenshot.
 const ResidencyAddress _kDefaultAddress = ResidencyAddress(
   country: 'Mongolia',
   city: 'Ulaanbaatar',
-  district: 'Khan Uul',
-  khoroo: '15th khoroo',
-  residence: 'Gerlug Vista',
 );
 
 class ResidencyFormNotifier extends StateNotifier<ResidencyFormState> {
@@ -50,20 +49,23 @@ class ResidencyFormNotifier extends StateNotifier<ResidencyFormState> {
   }
 
   Future<void> _load() async {
-    final useCase = _ref.read(getCachedResidencyAddressUseCaseProvider);
-    final result = await useCase();
-    result.when(
-      onSuccess: (cached) {
-        // Fall back to the design's defaults if nothing's been saved yet.
-        final address = cached.isComplete ? cached : _kDefaultAddress;
-        state = state.copyWith(isLoading: false, address: address);
+    final getCached = _ref.read(getCachedResidencyAddressUseCaseProvider);
+    final getCampuses = _ref.read(getCampusOptionsUseCaseProvider);
+
+    final cachedResult = await getCached();
+    final campusesResult = await getCampuses();
+
+    final address = cachedResult.when(
+      onSuccess: (cached) => cached.country != null ? cached : _kDefaultAddress,
+      onFailure: (_) => _kDefaultAddress,
+    );
+
+    campusesResult.when(
+      onSuccess: (campuses) {
+        state = state.copyWith(isLoading: false, address: address, campusOptions: campuses);
       },
       onFailure: (failure) {
-        state = state.copyWith(
-          isLoading: false,
-          address: _kDefaultAddress,
-          errorMessage: failure.message,
-        );
+        state = state.copyWith(isLoading: false, address: address, errorMessage: failure.message);
       },
     );
   }
@@ -76,22 +78,11 @@ class ResidencyFormNotifier extends StateNotifier<ResidencyFormState> {
     return _ref.read(residencyGeoDataSourceProvider).citiesFor(country);
   }
 
-  List<String> districtOptions() {
-    final city = state.address.city;
-    if (city == null) return const [];
-    return _ref.read(residencyGeoDataSourceProvider).districtsFor(city);
-  }
-
-  List<String> khorooOptions() {
-    final district = state.address.district;
-    if (district == null) return const [];
-    return _ref.read(residencyGeoDataSourceProvider).khoroosFor(district);
-  }
-
-  List<String> residenceOptions() {
-    final khoroo = state.address.khoroo;
-    if (khoroo == null) return const [];
-    return _ref.read(residencyGeoDataSourceProvider).residencesFor(khoroo);
+  void selectCampus(CampusOption option) {
+    state = state.copyWith(
+      address: state.address.copyWith(campusId: option.id, campusName: option.name),
+      clearError: true,
+    );
   }
 
   void selectCountry(String value) {
@@ -102,28 +93,7 @@ class ResidencyFormNotifier extends StateNotifier<ResidencyFormState> {
   }
 
   void selectCity(String value) {
-    state = state.copyWith(
-      address: state.address.copyWith(city: value).clearBelow(ResidencyLevel.city),
-      clearError: true,
-    );
-  }
-
-  void selectDistrict(String value) {
-    state = state.copyWith(
-      address: state.address.copyWith(district: value).clearBelow(ResidencyLevel.district),
-      clearError: true,
-    );
-  }
-
-  void selectKhoroo(String value) {
-    state = state.copyWith(
-      address: state.address.copyWith(khoroo: value).clearBelow(ResidencyLevel.khoroo),
-      clearError: true,
-    );
-  }
-
-  void selectResidence(String value) {
-    state = state.copyWith(address: state.address.copyWith(residence: value), clearError: true);
+    state = state.copyWith(address: state.address.copyWith(city: value), clearError: true);
   }
 
   Future<bool> save() async {

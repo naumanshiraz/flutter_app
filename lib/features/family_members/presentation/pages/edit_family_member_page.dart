@@ -21,11 +21,8 @@ class EditFamilyMemberPage extends ConsumerStatefulWidget {
 
 class _EditFamilyMemberPageState extends ConsumerState<EditFamilyMemberPage> {
   late final TextEditingController _nameController;
-  late final TextEditingController _emailController;
-  late final TextEditingController _phoneController;
+  late final TextEditingController _contactController;
   late String? _relationship;
-  late int? _birthYear;
-  late String? _gender;
 
   bool _isSaving = false;
   String? _errorMessage;
@@ -34,29 +31,22 @@ class _EditFamilyMemberPageState extends ConsumerState<EditFamilyMemberPage> {
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.member.name);
-    _emailController = TextEditingController(text: widget.member.email);
-    _phoneController = TextEditingController(text: widget.member.phone);
+    _contactController = TextEditingController(text: widget.member.contact);
     _relationship = widget.member.relationship;
-    _birthYear = widget.member.birthYear;
-    _gender = widget.member.gender;
   }
 
   @override
   void dispose() {
     _nameController.dispose();
-    _emailController.dispose();
-    _phoneController.dispose();
+    _contactController.dispose();
     super.dispose();
   }
 
   Future<void> _onSave() async {
     final updated = widget.member.copyWith(
       name: _nameController.text.trim(),
-      email: _emailController.text.trim(),
-      phone: _phoneController.text.trim(),
+      contact: _contactController.text.trim(),
       relationship: _relationship,
-      birthYear: _birthYear,
-      gender: _gender,
     );
 
     if (!updated.isValid) {
@@ -136,14 +126,9 @@ class _EditFamilyMemberPageState extends ConsumerState<EditFamilyMemberPage> {
                     SizedBox(height: 24.h),
                     FamilyMemberFormFields(
                       nameController: _nameController,
-                      emailController: _emailController,
-                      phoneController: _phoneController,
+                      contactController: _contactController,
                       relationship: _relationship,
-                      birthYear: _birthYear,
-                      gender: _gender,
                       onRelationshipChanged: (v) => setState(() => _relationship = v),
-                      onBirthYearChanged: (v) => setState(() => _birthYear = v),
-                      onGenderChanged: (v) => setState(() => _gender = v),
                     ),
                     if (_errorMessage != null) ...[
                       SizedBox(height: 16.h),
@@ -164,9 +149,6 @@ class _EditFamilyMemberPageState extends ConsumerState<EditFamilyMemberPage> {
   }
 }
 
-/// Defensive fallback for the (unlikely) case someone deep-links to the
-/// edit route without a member in `state.extra` — mirrors the pattern
-/// used for OTP verification's missing-args case.
 class EditFamilyMemberFallbackPage extends StatelessWidget {
   const EditFamilyMemberFallbackPage({super.key});
 

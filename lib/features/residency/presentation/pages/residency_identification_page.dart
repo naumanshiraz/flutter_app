@@ -9,6 +9,7 @@ import 'package:pms_app/core/widgets/gradient_button.dart';
 import 'package:pms_app/core/widgets/labeled_form_field.dart';
 import 'package:pms_app/core/widgets/single_select_sheet.dart';
 import 'package:pms_app/core/widgets/step_scaffold.dart';
+import 'package:pms_app/features/residency/domain/entities/campus_option.dart';
 import 'package:pms_app/features/residency/presentation/providers/residency_form_provider.dart';
 
 class ResidencyIdentificationPage extends ConsumerWidget {
@@ -32,14 +33,31 @@ class ResidencyIdentificationPage extends ConsumerWidget {
     if (selected != null) onSelected(selected);
   }
 
+  Future<void> _pickCampus(
+    BuildContext context,
+    WidgetRef ref, {
+    required List<CampusOption> options,
+    required CampusOption? current,
+    required ValueChanged<CampusOption> onSelected,
+  }) async {
+    if (options.isEmpty) return;
+    final selected = await SingleSelectSheet.show(
+      context,
+      options: options.map((c) => c.name).toList(),
+      current: current?.name,
+      title: 'Campuses or project',
+    );
+    if (selected == null) return;
+    final match = options.firstWhere((c) => c.name == selected);
+    onSelected(match);
+  }
+
   Future<void> _onNext(BuildContext context, WidgetRef ref) async {
     final notifier = ref.read(residencyFormProvider.notifier);
     final ok = await notifier.save();
     if (!ok || !context.mounted) return;
 
-    // Continue the multi-step flow into the next provided design
-    // (Family Members / affiliates) rather than returning to Home.
-    context.push(RouteNames.familyMembers);
+    context.push(RouteNames.properties);
   }
 
   @override
@@ -59,6 +77,10 @@ class ResidencyIdentificationPage extends ConsumerWidget {
         ),
       );
     }
+
+    final currentCampus = address.campusId == null
+        ? null
+        : CampusOption(id: address.campusId!, name: address.campusName ?? '');
 
     return StepScaffold(
       currentStep: 0,
@@ -86,6 +108,19 @@ class ResidencyIdentificationPage extends ConsumerWidget {
           ),
           SizedBox(height: 28.h),
           LabeledPickerField(
+            label: 'Campuses or project',
+            displayValue: address.campusName ?? 'Choose',
+            isPlaceholder: address.campusName == null,
+            onTap: () => _pickCampus(
+              context,
+              ref,
+              options: state.campusOptions,
+              current: currentCampus,
+              onSelected: notifier.selectCampus,
+            ),
+          ),
+          SizedBox(height: 20.h),
+          LabeledPickerField(
             label: 'Country',
             displayValue: address.country ?? 'Choose',
             isPlaceholder: address.country == null,
@@ -110,48 +145,6 @@ class ResidencyIdentificationPage extends ConsumerWidget {
               options: notifier.cityOptions(),
               current: address.city,
               onSelected: notifier.selectCity,
-            ),
-          ),
-          SizedBox(height: 20.h),
-          LabeledPickerField(
-            label: 'District',
-            displayValue: address.district ?? 'Choose',
-            isPlaceholder: address.district == null,
-            onTap: () => _pick(
-              context,
-              ref,
-              title: 'District',
-              options: notifier.districtOptions(),
-              current: address.district,
-              onSelected: notifier.selectDistrict,
-            ),
-          ),
-          SizedBox(height: 20.h),
-          LabeledPickerField(
-            label: 'Khoroo',
-            displayValue: address.khoroo ?? 'Choose',
-            isPlaceholder: address.khoroo == null,
-            onTap: () => _pick(
-              context,
-              ref,
-              title: 'Khoroo',
-              options: notifier.khorooOptions(),
-              current: address.khoroo,
-              onSelected: notifier.selectKhoroo,
-            ),
-          ),
-          SizedBox(height: 20.h),
-          LabeledPickerField(
-            label: 'Residence',
-            displayValue: address.residence ?? 'Choose',
-            isPlaceholder: address.residence == null,
-            onTap: () => _pick(
-              context,
-              ref,
-              title: 'Residence',
-              options: notifier.residenceOptions(),
-              current: address.residence,
-              onSelected: notifier.selectResidence,
             ),
           ),
           if (state.errorMessage != null) ...[

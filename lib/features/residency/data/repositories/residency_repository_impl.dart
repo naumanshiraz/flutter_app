@@ -4,6 +4,7 @@ import 'package:pms_app/core/utils/result.dart';
 import 'package:pms_app/features/residency/data/datasources/residency_local_datasource.dart';
 import 'package:pms_app/features/residency/data/datasources/residency_remote_datasource.dart';
 import 'package:pms_app/features/residency/data/models/residency_address_model.dart';
+import 'package:pms_app/features/residency/domain/entities/campus_option.dart';
 import 'package:pms_app/features/residency/domain/entities/residency_address.dart';
 import 'package:pms_app/features/residency/domain/repositories/residency_repository.dart';
 
@@ -42,6 +43,18 @@ class ResidencyRepositoryImpl implements ResidencyRepository {
       return ResultError(CacheFailure(e.message));
     } catch (e) {
       return ResultError(UnknownFailure('Failed to save residency address: $e'));
+    }
+  }
+
+  @override
+  Future<Result<List<CampusOption>>> getCampuses({String query = ''}) async {
+    try {
+      final models = await _remoteDataSource.getCampuses(query: query);
+      return Success(models.map((m) => m.toEntity()).toList());
+    } on ServerException catch (e) {
+      return ResultError(ServerFailure(e.message));
+    } catch (e) {
+      return ResultError(UnknownFailure('Failed to load campuses: $e'));
     }
   }
 }

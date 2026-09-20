@@ -11,11 +11,8 @@ class FamilyMemberModel with _$FamilyMemberModel {
   const factory FamilyMemberModel({
     required String id,
     @Default('') String name,
-    @Default('') String email,
-    @Default('') String phone,
+    @Default('') String contact,
     String? relationship,
-    int? birthYear,
-    String? gender,
   }) = _FamilyMemberModel;
 
   factory FamilyMemberModel.fromJson(Map<String, dynamic> json) =>
@@ -24,20 +21,14 @@ class FamilyMemberModel with _$FamilyMemberModel {
   factory FamilyMemberModel.fromEntity(FamilyMember entity) => FamilyMemberModel(
         id: entity.id,
         name: entity.name,
-        email: entity.email,
-        phone: entity.phone,
+        contact: entity.contact,
         relationship: entity.relationship,
-        birthYear: entity.birthYear,
-        gender: entity.gender,
       );
 
   FamilyMember toEntity() => FamilyMember(
         id: id,
         name: name,
-        email: email,
-        phone: phone,
+        contact: contact,
         relationship: relationship,
-        birthYear: birthYear,
-        gender: gender,
       );
 }

@@ -21,29 +21,25 @@ class FamilyMembersPage extends ConsumerStatefulWidget {
 
 class _FamilyMembersPageState extends ConsumerState<FamilyMembersPage> {
   final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _phoneController = TextEditingController();
+  final _contactController = TextEditingController();
 
   @override
   void dispose() {
     _nameController.dispose();
-    _emailController.dispose();
-    _phoneController.dispose();
+    _contactController.dispose();
     super.dispose();
   }
 
   void _clearDraftControllers() {
     _nameController.clear();
-    _emailController.clear();
-    _phoneController.clear();
+    _contactController.clear();
   }
 
   Future<void> _onAddAffiliate() async {
     final notifier = ref.read(familyMembersProvider.notifier);
     notifier.updateDraft(
       name: _nameController.text.trim(),
-      email: _emailController.text.trim(),
-      phone: _phoneController.text.trim(),
+      contact: _contactController.text.trim(),
     );
     final ok = await notifier.addDraftAsMember();
     if (ok) _clearDraftControllers();
@@ -77,9 +73,7 @@ class _FamilyMembersPageState extends ConsumerState<FamilyMembersPage> {
   }
 
   Future<void> _onNext() async {
-    // Continue the multi-step flow into the next provided design
-    // (Specify Property) rather than returning to Home.
-    context.push(RouteNames.properties);
+    context.push(RouteNames.vehicles);
   }
 
   @override
@@ -150,14 +144,9 @@ class _FamilyMembersPageState extends ConsumerState<FamilyMembersPage> {
           ],
           FamilyMemberFormFields(
             nameController: _nameController,
-            emailController: _emailController,
-            phoneController: _phoneController,
+            contactController: _contactController,
             relationship: state.draft.relationship,
-            birthYear: state.draft.birthYear,
-            gender: state.draft.gender,
             onRelationshipChanged: (v) => notifier.updateDraft(relationship: v),
-            onBirthYearChanged: (v) => notifier.updateDraft(birthYear: v),
-            onGenderChanged: (v) => notifier.updateDraft(gender: v),
           ),
           if (state.errorMessage != null) ...[
             SizedBox(height: 16.h),

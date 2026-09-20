@@ -63,7 +63,7 @@ class _PropertiesPageState extends ConsumerState<PropertiesPage> {
   }
 
   Future<void> _onNext() async {
-    context.push(RouteNames.vehicles);
+    context.push(RouteNames.familyMembers);
   }
 
   @override

@@ -102,6 +102,11 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   }
 
   Future<void> _onSave() async {
+    // TEMP: validation + PATCH /api/app/profile disabled so the residency
+    // screen can be tested standalone. Restore _validate() + save() below
+    // before shipping.
+    if (mounted) context.push(RouteNames.residencyIdentification);
+    return;
     if (!_validate()) return;
 
     ref.read(editProfileProvider.notifier).updateFields(

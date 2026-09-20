@@ -1,59 +1,50 @@
 import 'package:equatable/equatable.dart';
 
 class ResidencyAddress extends Equatable {
+  final String? campusId;
+  final String? campusName;
   final String? country;
   final String? city;
-  final String? district;
-  final String? khoroo;
-  final String? residence;
 
   const ResidencyAddress({
+    this.campusId,
+    this.campusName,
     this.country,
     this.city,
-    this.district,
-    this.khoroo,
-    this.residence,
   });
 
-  bool get isComplete =>
-      country != null && city != null && district != null && khoroo != null && residence != null;
+  bool get isComplete => campusId != null && country != null && city != null;
 
   ResidencyAddress copyWith({
+    String? campusId,
+    String? campusName,
     String? country,
     String? city,
-    String? district,
-    String? khoroo,
-    String? residence,
   }) {
     return ResidencyAddress(
+      campusId: campusId ?? this.campusId,
+      campusName: campusName ?? this.campusName,
       country: country ?? this.country,
       city: city ?? this.city,
-      district: district ?? this.district,
-      khoroo: khoroo ?? this.khoroo,
-      residence: residence ?? this.residence,
     );
   }
 
-  /// Clears every level *below* [level] — called whenever a higher-level
-  /// selection changes, since a new Country/City/etc invalidates
-  /// whatever was chosen underneath it.
+  /// Clears City whenever Country changes — a new country invalidates
+  /// whatever city was chosen under the old one. Campus is independent
+  /// of Country/City, so it's never cleared by this.
   ResidencyAddress clearBelow(ResidencyLevel level) {
     switch (level) {
+      case ResidencyLevel.campus:
+        return this;
       case ResidencyLevel.country:
-        return ResidencyAddress(country: country);
+        return ResidencyAddress(campusId: campusId, campusName: campusName, country: country);
       case ResidencyLevel.city:
-        return ResidencyAddress(country: country, city: city);
-      case ResidencyLevel.district:
-        return ResidencyAddress(country: country, city: city, district: district);
-      case ResidencyLevel.khoroo:
-        return ResidencyAddress(country: country, city: city, district: district, khoroo: khoroo);
-      case ResidencyLevel.residence:
         return this;
     }
   }
 
   @override
-  List<Object?> get props => [country, city, district, khoroo, residence];
+  List<Object?> get props => [campusId, campusName, country, city];
 }
 
-enum ResidencyLevel { country, city, district, khoroo, residence }
+enum ResidencyLevel { campus, country, city }

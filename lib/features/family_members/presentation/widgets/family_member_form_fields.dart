@@ -6,26 +6,16 @@ import 'package:pms_app/features/family_members/presentation/widgets/family_memb
 
 class FamilyMemberFormFields extends StatelessWidget {
   final TextEditingController nameController;
-  final TextEditingController emailController;
-  final TextEditingController phoneController;
+  final TextEditingController contactController;
   final String? relationship;
-  final int? birthYear;
-  final String? gender;
   final ValueChanged<String> onRelationshipChanged;
-  final ValueChanged<int> onBirthYearChanged;
-  final ValueChanged<String> onGenderChanged;
 
   const FamilyMemberFormFields({
     super.key,
     required this.nameController,
-    required this.emailController,
-    required this.phoneController,
+    required this.contactController,
     required this.relationship,
-    required this.birthYear,
-    required this.gender,
     required this.onRelationshipChanged,
-    required this.onBirthYearChanged,
-    required this.onGenderChanged,
   });
 
   Future<void> _pickRelationship(BuildContext context) async {
@@ -38,26 +28,6 @@ class FamilyMemberFormFields extends StatelessWidget {
     if (selected != null) onRelationshipChanged(selected);
   }
 
-  Future<void> _pickBirthYear(BuildContext context) async {
-    final selected = await SingleSelectSheet.show(
-      context,
-      options: FamilyMemberOptions.birthYears(),
-      current: birthYear?.toString(),
-      title: 'Birth year',
-    );
-    if (selected != null) onBirthYearChanged(int.parse(selected));
-  }
-
-  Future<void> _pickGender(BuildContext context) async {
-    final selected = await SingleSelectSheet.show(
-      context,
-      options: FamilyMemberOptions.genders,
-      current: gender,
-      title: 'Gender',
-    );
-    if (selected != null) onGenderChanged(selected);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -66,17 +36,9 @@ class FamilyMemberFormFields extends StatelessWidget {
         LabeledFormField(label: 'Name', controller: nameController, hintText: 'Enter full name'),
         SizedBox(height: 20.h),
         LabeledFormField(
-          label: 'Email',
-          controller: emailController,
-          hintText: 'Enter email address',
-          keyboardType: TextInputType.emailAddress,
-        ),
-        SizedBox(height: 20.h),
-        LabeledFormField(
-          label: 'Phone number',
-          controller: phoneController,
-          hintText: 'Enter phone number',
-          keyboardType: TextInputType.phone,
+          label: 'Email or phone number',
+          controller: contactController,
+          hintText: 'Enter email address or phone number',
         ),
         SizedBox(height: 20.h),
         LabeledPickerField(
@@ -84,20 +46,6 @@ class FamilyMemberFormFields extends StatelessWidget {
           displayValue: relationship ?? 'Choose',
           isPlaceholder: relationship == null,
           onTap: () => _pickRelationship(context),
-        ),
-        SizedBox(height: 20.h),
-        LabeledPickerField(
-          label: 'Birth year',
-          displayValue: birthYear?.toString() ?? 'Choose',
-          isPlaceholder: birthYear == null,
-          onTap: () => _pickBirthYear(context),
-        ),
-        SizedBox(height: 20.h),
-        LabeledPickerField(
-          label: 'Gender',
-          displayValue: gender ?? 'Choose',
-          isPlaceholder: gender == null,
-          onTap: () => _pickGender(context),
         ),
       ],
     );

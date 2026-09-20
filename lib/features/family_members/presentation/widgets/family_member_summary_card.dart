@@ -29,12 +29,9 @@ class FamilyMemberSummaryCard extends StatelessWidget {
         [
           SummaryField(label: 'Name', value: member.name, flex: 2),
           SummaryField(label: 'Relationship', value: member.relationship ?? '-'),
-          SummaryField(label: 'Year of birth', value: member.birthYear?.toString() ?? '-'),
         ],
         [
-          SummaryField(label: 'Email', value: member.email, flex: 2),
-          SummaryField(label: 'Phone', value: member.phone),
-          SummaryField(label: 'Gender', value: member.gender ?? '-'),
+          SummaryField(label: 'Email / Phone', value: member.contact, flex: 2),
         ],
       ],
     );

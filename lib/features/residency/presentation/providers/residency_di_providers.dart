@@ -33,3 +33,7 @@ final getCachedResidencyAddressUseCaseProvider = Provider<GetCachedResidencyAddr
 final saveResidencyAddressUseCaseProvider = Provider<SaveResidencyAddressUseCase>((ref) {
   return SaveResidencyAddressUseCase(ref.watch(residencyRepositoryProvider));
 });
+
+final getCampusOptionsUseCaseProvider = Provider<GetCampusOptionsUseCase>((ref) {
+  return GetCampusOptionsUseCase(ref.watch(residencyRepositoryProvider));
+});
