@@ -9,6 +9,10 @@ abstract class ProfileRemoteDataSource {
   Future<void> updateProfile(EditableProfileModel profile);
 
   Future<void> updateContactIdentifier({required String field, required String value});
+
+  Future<String> uploadAvatar(String filePath);
+
+  Future<void> deleteAvatar();
 }
 
 class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
@@ -54,19 +58,10 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
           if (birthDate != null)
             'birth_date':
                 '${birthDate.year.toString().padLeft(4, '0')}-${birthDate.month.toString().padLeft(2, '0')}-${birthDate.day.toString().padLeft(2, '0')}',
-          
           if (profile.country != null && profile.country!.isNotEmpty)
             'location': profile.country,
         },
       );
-
-      // ---- Avatar upload: no documented endpoint yet -------------------
-      // if (profile.avatarPath != null) {
-      //   final formData = FormData.fromMap({
-      //     'avatar': await MultipartFile.fromFile(profile.avatarPath!),
-      //   });
-      //   await _dio.post('${AppConstants.endpointProfile}/avatar', data: formData);
-      // }
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
         final serverError = (e.response?.data is Map) ? e.response?.data['error'] : null;
@@ -91,6 +86,43 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
       throw ServerException(e.message ?? 'Failed to update $field.');
     } catch (e) {
       throw ServerException('Unexpected error updating $field: $e');
+    }
+  }
+
+  @override
+  Future<String> uploadAvatar(String filePath) async {
+    try {
+      final formData = FormData.fromMap({
+        'image': await MultipartFile.fromFile(filePath),
+      });
+      final response = await _dio.post(AppConstants.endpointProfileAvatar, data: formData);
+      final data = response.data as Map<String, dynamic>;
+      return data['avatar_url'] as String;
+    } on DioException catch (e) {
+      final status = e.response?.statusCode;
+      if (status == 400) {
+        throw const ServerException('Please choose a JPEG, PNG or WebP image.');
+      }
+      if (status == 413) {
+        throw const ServerException('That image is larger than 2 MB. Please choose a smaller one.');
+      }
+      if (status == 429) {
+        throw const ServerException('Too many photo uploads. Please try again in a bit.');
+      }
+      throw ServerException(e.message ?? 'Failed to upload photo.');
+    } catch (e) {
+      throw ServerException('Unexpected error uploading photo: $e');
+    }
+  }
+
+  @override
+  Future<void> deleteAvatar() async {
+    try {
+      await _dio.delete(AppConstants.endpointProfileAvatar);
+    } on DioException catch (e) {
+      throw ServerException(e.message ?? 'Failed to remove photo.');
+    } catch (e) {
+      throw ServerException('Unexpected error removing photo: $e');
     }
   }
 }

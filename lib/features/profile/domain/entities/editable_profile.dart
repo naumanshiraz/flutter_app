@@ -36,7 +36,9 @@ class EditableProfile extends Equatable {
     DateTime? birthDate,
     String? pronouns,
     String? avatarPath,
+    bool clearAvatarPath = false,
     String? avatarUrl,
+    bool clearAvatarUrl = false,
   }) {
     return EditableProfile(
       name: name ?? this.name,
@@ -45,8 +47,8 @@ class EditableProfile extends Equatable {
       country: country ?? this.country,
       birthDate: birthDate ?? this.birthDate,
       pronouns: pronouns ?? this.pronouns,
-      avatarPath: avatarPath ?? this.avatarPath,
-      avatarUrl: avatarUrl ?? this.avatarUrl,
+      avatarPath: clearAvatarPath ? null : (avatarPath ?? this.avatarPath),
+      avatarUrl: clearAvatarUrl ? null : (avatarUrl ?? this.avatarUrl),
     );
   }
 

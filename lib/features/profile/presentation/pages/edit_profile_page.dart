@@ -229,15 +229,22 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
               ),
             ),
             Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 24.h),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Center(
-                      child: GestureDetector(
-                        onTap: () => context.push(RouteNames.profilePicture),
-                        child: ProfileAvatarCircle(
+              child: state.status == EditProfileStatus.loading
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2.4,
+                        valueColor: AlwaysStoppedAnimation(AppColors.primary),
+                      ),
+                    )
+                  : SingleChildScrollView(
+                      padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 24.h),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Center(
+                            child: GestureDetector(
+                              onTap: () => context.push(RouteNames.profilePicture),
+                              child: ProfileAvatarCircle(
                           avatarPath: state.profile.avatarPath,
                           avatarUrl: state.profile.avatarUrl,
                           initials: state.profile.initials,

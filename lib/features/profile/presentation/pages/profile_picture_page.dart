@@ -17,11 +17,16 @@ class ProfilePicturePage extends ConsumerWidget {
     final ok = await notifier.pickAvatar(source);
     if (ok && context.mounted) {
       final state = ref.read(editProfileProvider);
-   
-      if (state.profile.avatarPath != null && state.profile.avatarPath!.isNotEmpty) {
+      
+      if (state.profile.avatarUrl != null && state.profile.avatarUrl!.isNotEmpty) {
         context.pop();
       }
     }
+  }
+
+  Future<void> _remove(BuildContext context, WidgetRef ref) async {
+    final ok = await ref.read(editProfileProvider.notifier).deleteAvatar();
+    if (ok && context.mounted) context.pop();
   }
 
   @override
@@ -59,10 +64,24 @@ class ProfilePicturePage extends ConsumerWidget {
               Center(
                 child: ProfileAvatarCircle(
                   avatarPath: state.profile.avatarPath,
+                  avatarUrl: state.profile.avatarUrl,
                   initials: state.profile.initials,
                   size: 200,
                 ),
               ),
+              if (state.isUploadingAvatar) ...[
+                SizedBox(height: 12.h),
+                const Center(
+                  child: SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.2,
+                      valueColor: AlwaysStoppedAnimation(AppColors.primary),
+                    ),
+                  ),
+                ),
+              ],
               SizedBox(height: 40.h),
               Text(
                 'Please add your profile picture',
@@ -88,16 +107,28 @@ class ProfilePicturePage extends ConsumerWidget {
               const Spacer(),
               GradientButton(
                 label: 'Take a photo',
-                isLoading: state.isPickingImage,
-                onPressed: () => _pick(context, ref, ProfilePictureSource.camera),
+                isLoading: state.isPickingImage || state.isUploadingAvatar,
+                onPressed: (state.isPickingImage || state.isUploadingAvatar)
+                    ? null
+                    : () => _pick(context, ref, ProfilePictureSource.camera),
               ),
               SizedBox(height: 12.h),
               SecondaryButton(
                 label: 'Camera roll',
-                onPressed: state.isPickingImage
+                onPressed: (state.isPickingImage || state.isUploadingAvatar)
                     ? null
                     : () => _pick(context, ref, ProfilePictureSource.gallery),
               ),
+              if ((state.profile.avatarUrl != null && state.profile.avatarUrl!.isNotEmpty) ||
+                  (state.profile.avatarPath != null && state.profile.avatarPath!.isNotEmpty)) ...[
+                SizedBox(height: 12.h),
+                TextButton(
+                  onPressed: (state.isPickingImage || state.isUploadingAvatar)
+                      ? null
+                      : () => _remove(context, ref),
+                  child: Text('Remove photo', style: AppTextStyles.body.copyWith(color: AppColors.error)),
+                ),
+              ],
               SizedBox(height: 20.h),
             ],
           ),

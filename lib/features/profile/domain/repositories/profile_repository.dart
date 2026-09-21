@@ -9,4 +9,8 @@ abstract class ProfileRepository {
   Future<Result<String>> pickProfilePicture(ProfilePictureSource source);
 
   Future<Result<void>> updateContactIdentifier({required String field, required String value});
+
+  Future<Result<String>> uploadAvatar(String filePath);
+
+  Future<Result<void>> deleteAvatar();
 }

@@ -69,4 +69,28 @@ class ProfileRepositoryImpl implements ProfileRepository {
       return ResultError(UnknownFailure('Failed to update $field: $e'));
     }
   }
+
+  @override
+  Future<Result<String>> uploadAvatar(String filePath) async {
+    try {
+      final avatarUrl = await _remoteDataSource.uploadAvatar(filePath);
+      return Success(avatarUrl);
+    } on ServerException catch (e) {
+      return ResultError(ServerFailure(e.message));
+    } catch (e) {
+      return ResultError(UnknownFailure('Failed to upload photo: $e'));
+    }
+  }
+
+  @override
+  Future<Result<void>> deleteAvatar() async {
+    try {
+      await _remoteDataSource.deleteAvatar();
+      return const Success(null);
+    } on ServerException catch (e) {
+      return ResultError(ServerFailure(e.message));
+    } catch (e) {
+      return ResultError(UnknownFailure('Failed to remove photo: $e'));
+    }
+  }
 }

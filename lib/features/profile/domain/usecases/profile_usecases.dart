@@ -32,3 +32,16 @@ class UpdateContactIdentifierUseCase {
       _repository.updateContactIdentifier(field: field, value: value);
 }
 
+class UploadAvatarUseCase {
+  final ProfileRepository _repository;
+  const UploadAvatarUseCase(this._repository);
+
+  Future<Result<String>> call(String filePath) => _repository.uploadAvatar(filePath);
+}
+
+class DeleteAvatarUseCase {
+  final ProfileRepository _repository;
+  const DeleteAvatarUseCase(this._repository);
+
+  Future<Result<void>> call() => _repository.deleteAvatar();
+}

@@ -9,12 +9,14 @@ class EditProfileState {
   final EditProfileStatus status;
   final EditableProfile profile;
   final bool isPickingImage;
+  final bool isUploadingAvatar;
   final String? errorMessage;
 
   const EditProfileState({
     this.status = EditProfileStatus.loading,
     this.profile = const EditableProfile(),
     this.isPickingImage = false,
+    this.isUploadingAvatar = false,
     this.errorMessage,
   });
 
@@ -22,6 +24,7 @@ class EditProfileState {
     EditProfileStatus? status,
     EditableProfile? profile,
     bool? isPickingImage,
+    bool? isUploadingAvatar,
     String? errorMessage,
     bool clearError = false,
   }) {
@@ -29,17 +32,12 @@ class EditProfileState {
       status: status ?? this.status,
       profile: profile ?? this.profile,
       isPickingImage: isPickingImage ?? this.isPickingImage,
+      isUploadingAvatar: isUploadingAvatar ?? this.isUploadingAvatar,
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
     );
   }
 }
 
-/// Backs both `EditProfilePage` and `ProfilePicturePage`. Uses
-/// `autoDispose` for the usual "fresh data on each Edit-profile visit"
-/// benefit — this stays safe across the two pages because
-/// `ProfilePicturePage` is `push`ed *on top of* `EditProfilePage`, which
-/// therefore remains mounted (and subscribed) underneath the whole time,
-/// so the provider is never torn down mid-flow.
 class EditProfileNotifier extends StateNotifier<EditProfileState> {
   final Ref _ref;
 
@@ -81,27 +79,67 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
     );
   }
 
-  /// Returns `true` if an image was picked (or the user cancelled — a
-  /// silent no-op), `false` only for a real, surfaced failure.
   Future<bool> pickAvatar(ProfilePictureSource source) async {
     state = state.copyWith(isPickingImage: true, clearError: true);
-    final useCase = _ref.read(pickProfilePictureUseCaseProvider);
-    final result = await useCase(source);
+    final pickUseCase = _ref.read(pickProfilePictureUseCaseProvider);
+    final pickResult = await pickUseCase(source);
 
-    return result.when(
-      onSuccess: (path) {
+    String? path;
+    bool cancelledOrFailed = false;
+    String? pickErrorMessage;
+
+    pickResult.when(
+      onSuccess: (p) => path = p,
+      onFailure: (failure) {
+        cancelledOrFailed = true;
+        if (failure is! PickCancelledFailure) pickErrorMessage = failure.message;
+      },
+    );
+
+    if (cancelledOrFailed) {
+      state = state.copyWith(isPickingImage: false, errorMessage: pickErrorMessage);
+      return pickErrorMessage == null;
+    }
+
+    state = state.copyWith(
+      isPickingImage: false,
+      isUploadingAvatar: true,
+      profile: state.profile.copyWith(avatarPath: path),
+    );
+
+    final uploadUseCase = _ref.read(uploadAvatarUseCaseProvider);
+    final uploadResult = await uploadUseCase(path!);
+
+    return uploadResult.when(
+      onSuccess: (avatarUrl) {
         state = state.copyWith(
-          isPickingImage: false,
-          profile: state.profile.copyWith(avatarPath: path),
+          isUploadingAvatar: false,
+          profile: state.profile.copyWith(clearAvatarPath: true, avatarUrl: avatarUrl),
         );
         return true;
       },
       onFailure: (failure) {
-        if (failure is PickCancelledFailure) {
-          state = state.copyWith(isPickingImage: false);
-          return true;
-        }
-        state = state.copyWith(isPickingImage: false, errorMessage: failure.message);
+        state = state.copyWith(isUploadingAvatar: false, errorMessage: failure.message);
+        return false;
+      },
+    );
+  }
+
+  Future<bool> deleteAvatar() async {
+    state = state.copyWith(isUploadingAvatar: true, clearError: true);
+    final useCase = _ref.read(deleteAvatarUseCaseProvider);
+    final result = await useCase();
+
+    return result.when(
+      onSuccess: (_) {
+        state = state.copyWith(
+          isUploadingAvatar: false,
+          profile: state.profile.copyWith(clearAvatarPath: true, clearAvatarUrl: true),
+        );
+        return true;
+      },
+      onFailure: (failure) {
+        state = state.copyWith(isUploadingAvatar: false, errorMessage: failure.message);
         return false;
       },
     );

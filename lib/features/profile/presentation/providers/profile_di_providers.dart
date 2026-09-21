@@ -36,3 +36,11 @@ final pickProfilePictureUseCaseProvider = Provider<PickProfilePictureUseCase>((r
 final updateContactIdentifierUseCaseProvider = Provider<UpdateContactIdentifierUseCase>((ref) {
   return UpdateContactIdentifierUseCase(ref.watch(profileRepositoryProvider));
 });
+
+final uploadAvatarUseCaseProvider = Provider<UploadAvatarUseCase>((ref) {
+  return UploadAvatarUseCase(ref.watch(profileRepositoryProvider));
+});
+
+final deleteAvatarUseCaseProvider = Provider<DeleteAvatarUseCase>((ref) {
+  return DeleteAvatarUseCase(ref.watch(profileRepositoryProvider));
+});
