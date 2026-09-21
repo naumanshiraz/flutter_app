@@ -11,6 +11,7 @@ import 'package:pms_app/core/widgets/labeled_form_field.dart';
 import 'package:pms_app/core/widgets/single_select_sheet.dart';
 import 'package:pms_app/features/profile/presentation/providers/edit_profile_provider.dart';
 import 'package:pms_app/features/profile/presentation/widgets/profile_avatar_circle.dart';
+import 'package:pms_app/core/utils/svg_icons.dart';
 
 class EditProfilePage extends ConsumerStatefulWidget {
   const EditProfilePage({super.key});
@@ -283,7 +284,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                       enabled: false,
                       errorText: _fieldErrors['email'],
                       trailing: IconButton(
-                        icon: Icon(Icons.edit_outlined, size: 18.sp, color: AppColors.textSecondary),
+                        icon: SvgIcons.edit(size: 30.sp, color: AppColors.textSecondary),
                         onPressed: () => _confirmChangeContact(context, field: 'email'),
                       ),
                     ),
@@ -296,7 +297,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                       enabled: false,
                       errorText: _fieldErrors['phone'],
                       trailing: IconButton(
-                        icon: Icon(Icons.edit_outlined, size: 18.sp, color: AppColors.textSecondary),
+                        icon: SvgIcons.edit(size: 30.sp, color: AppColors.textSecondary),
                         onPressed: () => _confirmChangeContact(context, field: 'phone'),
                       ),
                     ),
