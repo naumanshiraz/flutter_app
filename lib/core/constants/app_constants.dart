@@ -41,5 +41,6 @@ class AppConstants {
   static const String endpointAuthRefresh = '/api/auth/refresh';
   static const String endpointAuthLogout = '/api/auth/logout';
   static const String endpointProfile = '/api/app/profile';
+  static const String endpointProfileAvatar = '/api/app/profile/avatar';
   static const String endpointCampuses = '/api/app/campuses';
 }

@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:pms_app/core/router/route_names.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
-import 'package:pms_app/core/utils/svg_icons.dart';
+import 'package:pms_app/core/widgets/gradient_button.dart';
 import 'package:pms_app/core/widgets/labeled_form_field.dart';
 import 'package:pms_app/core/widgets/single_select_sheet.dart';
 import 'package:pms_app/features/profile/presentation/providers/edit_profile_provider.dart';
@@ -107,6 +107,8 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     // before shipping.
     if (mounted) context.push(RouteNames.residencyIdentification);
     return;
+
+    // ignore: dead_code
     if (!_validate()) return;
 
     ref.read(editProfileProvider.notifier).updateFields(
@@ -125,21 +127,51 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     final label = field == 'email' ? 'email address' : 'phone number';
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Change $label?'),
-        content: Text(
-          'Please double-check your $label before confirming. This action cannot be undone.',
+      barrierColor: AppColors.modalScrim,
+      builder: (context) => Dialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Change $label?',
+                textAlign: TextAlign.center,
+                style: AppTextStyles.pageTitle.copyWith(fontSize: 16.sp),
+              ),
+              SizedBox(height: 10.h),
+              Text(
+                'Please double-check your $label before confirming. This action cannot be undone.',
+                textAlign: TextAlign.center,
+                style: AppTextStyles.bodySecondary,
+              ),
+              SizedBox(height: 20.h),
+              Row(
+                children: [
+                  Expanded(
+                    child: SecondaryButton(
+                      label: 'Yes',
+                      onPressed: () => Navigator.of(context).pop(true),
+                      height: 44.h,
+                      borderRadius: 10.r,
+                    ),
+                  ),
+                  SizedBox(width: 12.w),
+                  Expanded(
+                    child: GradientButton(
+                      label: 'No',
+                      onPressed: () => Navigator.of(context).pop(false),
+                      height: 44.h,
+                      borderRadius: 10.r,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('No'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Yes', style: TextStyle(color: AppColors.primary)),
-          ),
-        ],
       ),
     );
     if (confirmed != true || !context.mounted) return;
@@ -244,7 +276,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                       enabled: false,
                       errorText: _fieldErrors['email'],
                       trailing: IconButton(
-                        icon: SvgIcons.edit(size: 34.sp, color: AppColors.textSecondary),
+                        icon: Icon(Icons.edit_outlined, size: 18.sp, color: AppColors.textSecondary),
                         onPressed: () => _confirmChangeContact(context, field: 'email'),
                       ),
                     ),
@@ -257,7 +289,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                       enabled: false,
                       errorText: _fieldErrors['phone'],
                       trailing: IconButton(
-                        icon: SvgIcons.edit(size: 34.sp, color: AppColors.textSecondary),
+                        icon: Icon(Icons.edit_outlined, size: 18.sp, color: AppColors.textSecondary),
                         onPressed: () => _confirmChangeContact(context, field: 'phone'),
                       ),
                     ),

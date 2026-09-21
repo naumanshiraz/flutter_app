@@ -29,50 +29,51 @@ class AppTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: height ?? 56.h,
-      child: TextField(
-        controller: controller,
-        enabled: enabled,
-        keyboardType: keyboardType,
-        obscureText: obscureText,
-        onChanged: onChanged,
-        style: AppTextStyles.inputText,
-        decoration: InputDecoration(
-          hintText: hintText,
-          errorText: errorText,
-          suffixIcon: suffixIcon,
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: 20.w,
-            vertical: 14.h,
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.r),
-            borderSide: const BorderSide(
-              color: AppColors.border,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.r),
-            borderSide: const BorderSide(
-              color: AppColors.primary,
-              width: 1.4,
-            ),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.r),
-            borderSide: const BorderSide(
-              color: AppColors.error,
-            ),
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.r),
-            borderSide: const BorderSide(
-              color: AppColors.border,
+    final hasError = errorText != null;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        SizedBox(
+          height: height ?? 56.h,
+          child: TextField(
+            controller: controller,
+            enabled: enabled,
+            keyboardType: keyboardType,
+            obscureText: obscureText,
+            onChanged: onChanged,
+            style: AppTextStyles.inputText,
+            decoration: InputDecoration(
+              hintText: hintText,
+              errorText: null,
+              suffixIcon: suffixIcon,
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 20.w,
+                vertical: 14.h,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.r),
+                borderSide: BorderSide(color: hasError ? AppColors.error : AppColors.border),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.r),
+                borderSide: BorderSide(
+                  color: hasError ? AppColors.error : AppColors.primary,
+                  width: 1.4,
+                ),
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.r),
+                borderSide: BorderSide(color: hasError ? AppColors.error : AppColors.border),
+              ),
             ),
           ),
         ),
-      ),
+        if (hasError) ...[
+          SizedBox(height: 4.h),
+          Text(errorText!, style: AppTextStyles.caption.copyWith(color: AppColors.error)),
+        ],
+      ],
     );
   }
 }

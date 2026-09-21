@@ -20,26 +20,26 @@ class FamilyMembersPage extends ConsumerStatefulWidget {
 }
 
 class _FamilyMembersPageState extends ConsumerState<FamilyMembersPage> {
-  final _nameController = TextEditingController();
-  final _contactController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
 
   @override
   void dispose() {
-    _nameController.dispose();
-    _contactController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
     super.dispose();
   }
 
   void _clearDraftControllers() {
-    _nameController.clear();
-    _contactController.clear();
+    _emailController.clear();
+    _phoneController.clear();
   }
 
   Future<void> _onAddAffiliate() async {
     final notifier = ref.read(familyMembersProvider.notifier);
     notifier.updateDraft(
-      name: _nameController.text.trim(),
-      contact: _contactController.text.trim(),
+      email: _emailController.text.trim(),
+      phone: _phoneController.text.trim(),
     );
     final ok = await notifier.addDraftAsMember();
     if (ok) _clearDraftControllers();
@@ -94,7 +94,7 @@ class _FamilyMembersPageState extends ConsumerState<FamilyMembersPage> {
     }
 
     return StepScaffold(
-      currentStep: 1,
+      currentStep: 2,
       totalSteps: 5,
       bottomButton: Column(
         mainAxisSize: MainAxisSize.min,
@@ -143,8 +143,8 @@ class _FamilyMembersPageState extends ConsumerState<FamilyMembersPage> {
             SizedBox(height: 20.h),
           ],
           FamilyMemberFormFields(
-            nameController: _nameController,
-            contactController: _contactController,
+            emailController: _emailController,
+            phoneController: _phoneController,
             relationship: state.draft.relationship,
             onRelationshipChanged: (v) => notifier.updateDraft(relationship: v),
           ),

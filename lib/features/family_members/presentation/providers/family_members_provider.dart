@@ -57,9 +57,9 @@ class FamilyMembersNotifier extends StateNotifier<FamilyMembersState> {
     );
   }
 
-  void updateDraft({String? name, String? contact, String? relationship}) {
+  void updateDraft({String? name, String? email, String? phone, String? relationship}) {
     state = state.copyWith(
-      draft: state.draft.copyWith(name: name, contact: contact, relationship: relationship),
+      draft: state.draft.copyWith(name: name, email: email, phone: phone, relationship: relationship),
       clearError: true,
     );
   }

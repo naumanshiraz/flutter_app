@@ -84,7 +84,7 @@ class _PropertiesPageState extends ConsumerState<PropertiesPage> {
     }
 
     return StepScaffold(
-      currentStep: 2,
+      currentStep: 1,
       totalSteps: 5,
       bottomButton: Column(
         mainAxisSize: MainAxisSize.min,

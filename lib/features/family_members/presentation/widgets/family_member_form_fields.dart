@@ -5,15 +5,15 @@ import 'package:pms_app/core/widgets/single_select_sheet.dart';
 import 'package:pms_app/features/family_members/presentation/widgets/family_member_options.dart';
 
 class FamilyMemberFormFields extends StatelessWidget {
-  final TextEditingController nameController;
-  final TextEditingController contactController;
+  final TextEditingController emailController;
+  final TextEditingController phoneController;
   final String? relationship;
   final ValueChanged<String> onRelationshipChanged;
 
   const FamilyMemberFormFields({
     super.key,
-    required this.nameController,
-    required this.contactController,
+    required this.emailController,
+    required this.phoneController,
     required this.relationship,
     required this.onRelationshipChanged,
   });
@@ -33,12 +33,18 @@ class FamilyMemberFormFields extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        LabeledFormField(label: 'Name', controller: nameController, hintText: 'Enter full name'),
+        LabeledFormField(
+          label: 'Email',
+          controller: emailController,
+          hintText: 'Enter email address',
+          keyboardType: TextInputType.emailAddress,
+        ),
         SizedBox(height: 20.h),
         LabeledFormField(
-          label: 'Email or phone number',
-          controller: contactController,
-          hintText: 'Enter email address or phone number',
+          label: 'Phone number',
+          controller: phoneController,
+          hintText: 'Enter phone number',
+          keyboardType: TextInputType.phone,
         ),
         SizedBox(height: 20.h),
         LabeledPickerField(

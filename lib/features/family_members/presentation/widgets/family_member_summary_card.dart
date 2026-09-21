@@ -27,11 +27,14 @@ class FamilyMemberSummaryCard extends StatelessWidget {
       onAction: onAction,
       rows: [
         [
-          SummaryField(label: 'Name', value: member.name, flex: 2),
+          SummaryField(label: 'Name', value: member.name.isEmpty ? '-' : member.name),
           SummaryField(label: 'Relationship', value: member.relationship ?? '-'),
+          SummaryField(label: 'Invitation Status', value: member.invitationStatus),
         ],
         [
-          SummaryField(label: 'Email / Phone', value: member.contact, flex: 2),
+          SummaryField(label: 'Email', value: member.email.isEmpty ? '-' : member.email),
+          SummaryField(label: 'Phone', value: member.phone.isEmpty ? '-' : member.phone),
+          SummaryField(label: '', value: ''),
         ],
       ],
     );
