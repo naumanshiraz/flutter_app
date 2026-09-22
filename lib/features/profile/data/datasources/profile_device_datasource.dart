@@ -28,9 +28,6 @@ class ProfileDeviceDataSourceImpl implements ProfileDeviceDataSource {
     final XFile? picked = await _picker.pickImage(
       source: source == ProfilePictureSource.camera ? ImageSource.camera : ImageSource.gallery,
       imageQuality: 85,
-      // Longest side capped at 1024px client-side — the server rejects
-      // anything over 4096px/2MB outright rather than downscaling it, so
-      // an un-resized phone photo would fail there instead of here.
       maxWidth: 1024,
       maxHeight: 1024,
     );

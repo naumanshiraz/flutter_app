@@ -76,12 +76,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   @override
   Future<void> updateContactIdentifier({required String field, required String value}) async {
     try {
-      // ---- MOCK (no documented endpoint yet; identifier already proven --
-      // ---- via OTP by the time this is called) --------------------------
       await Future.delayed(const Duration(milliseconds: 600));
-
-      // ---- REAL API (uncomment once the backend exists) ------------------
-      // await _dio.patch(AppConstants.endpointProfile, data: {field: value});
     } on DioException catch (e) {
       throw ServerException(e.message ?? 'Failed to update $field.');
     } catch (e) {

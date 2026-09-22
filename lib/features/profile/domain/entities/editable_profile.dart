@@ -6,7 +6,6 @@ class EditableProfile extends Equatable {
   final String phone;
   final String? country;
   final DateTime? birthDate;
-  final String? pronouns;
   final String? avatarPath;
   final String? avatarUrl;
 
@@ -16,7 +15,6 @@ class EditableProfile extends Equatable {
     this.phone = '',
     this.country,
     this.birthDate,
-    this.pronouns,
     this.avatarPath,
     this.avatarUrl,
   });
@@ -34,7 +32,6 @@ class EditableProfile extends Equatable {
     String? phone,
     String? country,
     DateTime? birthDate,
-    String? pronouns,
     String? avatarPath,
     bool clearAvatarPath = false,
     String? avatarUrl,
@@ -46,15 +43,13 @@ class EditableProfile extends Equatable {
       phone: phone ?? this.phone,
       country: country ?? this.country,
       birthDate: birthDate ?? this.birthDate,
-      pronouns: pronouns ?? this.pronouns,
       avatarPath: clearAvatarPath ? null : (avatarPath ?? this.avatarPath),
       avatarUrl: clearAvatarUrl ? null : (avatarUrl ?? this.avatarUrl),
     );
   }
 
   @override
-  List<Object?> get props =>
-      [name, email, phone, country, birthDate, pronouns, avatarPath, avatarUrl];
+  List<Object?> get props => [name, email, phone, country, birthDate, avatarPath, avatarUrl];
 }
 
 enum ProfilePictureSource { camera, gallery }

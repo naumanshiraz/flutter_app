@@ -14,7 +14,6 @@ class EditableProfileModel with _$EditableProfileModel {
     @Default('') String phone,
     String? country,
     DateTime? birthDate,
-    String? pronouns,
     String? avatarPath,
     String? avatarUrl,
   }) = _EditableProfileModel;
@@ -28,7 +27,6 @@ class EditableProfileModel with _$EditableProfileModel {
         phone: entity.phone,
         country: entity.country,
         birthDate: entity.birthDate,
-        pronouns: entity.pronouns,
         avatarPath: entity.avatarPath,
         avatarUrl: entity.avatarUrl,
       );
@@ -39,7 +37,6 @@ class EditableProfileModel with _$EditableProfileModel {
         phone: phone,
         country: country,
         birthDate: birthDate,
-        pronouns: pronouns,
         avatarPath: avatarPath,
         avatarUrl: avatarUrl,
       );

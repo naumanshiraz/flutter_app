@@ -24,7 +24,6 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   late final TextEditingController _nameController;
   late final TextEditingController _emailController;
   late final TextEditingController _phoneController;
-  late final TextEditingController _pronounsController;
 
   bool _controllersHydrated = false;
   final Map<String, String> _fieldErrors = {};
@@ -35,7 +34,6 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     _nameController = TextEditingController();
     _emailController = TextEditingController();
     _phoneController = TextEditingController();
-    _pronounsController = TextEditingController();
   }
 
   @override
@@ -43,7 +41,6 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     _nameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
-    _pronounsController.dispose();
     super.dispose();
   }
 
@@ -52,7 +49,6 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     _nameController.text = state.profile.name;
     _emailController.text = state.profile.email;
     _phoneController.text = state.profile.phone;
-    _pronounsController.text = state.profile.pronouns ?? '';
     _controllersHydrated = true;
   }
 
@@ -94,7 +90,6 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
       errors['country'] = 'Please choose your country.';
     }
     if (state.profile.birthDate == null) errors['birthDate'] = 'Please choose your birthdate.';
-    if (_pronounsController.text.trim().isEmpty) errors['pronouns'] = 'Please enter your pronouns.';
 
     setState(() => _fieldErrors
       ..clear()
@@ -103,9 +98,6 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   }
 
   Future<void> _onSave() async {
-    // TEMP: validation + PATCH /api/app/profile disabled so the residency
-    // screen can be tested standalone. Restore _validate() + save() below
-    // before shipping.
     if (mounted) context.push(RouteNames.residencyIdentification);
     return;
 
@@ -116,7 +108,6 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
           name: _nameController.text.trim(),
           email: _emailController.text.trim(),
           phone: _phoneController.text.trim(),
-          pronouns: _pronounsController.text.trim(),
         );
 
     final ok = await ref.read(editProfileProvider.notifier).save();
@@ -284,7 +275,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                       enabled: false,
                       errorText: _fieldErrors['email'],
                       trailing: IconButton(
-                        icon: SvgIcons.edit(size: 30.sp, color: AppColors.textSecondary),
+                        icon:  SvgIcons.edit(size: 30.sp, color: AppColors.textSecondary),
                         onPressed: () => _confirmChangeContact(context, field: 'email'),
                       ),
                     ),
@@ -297,7 +288,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                       enabled: false,
                       errorText: _fieldErrors['phone'],
                       trailing: IconButton(
-                        icon: SvgIcons.edit(size: 30.sp, color: AppColors.textSecondary),
+                        icon:  SvgIcons.edit(size: 30.sp, color: AppColors.textSecondary),
                         onPressed: () => _confirmChangeContact(context, field: 'phone'),
                       ),
                     ),
@@ -318,14 +309,6 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                       isPlaceholder: state.profile.birthDate == null,
                       onTap: () => _pickBirthDate(context),
                       errorText: _fieldErrors['birthDate'],
-                    ),
-                    SizedBox(height: 20.h),
-                    LabeledFormField(
-                      label: 'Pronouns',
-                      controller: _pronounsController,
-                      hintText: 'e.g. she/her, he/him, they/them',
-                      errorText: _fieldErrors['pronouns'],
-                      onChanged: (_) => setState(() => _fieldErrors.remove('pronouns')),
                     ),
                     if (state.errorMessage != null) ...[
                       SizedBox(height: 16.h),

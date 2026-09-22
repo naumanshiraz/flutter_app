@@ -64,7 +64,6 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
     String? phone,
     String? country,
     DateTime? birthDate,
-    String? pronouns,
   }) {
     state = state.copyWith(
       profile: state.profile.copyWith(
@@ -73,7 +72,6 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
         phone: phone,
         country: country,
         birthDate: birthDate,
-        pronouns: pronouns,
       ),
       clearError: true,
     );
