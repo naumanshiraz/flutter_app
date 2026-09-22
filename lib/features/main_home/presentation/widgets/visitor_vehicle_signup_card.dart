@@ -10,12 +10,14 @@ import 'package:pms_app/features/main_home/presentation/providers/visitor_provid
 enum VisitorAction { edit, delete }
 
 class VisitorVehicleSignupCard extends ConsumerWidget {
-  const VisitorVehicleSignupCard({super.key});
+  final String householdId;
+
+  const VisitorVehicleSignupCard({super.key, required this.householdId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(visitorNotifierProvider);
-    final notifier = ref.read(visitorNotifierProvider.notifier);
+    final state = ref.watch(visitorNotifierProvider(householdId));
+    final notifier = ref.read(visitorNotifierProvider(householdId).notifier);
 
     final has = state.schedules.isNotEmpty;
     final first = has ? state.schedules.first : null;

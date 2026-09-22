@@ -23,14 +23,16 @@ class MainHomeState {
 class MainHomeNotifier extends StateNotifier<MainHomeState> {
   final GetControlsUseCase _getControlsUseCase;
   final ToggleControlUseCase _toggleControlUseCase;
+  final String? _householdId;
 
-  MainHomeNotifier(this._getControlsUseCase, this._toggleControlUseCase) : super(const MainHomeState()) {
+  MainHomeNotifier(this._getControlsUseCase, this._toggleControlUseCase, this._householdId)
+      : super(const MainHomeState()) {
     _fetch();
   }
 
   Future<void> _fetch() async {
     state = state.copyWith(isLoading: true, clearError: true);
-    final result = await _getControlsUseCase();
+    final result = await _getControlsUseCase(householdId: _householdId);
     result.when(
       onSuccess: (controls) {
         state = state.copyWith(isLoading: false, controls: controls);
@@ -58,7 +60,6 @@ class MainHomeNotifier extends StateNotifier<MainHomeState> {
         // success: nothing else to do (persisted by repo)
       },
       onFailure: (failure) {
-        // rollback on failure using a fresh list, not the optimistic one
         final rolledBackList = List<Control>.from(state.controls)..[idx] = current;
         state = state.copyWith(controls: rolledBackList, error: failure.message);
       },
@@ -66,9 +67,11 @@ class MainHomeNotifier extends StateNotifier<MainHomeState> {
   }
 }
 
-final mainHomeNotifierProvider = StateNotifierProvider.autoDispose<MainHomeNotifier, MainHomeState>(
-      (ref) => MainHomeNotifier(
+final mainHomeNotifierProvider =
+    StateNotifierProvider.autoDispose.family<MainHomeNotifier, MainHomeState, String?>(
+  (ref, householdId) => MainHomeNotifier(
     ref.watch(getControlsUseCaseProvider),
     ref.watch(toggleControlUseCaseProvider),
+    householdId,
   ),
 );

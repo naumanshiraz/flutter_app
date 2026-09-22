@@ -2,6 +2,7 @@ import 'package:pms_app/features/main_home/domain/entities/visitor_schedule.dart
 
 class VisitorModel {
   final String id;
+  final String householdId;
   final String guestName;
   final String licensePlate;
   final String time;
@@ -9,6 +10,7 @@ class VisitorModel {
 
   const VisitorModel({
     required this.id,
+    required this.householdId,
     required this.guestName,
     required this.licensePlate,
     required this.time,
@@ -18,6 +20,7 @@ class VisitorModel {
   factory VisitorModel.fromJson(Map<String, dynamic> json) {
     return VisitorModel(
       id: json['id'] as String,
+      householdId: (json['householdId'] as String?) ?? '',
       guestName: json['guestName'] as String,
       licensePlate: json['licensePlate'] as String,
       time: json['time'] as String,
@@ -27,6 +30,7 @@ class VisitorModel {
 
   Map<String, dynamic> toJson() => {
     'id': id,
+    'householdId': householdId,
     'guestName': guestName,
     'licensePlate': licensePlate,
     'time': time,
@@ -35,6 +39,7 @@ class VisitorModel {
 
   VisitorSchedule toEntity() => VisitorSchedule(
     id: id,
+    householdId: householdId,
     guestName: guestName,
     licensePlate: licensePlate,
     time: time,
@@ -43,6 +48,7 @@ class VisitorModel {
 
   static VisitorModel fromEntity(VisitorSchedule e) => VisitorModel(
     id: e.id,
+    householdId: e.householdId,
     guestName: e.guestName,
     licensePlate: e.licensePlate,
     time: e.time,

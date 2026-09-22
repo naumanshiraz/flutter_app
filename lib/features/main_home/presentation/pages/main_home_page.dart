@@ -19,20 +19,20 @@ class MainHomePage extends ConsumerStatefulWidget {
 class _MainHomePageState extends ConsumerState<MainHomePage> {
   int _selectedIndex = 0;
 
-  static const List<Widget> _tabs = [
-    MainHomeContentView(),
-    ChatConversationsView(),
-    ConciergePage(),
-    HomeContent(),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final tabs = [
+      MainHomeContentView(campusId: widget.propertyId),
+      const ChatConversationsView(),
+      const ConciergePage(),
+      const HomeContent(),
+    ];
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         bottom: false,
-        child: IndexedStack(index: _selectedIndex, children: _tabs),
+        child: IndexedStack(index: _selectedIndex, children: tabs),
       ),
       bottomNavigationBar: SafeArea(
         top: false,

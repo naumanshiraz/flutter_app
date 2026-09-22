@@ -68,6 +68,7 @@ class _SetUpScheduleSheetState extends State<SetUpScheduleSheet> {
     final dateStr = _date.toIso8601String().split('T').first;
     final schedule = VisitorSchedule(
       id: widget.initial?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
+      householdId: 'fa5f0c43-430b-49ab-a84d-6d4e72b956c7',
       guestName: _guestCtrl.text.trim(),
       licensePlate: _plateCtrl.text.trim(),
       time: timeStr,

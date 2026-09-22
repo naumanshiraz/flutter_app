@@ -15,21 +15,36 @@ class VisitorRemoteDataSourceImpl implements VisitorRemoteDataSource {
 
   VisitorRemoteDataSourceImpl(this._dio);
 
-  // In-memory mock DB used until backend exists.
   static final List<Map<String, dynamic>> _mockDb = <Map<String, dynamic>>[
     {
       'id': 'v1',
+      'householdId': 'fa5f0c43-430b-49ab-a84d-6d4e72b956c7',
       'guestName': 'Dolgor',
       'licensePlate': '7586 - YBP',
       'time': '17:30',
       'date': '2024-04-20',
+    },
+    {
+      'id': 'v2',
+      'householdId': '2c1e6a7a-3b3b-4a2e-8b9a-9e7f6a2d5c33',
+      'guestName': 'Batbayar',
+      'licensePlate': '3312 - UBH',
+      'time': '09:15',
+      'date': '2024-04-22',
+    },
+    {
+      'id': 'v3',
+      'householdId': '7b8c4e1a-2d3f-4a5b-8c6d-1e2f3a4b5c77',
+      'guestName': 'Sarnai',
+      'licensePlate': '9021 - OTB',
+      'time': '14:00',
+      'date': '2024-04-23',
     },
   ];
 
   @override
   Future<List<VisitorModel>> getSchedules() async {
     try {
-      // MOCK: simulate network latency
       await Future.delayed(const Duration(milliseconds: 500));
       return _mockDb.map((j) => VisitorModel.fromJson(j)).toList();
 

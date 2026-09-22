@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class VisitorSchedule extends Equatable {
   final String id;
+  final String householdId;
   final String guestName;
   final String licensePlate;
   final String time; // HH:mm
@@ -9,6 +10,7 @@ class VisitorSchedule extends Equatable {
 
   const VisitorSchedule({
     required this.id,
+    required this.householdId,
     required this.guestName,
     required this.licensePlate,
     required this.time,
@@ -16,6 +18,7 @@ class VisitorSchedule extends Equatable {
   });
 
   VisitorSchedule copyWith({
+    String? householdId,
     String? guestName,
     String? licensePlate,
     String? time,
@@ -23,6 +26,7 @@ class VisitorSchedule extends Equatable {
   }) {
     return VisitorSchedule(
       id: id,
+      householdId: householdId ?? this.householdId,
       guestName: guestName ?? this.guestName,
       licensePlate: licensePlate ?? this.licensePlate,
       time: time ?? this.time,
@@ -31,5 +35,5 @@ class VisitorSchedule extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, guestName, licensePlate, time, date];
+  List<Object?> get props => [id, householdId, guestName, licensePlate, time, date];
 }

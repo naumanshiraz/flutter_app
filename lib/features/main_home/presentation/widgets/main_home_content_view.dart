@@ -9,18 +9,31 @@ import 'package:pms_app/core/utils/greeting.dart';
 import 'package:pms_app/core/widgets/menu_sheet.dart';
 import 'package:pms_app/features/activity_log/presentation/pages/activity_log_page.dart';
 import 'package:pms_app/features/main_home/presentation/providers/main_home_provider.dart';
+import 'package:pms_app/features/main_home/presentation/providers/household_provider.dart';
 import 'package:pms_app/features/main_home/presentation/widgets/control_card.dart';
-import 'package:pms_app/features/main_home/presentation/widgets/image_carousel.dart';
+import 'package:pms_app/features/main_home/presentation/widgets/household_carousel_card.dart';
 import 'package:pms_app/features/main_home/presentation/widgets/visitor_vehicle_signup_card.dart';
 import 'package:pms_app/core/utils/svg_icons.dart';
 
+const String _kDefaultCampusId = 'gerlug-vista';
+
 class MainHomeContentView extends ConsumerWidget {
-  const MainHomeContentView({super.key});
+  final String? campusId;
+
+  const MainHomeContentView({super.key, this.campusId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(mainHomeNotifierProvider);
-    final notifier = ref.read(mainHomeNotifierProvider.notifier);
+    final resolvedCampusId = campusId ?? _kDefaultCampusId;
+    final householdState = ref.watch(householdNotifierProvider(resolvedCampusId));
+    final householdNotifier = ref.read(householdNotifierProvider(resolvedCampusId).notifier);
+    final currentHouseholdId = householdState.current?.id;
+    final state = currentHouseholdId == null
+        ? const MainHomeState(isLoading: true)
+        : ref.watch(mainHomeNotifierProvider(currentHouseholdId));
+    final notifier = currentHouseholdId == null
+        ? null
+        : ref.read(mainHomeNotifierProvider(currentHouseholdId).notifier);
 
     return Column(
       children: [
@@ -46,16 +59,25 @@ class MainHomeContentView extends ConsumerWidget {
             ],
           ),
         ),
-        Expanded(child: _buildBody(context, state, notifier)),
+        Expanded(child: _buildBody(context, state, notifier, householdState, householdNotifier)),
       ],
     );
   }
 
-  Widget _buildBody(BuildContext context, MainHomeState state, MainHomeNotifier notifier) {
-    return state.isLoading
+  Widget _buildBody(
+    BuildContext context,
+    MainHomeState state,
+    MainHomeNotifier? notifier,
+    HouseholdState householdState,
+    HouseholdNotifier householdNotifier,
+  ) {
+    return (householdState.isLoading || state.isLoading)
         ? const Center(child: CircularProgressIndicator())
         : RefreshIndicator(
-            onRefresh: notifier.refresh,
+            onRefresh: () => Future.wait([
+              householdNotifier.refresh(),
+              if (notifier != null) notifier.refresh(),
+            ]),
             color: AppColors.primary,
             child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
@@ -83,32 +105,22 @@ class MainHomeContentView extends ConsumerWidget {
                     ),
                   ),
                   SizedBox(height: 12.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Gerlug vista',
-                                style: AppTextStyles.body
-                                    .copyWith(fontWeight: FontWeight.w700, fontSize: 16.sp),),
-                            Text(
-                              '15th Khoroo, Khan Uul District, Ulaanbaatar, Mongolia 13146',
-                              style: AppTextStyles.caption,
-                            ),
-                          ],
-                        ),
+                  if (householdState.current == null)
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 24.h),
+                      child: Text(
+                        householdState.error ?? 'No households found for this property.',
+                        style: AppTextStyles.caption.copyWith(color: AppColors.error),
                       ),
-                    ],
-                  ),
-                  SizedBox(height: 8.h),
-                  const ImageCarousel(imageUrls: [
-                    'https://picsum.photos/800/400?image=10',
-                    'https://picsum.photos/800/400?image=20',
-                    'https://picsum.photos/800/400?image=30',
-                  ],),
+                    )
+                  else
+                    HouseholdCarouselCard(
+                      household: householdState.current!,
+                      currentIndex: householdState.currentIndex,
+                      total: householdState.total,
+                      onPrevious: householdNotifier.previous,
+                      onNext: householdNotifier.next,
+                    ),
                   SizedBox(height: 18.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -147,11 +159,12 @@ class MainHomeContentView extends ConsumerWidget {
                     ),
                     itemBuilder: (context, index) {
                       final c = state.controls[index];
-                      return ControlCard(control: c, onToggle: () => notifier.toggle(c.id));
+                      return ControlCard(control: c, onToggle: () => notifier?.toggle(c.id));
                     },
                   ),
                   SizedBox(height: 20.h),
-                  const VisitorVehicleSignupCard(),
+                  if (householdState.current != null)
+                    VisitorVehicleSignupCard(householdId: householdState.current!.id),
                   SizedBox(height: 16.h),
                 ],
               ),

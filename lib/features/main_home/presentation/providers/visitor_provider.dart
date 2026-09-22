@@ -23,8 +23,10 @@ class VisitorNotifier extends StateNotifier<VisitorState> {
   final GetVisitorSchedulesUseCase _getUseCase;
   final AddOrUpdateVisitorScheduleUseCase _addUpdateUseCase;
   final DeleteVisitorScheduleUseCase _deleteUseCase;
+  final String _householdId;
 
-  VisitorNotifier(this._getUseCase, this._addUpdateUseCase, this._deleteUseCase) : super(const VisitorState()) {
+  VisitorNotifier(this._getUseCase, this._addUpdateUseCase, this._deleteUseCase, this._householdId)
+      : super(const VisitorState()) {
     _fetch();
   }
 
@@ -33,8 +35,8 @@ class VisitorNotifier extends StateNotifier<VisitorState> {
     final result = await _getUseCase();
     result.when(
       onSuccess: (schedules) {
-        // DO NOT auto-create a placeholder — use dynamic (empty) state
-        state = state.copyWith(isLoading: false, schedules: schedules);
+        final filtered = schedules.where((s) => s.householdId == _householdId).toList();
+        state = state.copyWith(isLoading: false, schedules: filtered);
       },
       onFailure: (f) {
         state = state.copyWith(isLoading: false, error: f.message);
@@ -45,7 +47,8 @@ class VisitorNotifier extends StateNotifier<VisitorState> {
   Future<void> refresh() => _fetch();
 
   Future<void> addOrUpdate(VisitorSchedule schedule) async {
-    final result = await _addUpdateUseCase(schedule);
+    final tagged = schedule.copyWith(householdId: _householdId);
+    final result = await _addUpdateUseCase(tagged);
     result.when(
       onSuccess: (_) => refresh(),
       onFailure: (f) => state = state.copyWith(error: f.message),
@@ -61,10 +64,12 @@ class VisitorNotifier extends StateNotifier<VisitorState> {
   }
 }
 
-final visitorNotifierProvider = StateNotifierProvider.autoDispose<VisitorNotifier, VisitorState>((ref) {
+final visitorNotifierProvider =
+    StateNotifierProvider.autoDispose.family<VisitorNotifier, VisitorState, String>((ref, householdId) {
   return VisitorNotifier(
     ref.watch(getVisitorSchedulesUseCaseProvider),
     ref.watch(addOrUpdateVisitorScheduleUseCaseProvider),
     ref.watch(deleteVisitorScheduleUseCaseProvider),
+    householdId,
   );
 });

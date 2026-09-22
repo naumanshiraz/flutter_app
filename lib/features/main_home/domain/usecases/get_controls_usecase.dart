@@ -6,5 +6,6 @@ class GetControlsUseCase {
   final MainHomeRepository _repository;
   const GetControlsUseCase(this._repository);
 
-  Future<Result<List<Control>>> call() => _repository.getControls();
+  Future<Result<List<Control>>> call({String? householdId}) =>
+      _repository.getControls(householdId: householdId);
 }

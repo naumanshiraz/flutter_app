@@ -12,14 +12,13 @@ final mainHomeLocalDataSourceProvider = Provider<MainHomeLocalDataSource>((ref) 
 });
 
 final mainHomeRemoteDataSourceProvider = Provider<MainHomeRemoteDataSource>((ref) {
-  // Uses project's dio provider (wired in core/di)
   return MainHomeRemoteDataSourceImpl(ref.watch(dioClientProvider).dio);
 });
 
 final mainHomeRepositoryProvider = Provider<MainHomeRepository>((ref) {
   return MainHomeRepositoryImpl(
-    localDataSource: ref.watch(mainHomeLocalDataSourceProvider),
     remoteDataSource: ref.watch(mainHomeRemoteDataSourceProvider),
+    localDataSource: ref.watch(mainHomeLocalDataSourceProvider),
   );
 });
 

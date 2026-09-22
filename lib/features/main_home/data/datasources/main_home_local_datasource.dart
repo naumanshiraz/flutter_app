@@ -15,7 +15,6 @@ class MainHomeLocalDataSourceImpl implements MainHomeLocalDataSource {
   Future<List<ControlModel>> fetchControls() async {
     try {
       await Future.delayed(const Duration(milliseconds: 300));
-      // Mocked local dataset (no backend needed)
       return const [
         ControlModel(
           id: 'main_entrance',

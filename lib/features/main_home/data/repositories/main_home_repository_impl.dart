@@ -7,30 +7,23 @@ import 'package:pms_app/features/main_home/domain/entities/control.dart';
 import 'package:pms_app/features/main_home/domain/repositories/main_home_repository.dart';
 
 class MainHomeRepositoryImpl implements MainHomeRepository {
-  final MainHomeLocalDataSource localDataSource;
   final MainHomeRemoteDataSource remoteDataSource;
+  final MainHomeLocalDataSource localDataSource;
 
-  MainHomeRepositoryImpl({
-    required this.localDataSource,
-    required this.remoteDataSource,
-  });
+  MainHomeRepositoryImpl({required this.remoteDataSource, required this.localDataSource});
 
   @override
-  Future<Result<List<Control>>> getControls({String? propertyId}) async {
+  Future<Result<List<Control>>> getControls({String? householdId}) async {
     try {
-      // Prefer remote (mocked) but fall back to local if remote fails.
-      final remoteModels = await remoteDataSource.getControls(propertyId: propertyId);
+      final remoteModels = await remoteDataSource.getControls(householdId: householdId);
       final entities = remoteModels.map((m) => m.toEntity()).toList();
       return Success(entities);
-    } on ServerException {
-      // Try local fallback
+    } on ServerException catch (_) {
       try {
-        final local = await localDataSource.fetchControls();
-        return Success(local.map((m) => m.toEntity()).toList());
-      } on CacheException catch (e2) {
-        return ResultError(CacheFailure(e2.message));
-      } catch (e) {
-        return ResultError(UnknownFailure('Failed to load controls: $e'));
+        final localModels = await localDataSource.fetchControls();
+        return Success(localModels.map((m) => m.toEntity()).toList());
+      } on CacheException catch (e) {
+        return ResultError(CacheFailure(e.message));
       }
     } catch (e) {
       return ResultError(UnknownFailure('Failed to load controls: $e'));
@@ -40,7 +33,6 @@ class MainHomeRepositoryImpl implements MainHomeRepository {
   @override
   Future<Result<void>> toggleControl(String id, bool newState) async {
     try {
-      // Optimistic: ask remote to toggle (mock), persist locally
       await remoteDataSource.toggleControl(id, newState);
       await localDataSource.persistToggle(id, newState);
       return const Success(null);
