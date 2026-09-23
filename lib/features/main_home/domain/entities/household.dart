@@ -21,8 +21,10 @@ class Household extends Equatable {
     this.imageUrl,
   });
 
+  /// Title shown on the household carousel card.
   String get displayName => buildingName;
 
+  /// Subtitle shown under [displayName].
   String get displaySubtitle => 'Suite $suite • Floor $floor • $unitType';
 
   @override

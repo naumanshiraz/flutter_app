@@ -45,6 +45,7 @@ class VisitorRemoteDataSourceImpl implements VisitorRemoteDataSource {
   @override
   Future<List<VisitorModel>> getSchedules() async {
     try {
+      // MOCK: simulate network latency
       await Future.delayed(const Duration(milliseconds: 500));
       return _mockDb.map((j) => VisitorModel.fromJson(j)).toList();
 

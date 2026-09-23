@@ -68,6 +68,14 @@ class MainHomeRemoteDataSourceImpl implements MainHomeRemoteDataSource {
       await Future.delayed(const Duration(milliseconds: 500));
       final rows = (householdId != null ? _householdControls[householdId] : null) ?? _defaultControls;
       return rows.map(ControlModel.fromJson).toList();
+
+      // REAL API (uncomment and provide endpoint when available)
+      // final response = await _dio.get(
+      //   AppConstants.endpointControls,
+      //   queryParameters: {if (householdId != null) 'household_id': householdId},
+      // );
+      // final data = response.data as List<dynamic>;
+      // return data.map((j) => ControlModel.fromJson(j as Map<String, dynamic>)).toList();
     } on DioException catch (e) {
       throw ServerException(e.message ?? 'Failed to fetch controls from server.');
     } catch (e) {

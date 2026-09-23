@@ -10,7 +10,7 @@ class VisitorSchedule extends Equatable {
 
   const VisitorSchedule({
     required this.id,
-    required this.householdId,
+    this.householdId = '',
     required this.guestName,
     required this.licensePlate,
     required this.time,

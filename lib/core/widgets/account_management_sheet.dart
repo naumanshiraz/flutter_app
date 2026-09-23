@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pms_app/core/di/injection.dart';
-import 'package:pms_app/core/widgets/account_management_sheet.dart';
 import 'package:pms_app/core/router/route_names.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
-import 'package:pms_app/features/auth/presentation/providers/auth_providers.dart';
-import 'package:pms_app/features/splash/presentation/providers/app_initialization_provider.dart';
 
-class SettingsSheet extends ConsumerWidget {
-  const SettingsSheet({super.key});
+class AccountManagementSheet extends StatelessWidget {
+  const AccountManagementSheet({super.key});
 
   static Future<void> show(BuildContext context) {
     return showModalBottomSheet<void>(
@@ -19,21 +14,12 @@ class SettingsSheet extends ConsumerWidget {
       isScrollControlled: true,
       backgroundColor: AppColors.background,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24.r))),
-      builder: (context) => const SettingsSheet(),
+      builder: (context) => const AccountManagementSheet(),
     );
   }
 
-  Future<void> _logOut(BuildContext context, WidgetRef ref) async {
-    final refreshToken = await ref.read(secureStorageServiceProvider).getRefreshToken();
-    await ref.read(logoutUseCaseProvider)(refreshToken ?? '');
-    await ref.read(appInitializationProvider.notifier).refresh();
-    if (!context.mounted) return;
-    Navigator.of(context).pop();
-    context.go(RouteNames.login);
-  }
-
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return DraggableScrollableSheet(
       initialChildSize: 0.85,
       minChildSize: 0.5,
@@ -53,10 +39,13 @@ class SettingsSheet extends ConsumerWidget {
                       alignment: Alignment.centerLeft,
                       child: IconButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        icon: const Icon(Icons.close),
+                        icon: const Icon(Icons.arrow_back_ios_new, size: 18),
                       ),
                     ),
-                    Text('Settings', style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700, fontSize: 16.sp)),
+                    Text(
+                      'Account management',
+                      style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700, fontSize: 16.sp),
+                    ),
                   ],
                 ),
               ),
@@ -66,33 +55,19 @@ class SettingsSheet extends ConsumerWidget {
                   controller: scrollController,
                   padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
                   children: [
+                    _sectionLabel('Affiliates'),
+                    _row('Affiliates management'),
+                    // TODO: replace with the signed-in user's actual name once
+                    // a profile provider is wired into this sheet.
+                    _row("Narandelger Jargal's greetings"),
                     _sectionLabel('Account'),
                     _row(
-                      'Edit profile',
+                      'Account termination',
                       onTap: () {
                         Navigator.of(context).pop();
-                        context.push(RouteNames.editProfile);
+                        context.push(RouteNames.accountTermination);
                       },
                     ),
-                    _row(
-                      'Account management',
-                      onTap: () {
-                        Navigator.of(context).pop();
-                        AccountManagementSheet.show(context);
-                      },
-                    ),
-                    _row('Interest tuner'),
-                    _row('Email notifications'),
-                    _row('Push notifications'),
-                    _row('Reports and violations center', external: true),
-                    _sectionLabel('Login'),
-                    _row('Add account'),
-                    _row('Security'),
-                    _row('Log out', showChevron: false, onTap: () => _logOut(context, ref)),
-                    _sectionLabel('Support'),
-                    _row('Frequently asked questions', external: true),
-                    _row('Terms of service', external: true),
-                    _row('Privacy policy', external: true),
                   ],
                 ),
               ),
@@ -110,7 +85,7 @@ class SettingsSheet extends ConsumerWidget {
     );
   }
 
-  Widget _row(String label, {bool external = false, bool showChevron = true, VoidCallback? onTap}) {
+  Widget _row(String label, {VoidCallback? onTap}) {
     return InkWell(
       onTap: onTap,
       child: Padding(
@@ -120,10 +95,7 @@ class SettingsSheet extends ConsumerWidget {
             Expanded(
               child: Text(label, style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700, fontSize: 15.sp)),
             ),
-            if (external)
-              Icon(Icons.north_east, size: 18.sp, color: AppColors.textBlack)
-            else if (showChevron)
-              Icon(Icons.chevron_right, size: 20.sp, color: AppColors.textBlack),
+            Icon(Icons.chevron_right, size: 20.sp, color: AppColors.textBlack),
           ],
         ),
       ),

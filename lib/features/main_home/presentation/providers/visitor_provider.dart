@@ -19,6 +19,9 @@ class VisitorState {
   }
 }
 
+/// Visitor schedules for a single household (identified by [_householdId]),
+/// so switching households (prev/next arrows) shows that household's own
+/// schedule.
 class VisitorNotifier extends StateNotifier<VisitorState> {
   final GetVisitorSchedulesUseCase _getUseCase;
   final AddOrUpdateVisitorScheduleUseCase _addUpdateUseCase;
