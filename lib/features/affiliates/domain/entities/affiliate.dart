@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class Affiliate extends Equatable {
   final String id;
-  final String propertyId;
+  final String? householdId;
   final String name;
   final String email;
   final String phone;
@@ -11,7 +11,7 @@ class Affiliate extends Equatable {
 
   const Affiliate({
     required this.id,
-    required this.propertyId,
+    this.householdId,
     this.name = '',
     this.email = '',
     this.phone = '',
@@ -22,7 +22,7 @@ class Affiliate extends Equatable {
   bool get isTenant => relationship == 'Tenant';
 
   Affiliate copyWith({
-    String? propertyId,
+    String? householdId,
     String? name,
     String? email,
     String? phone,
@@ -31,7 +31,7 @@ class Affiliate extends Equatable {
   }) {
     return Affiliate(
       id: id,
-      propertyId: propertyId ?? this.propertyId,
+      householdId: householdId ?? this.householdId,
       name: name ?? this.name,
       email: email ?? this.email,
       phone: phone ?? this.phone,
@@ -41,5 +41,5 @@ class Affiliate extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, propertyId, name, email, phone, relationship, status];
+  List<Object?> get props => [id, householdId, name, email, phone, relationship, status];
 }

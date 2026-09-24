@@ -10,7 +10,7 @@ class AffiliateModel with _$AffiliateModel {
 
   const factory AffiliateModel({
     required String id,
-    @JsonKey(name: 'property_id') required String propertyId,
+    @JsonKey(name: 'household_id') String? householdId,
     @Default('') String name,
     @Default('') String email,
     @Default('') String phone,
@@ -22,7 +22,7 @@ class AffiliateModel with _$AffiliateModel {
 
   factory AffiliateModel.fromEntity(Affiliate entity) => AffiliateModel(
         id: entity.id,
-        propertyId: entity.propertyId,
+        householdId: entity.householdId,
         name: entity.name,
         email: entity.email,
         phone: entity.phone,
@@ -32,7 +32,7 @@ class AffiliateModel with _$AffiliateModel {
 
   Affiliate toEntity() => Affiliate(
         id: id,
-        propertyId: propertyId,
+        householdId: householdId,
         name: name,
         email: email,
         phone: phone,

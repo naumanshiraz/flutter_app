@@ -6,8 +6,8 @@ class GetAffiliatesUseCase {
   final AffiliatesRepository _repository;
   const GetAffiliatesUseCase(this._repository);
 
-  Future<Result<List<Affiliate>>> call({String? propertyId}) =>
-      _repository.getAffiliates(propertyId: propertyId);
+  Future<Result<List<Affiliate>>> call({String? householdId}) =>
+      _repository.getAffiliates(householdId: householdId);
 }
 
 class AddOrUpdateAffiliateUseCase {

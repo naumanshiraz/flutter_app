@@ -44,6 +44,7 @@ import 'package:pms_app/features/service_profile/presentation/pages/service_prof
 import 'package:pms_app/features/account_modification/presentation/pages/admin_account_modification_page.dart';
 import 'package:pms_app/features/account_termination/presentation/pages/account_termination_page.dart';
 import 'package:pms_app/features/family_members/presentation/pages/occupants_page.dart';
+import 'package:pms_app/features/affiliates/presentation/pages/affiliates_management_page.dart';
 import 'package:pms_app/features/splash/domain/entities/app_destination.dart';
 import 'package:pms_app/features/splash/presentation/pages/splash_page.dart';
 import 'package:pms_app/features/splash/presentation/providers/app_initialization_provider.dart';
@@ -107,7 +108,8 @@ String? _routeGuard(BuildContext context, GoRouterState state, Ref ref) {
           currentPath == RouteNames.serviceProfile ||
           currentPath == RouteNames.adminAccountModification || 
           currentPath == RouteNames.accountTermination ||
-          currentPath == RouteNames.occupants;
+          currentPath == RouteNames.occupants ||
+          currentPath == RouteNames.affiliatesManagement;
 
       if (isSplashRoute) {
         return isAuthenticated ? RouteNames.home : RouteNames.login;
@@ -281,7 +283,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           if (member == null) {
             return const EditFamilyMemberFallbackPage();
           }
-          return EditFamilyMemberPage(member: member);
+          return EditFamilyMemberPage(affiliate: member);
         },
       ),
       GoRoute(
@@ -385,7 +387,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: RouteNames.occupants,
         name: RouteNames.occupants,
-        builder: (context, state) => OccupantsPage(propertyId: state.extra as String? ?? 'fa5f0c43-430b-49ab-a84d-6d4e72b956c7'),
+        builder: (context, state) => OccupantsPage(householdId: state.extra as String? ?? 'fa5f0c43-430b-49ab-a84d-6d4e72b956c7'),
+      ),
+      GoRoute(
+        path: RouteNames.affiliatesManagement,
+        name: RouteNames.affiliatesManagement,
+        builder: (context, state) => const AffiliatesManagementPage(),
       ),
     ],
     errorBuilder: (context, state) => PlaceholderPage(

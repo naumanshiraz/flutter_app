@@ -42,17 +42,17 @@ class AffiliatesState {
 
 class AffiliatesNotifier extends StateNotifier<AffiliatesState> {
   final Ref _ref;
-  final String? _propertyId;
+  final String? _householdId;
   static const _uuid = Uuid();
 
-  AffiliatesNotifier(this._ref, this._propertyId) : super(const AffiliatesState()) {
+  AffiliatesNotifier(this._ref, this._householdId) : super(const AffiliatesState()) {
     _load();
   }
 
   Future<void> _load() async {
     state = state.copyWith(isLoading: true, clearError: true);
     final useCase = _ref.read(getAffiliatesUseCaseProvider);
-    final result = await useCase(propertyId: _propertyId);
+    final result = await useCase(householdId: _householdId);
     result.when(
       onSuccess: (affiliates) => state = state.copyWith(isLoading: false, affiliates: affiliates),
       onFailure: (f) => state = state.copyWith(isLoading: false, errorMessage: f.message),
@@ -75,17 +75,12 @@ class AffiliatesNotifier extends StateNotifier<AffiliatesState> {
       state = state.copyWith(errorMessage: error);
       return error;
     }
-    if (_propertyId == null) {
-      const msg = 'A property must be selected before adding an affiliate.';
-      state = state.copyWith(errorMessage: msg);
-      return msg;
-    }
 
     state = state.copyWith(isSubmittingDraft: true, clearError: true);
     final isEmail = contact.contains('@');
     final draft = Affiliate(
       id: _uuid.v4(),
-      propertyId: _propertyId,
+      householdId: _householdId,
       name: name.trim(),
       email: isEmail ? contact.trim() : '',
       phone: isEmail ? '' : contact.trim(),
@@ -150,5 +145,5 @@ class AffiliatesNotifier extends StateNotifier<AffiliatesState> {
 
 final affiliatesProvider =
     StateNotifierProvider.autoDispose.family<AffiliatesNotifier, AffiliatesState, String?>(
-  (ref, propertyId) => AffiliatesNotifier(ref, propertyId),
+  (ref, householdId) => AffiliatesNotifier(ref, householdId),
 );

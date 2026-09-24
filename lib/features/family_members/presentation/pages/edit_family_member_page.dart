@@ -61,7 +61,7 @@ class _EditFamilyMemberPageState extends ConsumerState<EditFamilyMemberPage> {
       _errorMessage = null;
     });
 
-    final notifier = ref.read(affiliatesProvider(updated.propertyId).notifier);
+    final notifier = ref.read(affiliatesProvider(updated.householdId).notifier);
     final ok = await notifier.updateAffiliate(updated);
 
     if (!mounted) return;
@@ -70,7 +70,7 @@ class _EditFamilyMemberPageState extends ConsumerState<EditFamilyMemberPage> {
     } else {
       setState(() {
         _isSaving = false;
-        _errorMessage = ref.read(affiliatesProvider(updated.propertyId)).errorMessage;
+        _errorMessage = ref.read(affiliatesProvider(updated.householdId)).errorMessage;
       });
     }
   }

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pms_app/core/router/route_names.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
+import 'package:pms_app/features/greetings/presentation/providers/greetings_provider.dart';
 
-class AccountManagementSheet extends StatelessWidget {
+class AccountManagementSheet extends ConsumerWidget {
   const AccountManagementSheet({super.key});
 
   static Future<void> show(BuildContext context) {
@@ -19,7 +21,9 @@ class AccountManagementSheet extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final greetingsState = ref.watch(greetingsProvider);
+
     return DraggableScrollableSheet(
       initialChildSize: 0.85,
       minChildSize: 0.5,
@@ -56,10 +60,24 @@ class AccountManagementSheet extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
                   children: [
                     _sectionLabel('Affiliates'),
-                    _row('Affiliates management'),
-                    // TODO: replace with the signed-in user's actual name once
-                    // a profile provider is wired into this sheet.
-                    _row("Narandelger Jargal's greetings"),
+                    _row(
+                      'Affiliates management',
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        context.push(RouteNames.affiliatesManagement);
+                      },
+                    ),
+                    if (greetingsState.isLoading)
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10.h),
+                        child: SizedBox(
+                          width: 16.w,
+                          height: 16.w,
+                          child: const CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                      )
+                    else
+                      for (final greeting in greetingsState.greetings) _row(greeting.label),
                     _sectionLabel('Account'),
                     _row(
                       'Account termination',

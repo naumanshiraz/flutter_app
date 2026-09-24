@@ -7,15 +7,17 @@ import 'package:pms_app/features/property_detail/presentation/widgets/residentia
 import 'package:pms_app/core/widgets/grey_button.dart';
 
 class PropertyAccessConfigSheet extends StatelessWidget {
-  const PropertyAccessConfigSheet({super.key});
+  final String propertyId;
 
-  static Future<void> show(BuildContext context) {
+  const PropertyAccessConfigSheet({super.key, required this.propertyId});
+
+  static Future<void> show(BuildContext context, String propertyId) {
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: AppColors.background,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24.r))),
-      builder: (context) => const PropertyAccessConfigSheet(),
+      builder: (context) => PropertyAccessConfigSheet(propertyId: propertyId),
     );
   }
 
@@ -49,7 +51,7 @@ class PropertyAccessConfigSheet extends StatelessWidget {
                       const SizedBox(height: 20),
                       GestureDetector(
                         behavior: HitTestBehavior.opaque,
-                        onTap: () => ResidentialInformationSheet.show(context),
+                        onTap: () => ResidentialInformationSheet.show(context, propertyId),
                         child: _row('Residential information'),
                       ),
                       const SizedBox(height: 20),

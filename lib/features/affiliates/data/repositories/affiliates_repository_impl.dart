@@ -12,9 +12,9 @@ class AffiliatesRepositoryImpl implements AffiliatesRepository {
   AffiliatesRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Result<List<Affiliate>>> getAffiliates({String? propertyId}) async {
+  Future<Result<List<Affiliate>>> getAffiliates({String? householdId}) async {
     try {
-      final models = await remoteDataSource.getAffiliates(propertyId: propertyId);
+      final models = await remoteDataSource.getAffiliates(householdId: householdId);
       return Success(models.map((m) => m.toEntity()).toList());
     } on ServerException catch (e) {
       return ResultError(ServerFailure(e.message));

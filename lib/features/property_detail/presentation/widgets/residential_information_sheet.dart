@@ -6,15 +6,17 @@ import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 
 class ResidentialInformationSheet extends StatelessWidget {
-  const ResidentialInformationSheet({super.key});
+  final String propertyId;
 
-  static Future<void> show(BuildContext context) {
+  const ResidentialInformationSheet({super.key, required this.propertyId});
+
+  static Future<void> show(BuildContext context, String propertyId) {
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: AppColors.background,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24.r))),
-      builder: (context) => const ResidentialInformationSheet(),
+      builder: (context) => ResidentialInformationSheet(propertyId: propertyId),
     );
   }
 
@@ -47,7 +49,7 @@ class ResidentialInformationSheet extends StatelessWidget {
                     ),
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
-                      onTap: () => _navigate(context, RouteNames.familyMembers),
+                      onTap: () => _navigate(context, RouteNames.occupants, extra: propertyId),
                       child: _row('Occupants'),
                     ),
                     GestureDetector(
@@ -66,11 +68,6 @@ class ResidentialInformationSheet extends StatelessWidget {
                       behavior: HitTestBehavior.opaque,
                       onTap: () => _navigate(context, RouteNames.adminAccountModification),
                       child: _row('Admin account modification'),
-                    ),
-                    GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () => _navigate(context, RouteNames.accountTermination),
-                      child: _row('Account termination'),
                     ),
                   ],
                 ),
@@ -104,9 +101,9 @@ class ResidentialInformationSheet extends StatelessWidget {
     );
   }
 
-  void _navigate(BuildContext context, String route) {
+  void _navigate(BuildContext context, String route, {Object? extra}) {
     Navigator.of(context).pop();
-    context.push(route);
+    context.push(route, extra: extra);
   }
 
   Widget _sectionLabel(String label) {

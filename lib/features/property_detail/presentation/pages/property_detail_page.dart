@@ -115,7 +115,7 @@ class _PropertyDetailPageState extends ConsumerState<PropertyDetailPage> {
                   ),
                 ),
                 InkWell(
-                  onTap: () => PropertyAccessConfigSheet.show(context),
+                  onTap: () => PropertyAccessConfigSheet.show(context, widget.propertyId),
                   child: SvgIcons.gear(),
                 ),
               ],
