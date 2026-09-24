@@ -16,7 +16,7 @@ import 'package:pms_app/features/chat/presentation/pages/post_detail_page.dart';
 import 'package:pms_app/features/chat/presentation/pages/public_chat_page.dart';
 import 'package:pms_app/features/chat/presentation/pages/group_info_page.dart';
 import 'package:pms_app/features/concierge/presentation/pages/concierge_page.dart';
-import 'package:pms_app/features/family_members/domain/entities/family_member.dart';
+import 'package:pms_app/features/affiliates/domain/entities/affiliate.dart';
 import 'package:pms_app/features/family_members/presentation/pages/edit_family_member_page.dart';
 import 'package:pms_app/features/family_members/presentation/pages/family_members_page.dart';
 import 'package:pms_app/features/home/presentation/pages/home_page.dart';
@@ -43,6 +43,7 @@ import 'package:pms_app/features/bank_transaction/presentation/pages/bank_transa
 import 'package:pms_app/features/service_profile/presentation/pages/service_profile_page.dart';
 import 'package:pms_app/features/account_modification/presentation/pages/admin_account_modification_page.dart';
 import 'package:pms_app/features/account_termination/presentation/pages/account_termination_page.dart';
+import 'package:pms_app/features/family_members/presentation/pages/occupants_page.dart';
 import 'package:pms_app/features/splash/domain/entities/app_destination.dart';
 import 'package:pms_app/features/splash/presentation/pages/splash_page.dart';
 import 'package:pms_app/features/splash/presentation/providers/app_initialization_provider.dart';
@@ -105,7 +106,8 @@ String? _routeGuard(BuildContext context, GoRouterState state, Ref ref) {
           currentPath == RouteNames.bankTransaction || 
           currentPath == RouteNames.serviceProfile ||
           currentPath == RouteNames.adminAccountModification || 
-          currentPath == RouteNames.accountTermination;
+          currentPath == RouteNames.accountTermination ||
+          currentPath == RouteNames.occupants;
 
       if (isSplashRoute) {
         return isAuthenticated ? RouteNames.home : RouteNames.login;
@@ -275,7 +277,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: RouteNames.editFamilyMember,
         name: RouteNames.editFamilyMember,
         builder: (context, state) {
-          final member = state.extra as FamilyMember?;
+          final member = state.extra as Affiliate?;
           if (member == null) {
             return const EditFamilyMemberFallbackPage();
           }
@@ -379,6 +381,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: RouteNames.accountTermination,
         name: RouteNames.accountTermination,
         builder: (context, state) => const AccountTerminationPage(),
+      ),
+      GoRoute(
+        path: RouteNames.occupants,
+        name: RouteNames.occupants,
+        builder: (context, state) => OccupantsPage(propertyId: state.extra as String? ?? 'fa5f0c43-430b-49ab-a84d-6d4e72b956c7'),
       ),
     ],
     errorBuilder: (context, state) => PlaceholderPage(

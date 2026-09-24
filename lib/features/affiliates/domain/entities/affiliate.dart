@@ -1,42 +1,45 @@
 import 'package:equatable/equatable.dart';
 
-class FamilyMember extends Equatable {
+class Affiliate extends Equatable {
   final String id;
+  final String propertyId;
   final String name;
   final String email;
   final String phone;
   final String? relationship;
-  final String invitationStatus;
+  final String status;
 
-  const FamilyMember({
+  const Affiliate({
     required this.id,
+    required this.propertyId,
     this.name = '',
     this.email = '',
     this.phone = '',
     this.relationship,
-    this.invitationStatus = 'Pending',
+    this.status = 'Pending',
   });
 
-  bool get isValid =>
-      (email.trim().isNotEmpty || phone.trim().isNotEmpty) && relationship != null;
+  bool get isTenant => relationship == 'Tenant';
 
-  FamilyMember copyWith({
+  Affiliate copyWith({
+    String? propertyId,
     String? name,
     String? email,
     String? phone,
     String? relationship,
-    String? invitationStatus,
+    String? status,
   }) {
-    return FamilyMember(
+    return Affiliate(
       id: id,
+      propertyId: propertyId ?? this.propertyId,
       name: name ?? this.name,
       email: email ?? this.email,
       phone: phone ?? this.phone,
       relationship: relationship ?? this.relationship,
-      invitationStatus: invitationStatus ?? this.invitationStatus,
+      status: status ?? this.status,
     );
   }
 
   @override
-  List<Object?> get props => [id, name, email, phone, relationship, invitationStatus];
+  List<Object?> get props => [id, propertyId, name, email, phone, relationship, status];
 }

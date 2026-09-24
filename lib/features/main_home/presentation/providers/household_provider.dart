@@ -34,9 +34,6 @@ class HouseholdState {
   }
 }
 
-/// Fetches households for a single campus (identified by [campusId], the
-/// value tapped on the Profile screen's campus/property tile) and exposes
-/// simple previous/next navigation over the resulting list.
 class HouseholdNotifier extends StateNotifier<HouseholdState> {
   final Ref _ref;
   final String _campusId;

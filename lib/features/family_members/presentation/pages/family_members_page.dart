@@ -7,10 +7,11 @@ import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 import 'package:pms_app/core/widgets/gradient_button.dart';
 import 'package:pms_app/core/widgets/step_scaffold.dart';
-import 'package:pms_app/features/family_members/domain/entities/family_member.dart';
-import 'package:pms_app/features/family_members/presentation/providers/family_members_provider.dart';
-import 'package:pms_app/features/family_members/presentation/widgets/family_member_form_fields.dart';
-import 'package:pms_app/features/family_members/presentation/widgets/family_member_summary_card.dart';
+import 'package:pms_app/features/affiliates/domain/entities/affiliate.dart';
+import 'package:pms_app/features/affiliates/presentation/providers/affiliates_provider.dart';
+import 'package:pms_app/features/affiliates/presentation/utils/affiliate_constants.dart';
+import 'package:pms_app/features/affiliates/presentation/widgets/affiliate_form_fields.dart';
+import 'package:pms_app/features/affiliates/presentation/widgets/affiliate_summary_card.dart';
 
 class FamilyMembersPage extends ConsumerStatefulWidget {
   const FamilyMembersPage({super.key});
@@ -20,46 +21,43 @@ class FamilyMembersPage extends ConsumerStatefulWidget {
 }
 
 class _FamilyMembersPageState extends ConsumerState<FamilyMembersPage> {
-  final _emailController = TextEditingController();
-  final _phoneController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _contactController = TextEditingController();
+  bool _showErrors = false;
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _phoneController.dispose();
+    _nameController.dispose();
+    _contactController.dispose();
     super.dispose();
   }
 
-  void _clearDraftControllers() {
-    _emailController.clear();
-    _phoneController.clear();
-  }
-
   Future<void> _onAddAffiliate() async {
-    final notifier = ref.read(familyMembersProvider.notifier);
-    notifier.updateDraft(
-      email: _emailController.text.trim(),
-      phone: _phoneController.text.trim(),
+    setState(() => _showErrors = true);
+    final notifier = ref.read(affiliatesProvider(kOnboardingDraftPropertyId).notifier);
+    final error = await notifier.addAffiliate(
+      name: _nameController.text,
+      contact: _contactController.text,
     );
-    final ok = await notifier.addDraftAsMember();
-    if (ok) _clearDraftControllers();
+    if (error == null) {
+      _nameController.clear();
+      _contactController.clear();
+      setState(() => _showErrors = false);
+    }
   }
 
-  Future<void> _onEditMember(FamilyMember member) async {
-    await context.push(RouteNames.editFamilyMember, extra: member);
+  Future<void> _onEditMember(Affiliate affiliate) async {
+    await context.push(RouteNames.editFamilyMember, extra: affiliate);
   }
 
-  Future<void> _onDeleteMember(FamilyMember member) async {
+  Future<void> _onDeleteMember(Affiliate affiliate) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Remove family member?'),
-        content: Text('This will remove ${member.name} from your affiliates.'),
+        title: const Text('Remove affiliate?'),
+        content: Text('This will remove ${affiliate.name} from your affiliates.'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
-          ),
+          TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Cancel')),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
             child: const Text('Remove', style: TextStyle(color: AppColors.error)),
@@ -68,7 +66,7 @@ class _FamilyMembersPageState extends ConsumerState<FamilyMembersPage> {
       ),
     );
     if (confirmed == true) {
-      await ref.read(familyMembersProvider.notifier).deleteMember(member.id);
+      await ref.read(affiliatesProvider(kOnboardingDraftPropertyId).notifier).deleteAffiliate(affiliate.id);
     }
   }
 
@@ -78,17 +76,14 @@ class _FamilyMembersPageState extends ConsumerState<FamilyMembersPage> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(familyMembersProvider);
-    final notifier = ref.read(familyMembersProvider.notifier);
+    final state = ref.watch(affiliatesProvider(kOnboardingDraftPropertyId));
+    final notifier = ref.read(affiliatesProvider(kOnboardingDraftPropertyId).notifier);
 
     if (state.isLoading) {
       return const Scaffold(
         backgroundColor: AppColors.background,
         body: Center(
-          child: CircularProgressIndicator(
-            strokeWidth: 2.4,
-            valueColor: AlwaysStoppedAnimation(AppColors.primary),
-          ),
+          child: CircularProgressIndicator(strokeWidth: 2.4, valueColor: AlwaysStoppedAnimation(AppColors.primary)),
         ),
       );
     }
@@ -99,11 +94,7 @@ class _FamilyMembersPageState extends ConsumerState<FamilyMembersPage> {
       bottomButton: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SecondaryButton(
-            label: 'Add an affiliate',
-            isLoading: state.isSubmittingDraft,
-            onPressed: _onAddAffiliate,
-          ),
+          SecondaryButton(label: 'Add an affiliate', isLoading: state.isSubmittingDraft, onPressed: _onAddAffiliate),
           SizedBox(height: 12.h),
           GradientButton(label: 'Next', onPressed: _onNext),
         ],
@@ -111,11 +102,7 @@ class _FamilyMembersPageState extends ConsumerState<FamilyMembersPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            'Please identify your affiliates',
-            textAlign: TextAlign.center,
-            style: AppTextStyles.pageTitle,
-          ),
+          Text('Please identify your affiliates', textAlign: TextAlign.center, style: AppTextStyles.pageTitle),
           SizedBox(height: 12.h),
           Text(
             'Please note that you only need to include family members '
@@ -124,37 +111,34 @@ class _FamilyMembersPageState extends ConsumerState<FamilyMembersPage> {
             style: AppTextStyles.bodySecondary,
           ),
           SizedBox(height: 20.h),
-          for (int i = 0; i < state.members.length; i++) ...[
-            FamilyMemberSummaryCard(
-              member: state.members[i],
+          for (int i = 0; i < state.affiliates.length; i++) ...[
+            AffiliateSummaryCard(
+              affiliate: state.affiliates[i],
               index: i,
-              total: state.members.length,
+              total: state.affiliates.length,
               onAction: (action) {
                 switch (action) {
-                  case FamilyMemberCardAction.edit:
-                    _onEditMember(state.members[i]);
+                  case AffiliateCardAction.edit:
+                    _onEditMember(state.affiliates[i]);
                     break;
-                  case FamilyMemberCardAction.delete:
-                    _onDeleteMember(state.members[i]);
+                  case AffiliateCardAction.delete:
+                    _onDeleteMember(state.affiliates[i]);
                     break;
                 }
               },
             ),
             SizedBox(height: 20.h),
           ],
-          FamilyMemberFormFields(
-            emailController: _emailController,
-            phoneController: _phoneController,
-            relationship: state.draft.relationship,
-            onRelationshipChanged: (v) => notifier.updateDraft(relationship: v),
+          AffiliateFormFields(
+            nameController: _nameController,
+            contactController: _contactController,
+            relationship: state.draftRelationship,
+            onRelationshipChanged: notifier.updateDraftRelationship,
+            showErrors: _showErrors,
           ),
           if (state.errorMessage != null) ...[
             SizedBox(height: 16.h),
-            Text(
-              state.errorMessage!,
-              textAlign: TextAlign.center,
-              style: AppTextStyles.caption.copyWith(color: AppColors.error),
-            ),
+            Text(state.errorMessage!, textAlign: TextAlign.center, style: AppTextStyles.caption.copyWith(color: AppColors.error)),
           ],
         ],
       ),
