@@ -64,7 +64,7 @@ class _OccupantsPageState extends ConsumerState<OccupantsPage> {
                   children: [
                     for (int i = 0; i < state.familyMembers.length; i++)
                       Padding(
-                        padding: EdgeInsets.only(bottom: 16.h),
+                        padding: EdgeInsets.only(bottom: 2.h),
                         child: AffiliateSummaryCard(
                           affiliate: state.familyMembers[i],
                           index: i,
@@ -99,7 +99,7 @@ class _OccupantsPageState extends ConsumerState<OccupantsPage> {
                       label: 'Add an affiliate', 
                       isLoading: state.isSubmittingDraft, 
                       onPressed: _onAddAffiliate,
-                      borderRadius: 12.r,
+                      borderRadius: 10.r,
                     ),
                   ],
                 ),

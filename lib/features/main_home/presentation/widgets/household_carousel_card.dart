@@ -26,90 +26,181 @@ class HouseholdCarouselCard extends StatelessWidget {
     final imageUrl = household.imageUrl;
     final hasMultiple = total > 1;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          height: 150.h,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12.r),
-                child: (imageUrl != null && imageUrl.isNotEmpty)
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(
+          color: AppColors.border,
+          width: 1,
+        ),
+        borderRadius: BorderRadius.circular(16.r),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Image
+          AspectRatio(
+            aspectRatio: 2.2,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                // Property image
+                (imageUrl != null && imageUrl.isNotEmpty)
                     ? CachedNetworkImage(
                         imageUrl: imageUrl,
                         fit: BoxFit.cover,
-                        placeholder: (context, _) => Container(color: AppColors.border),
+                        placeholder: (context, _) => Container(
+                          color: AppColors.border,
+                        ),
                         errorWidget: (context, _, __) => Container(
                           color: AppColors.border,
-                          child: const Icon(Icons.image_not_supported_outlined, color: AppColors.textSecondary),
+                          child: const Icon(
+                            Icons.image_not_supported_outlined,
+                            color: AppColors.textSecondary,
+                          ),
                         ),
                       )
                     : Container(
                         color: AppColors.border,
-                        child: const Icon(Icons.apartment, color: AppColors.textSecondary),
+                        child: const Icon(
+                          Icons.apartment,
+                          color: AppColors.textSecondary,
+                        ),
                       ),
-              ),
-              if (hasMultiple) ...[
+
+                // Top-left counter
                 Positioned(
-                  left: 8.w,
-                  top: 0,
-                  bottom: 0,
-                  child: Center(child: _ArrowButton(icon: Icons.chevron_left, onTap: onPrevious)),
+                  top: 12.h,
+                  left: 12.w,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 8.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.55),
+                      borderRadius: BorderRadius.circular(20.r),
+                    ),
+                    child: Text(
+                      '${currentIndex + 1} / $total properties',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
                 ),
-                Positioned(
-                  right: 8.w,
-                  top: 0,
-                  bottom: 0,
-                  child: Center(child: _ArrowButton(icon: Icons.chevron_right, onTap: onNext)),
+
+                // Previous arrow
+                if (hasMultiple)
+                  Positioned(
+                    left: 12.w,
+                    top: 0,
+                    bottom: 0,
+                    child: Center(
+                      child: _ArrowButton(
+                        icon: Icons.chevron_left,
+                        onTap: onPrevious,
+                      ),
+                    ),
+                  ),
+
+                // Next arrow
+                if (hasMultiple)
+                  Positioned(
+                    right: 12.w,
+                    top: 0,
+                    bottom: 0,
+                    child: Center(
+                      child: _ArrowButton(
+                        icon: Icons.chevron_right,
+                        onTap: onNext,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+
+          // Bottom information
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 8.w,
+              vertical: 8.h,
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Property name + address
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        household.displayName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.body.copyWith(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 17.sp,
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        household.displaySubtitle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.caption.copyWith(
+                          fontSize: 14.sp,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Vertical divider
+                Container(
+                  width: 1,
+                  height: 48.h,
+                  margin: EdgeInsets.symmetric(horizontal: 14.w),
+                  color: AppColors.border,
+                ),
+
+                // Property count
+                SizedBox(
+                  width: 70.w,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '${currentIndex + 1}/$total',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
+                        ),
+                      ),
+                      SizedBox(height: 2.h),
+                      Text(
+                        'properties',
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.caption.copyWith(
+                          fontSize: 13.sp,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
-              Positioned(
-                top: 8.h,
-                right: 8.w,
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.55),
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                  child: Text(
-                    '${currentIndex + 1}/$total properties',
-                    style: TextStyle(color: Colors.white, fontSize: 11.sp, fontWeight: FontWeight.w600),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
-        SizedBox(height: 12.h),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    household.displayName,
-                    style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700, fontSize: 16.sp),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Text(household.displaySubtitle, style: AppTextStyles.caption),
-                ],
-              ),
-            ),
-            Text(
-              '${currentIndex + 1}/$total\nproperties',
-              textAlign: TextAlign.right,
-              style: AppTextStyles.caption,
-            ),
-          ],
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

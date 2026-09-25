@@ -70,10 +70,15 @@ class AccountManagementSheet extends ConsumerWidget {
                     if (greetingsState.isLoading)
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 10.h),
-                        child: SizedBox(
-                          width: 16.w,
-                          height: 16.w,
-                          child: const CircularProgressIndicator(strokeWidth: 2),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: SizedBox(
+                            width: 16.w,
+                            height: 16.w,
+                            child: const CircularProgressIndicator(
+                              strokeWidth: 2,
+                            ),
+                          ),
                         ),
                       )
                     else

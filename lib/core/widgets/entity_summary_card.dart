@@ -58,7 +58,6 @@ class EntitySummaryCard extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: 6.h),
         Row(
           children: [
             Text('$itemLabel ${index + 1} of $total', style: AppTextStyles.caption),

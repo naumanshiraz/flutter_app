@@ -28,9 +28,6 @@ class MainHomeContentView extends ConsumerWidget {
     final householdState = ref.watch(householdNotifierProvider(resolvedCampusId));
     final householdNotifier = ref.read(householdNotifierProvider(resolvedCampusId).notifier);
     final currentHouseholdId = householdState.current?.id;
-
-    // Controls & visitor sign-up are scoped to the currently shown household,
-    // so they re-fetch and update whenever prev/next changes the household.
     final state = currentHouseholdId == null
         ? const MainHomeState(isLoading: true)
         : ref.watch(mainHomeNotifierProvider(currentHouseholdId));
@@ -74,9 +71,6 @@ class MainHomeContentView extends ConsumerWidget {
     HouseholdState householdState,
     HouseholdNotifier householdNotifier,
   ) {
-    // Screen-level loader: wait for households (and, once known, controls)
-    // so nothing flashes empty/default content while the household API
-    // (or its follow-on control/visitor fetches) is still in flight.
     return (householdState.isLoading || state.isLoading)
         ? const Center(child: CircularProgressIndicator())
         : RefreshIndicator(
