@@ -8,7 +8,8 @@ import 'package:pms_app/core/theme/app_text_styles.dart';
 import 'package:pms_app/core/widgets/gradient_button.dart';
 import 'package:pms_app/features/affiliates/presentation/providers/affiliates_provider.dart';
 import 'package:pms_app/features/affiliates/presentation/widgets/affiliate_form_fields.dart';
-import 'package:pms_app/features/affiliates/presentation/widgets/affiliate_summary_card.dart';
+import 'package:pms_app/features/affiliates/presentation/widgets/affiliate_management_card.dart';
+import 'package:pms_app/features/affiliates/presentation/pages/property_assignment_page.dart';
 
 class AffiliatesManagementPage extends ConsumerStatefulWidget {
   const AffiliatesManagementPage({super.key});
@@ -94,17 +95,27 @@ class _AffiliatesManagementPageState extends ConsumerState<AffiliatesManagementP
                     for (int i = 0; i < state.affiliates.length; i++)
                       Padding(
                         padding: EdgeInsets.only(bottom: 2.h),
-                        child: AffiliateSummaryCard(
+                        child: AffiliateManagementCard(
                           affiliate: state.affiliates[i],
                           index: i,
                           total: state.affiliates.length,
                           onAction: (action) {
                             switch (action) {
-                              case AffiliateCardAction.edit:
+                              case AffiliateManagementAction.edit:
                                 context.push(RouteNames.editFamilyMember, extra: state.affiliates[i]);
                                 break;
-                              case AffiliateCardAction.delete:
+                              case AffiliateManagementAction.delete:
                                 _onDelete(state.affiliates[i].id);
+                                break;
+                              case AffiliateManagementAction.propertyAssignment:
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (_) => PropertyAssignmentPage(affiliate: state.affiliates[i]),
+                                ));
+                                break;
+                              case AffiliateManagementAction.propertyAssigned:
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (_) => PropertyAssignmentPage(affiliate: state.affiliates[i], readOnly: true),
+                                ));
                                 break;
                             }
                           },

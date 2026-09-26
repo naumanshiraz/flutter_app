@@ -67,8 +67,16 @@ class EntitySummaryCard extends StatelessWidget {
               icon: Icon(Icons.more_horiz, size: 20.sp, color: AppColors.textSecondary),
               onSelected: onAction,
               itemBuilder: (context) => const [
-                PopupMenuItem(value: EntitySummaryCardAction.edit, child: Text('Edit')),
-                PopupMenuItem(value: EntitySummaryCardAction.delete, child: Text('Delete')),
+                PopupMenuItem(
+                  height: 36,
+                  value: EntitySummaryCardAction.edit, 
+                  child: Text('Edit')
+                ),
+                PopupMenuItem(
+                  height: 36,
+                  value: EntitySummaryCardAction.delete, 
+                  child: Text('Delete')
+                ),
               ],
             ),
           ],

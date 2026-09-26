@@ -25,9 +25,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
       return id.toString();
     } on DioException catch (e) {
-      if (e.response?.statusCode == 401) {
-        throw const UnauthorizedException();
-      }
+      final statusCode = e.response?.statusCode;
+        if (statusCode == 401 || statusCode == 403) {
+          throw const UnauthorizedException();
+        }
       throw ServerException(e.message ?? 'Failed to validate session.');
     } catch (e) {
       throw ServerException('Unexpected error validating session: $e');
