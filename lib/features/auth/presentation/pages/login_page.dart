@@ -52,66 +52,76 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(height: 200.h),
-              Center(child: SplashLogo(size: 88.w)),
-              SizedBox(height: 20.h),
-              Text(
-                AppConstants.appName,
-                textAlign: TextAlign.center,
-                style: AppTextStyles.appTitle,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: IntrinsicHeight(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      SizedBox(height: 200.h),
+                      Center(child: SplashLogo(size: 88.w)),
+                      SizedBox(height: 20.h),
+                      Text(
+                        AppConstants.appName,
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.appTitle,
+                      ),
+                      SizedBox(height: 80.h),
+                      AppTextField(
+                        controller: _controller,
+                        hintText: 'Enter your phone number or email address',
+                        height: 48.h,
+                        keyboardType: TextInputType.emailAddress,
+                        errorText: formState.errorMessage,
+                        onChanged: ref.read(loginFormProvider.notifier).onIdentifierChanged,
+                      ),
+                      SizedBox(height: 16.h),
+                      Text(
+                        'We will send you a 6-digit verification code for a '
+                        'password-free sign-in',
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.bodySecondary,
+                      ),
+                      const Spacer(), // now valid: IntrinsicHeight + min-height constraint give it a bounded, flexible space
+                      GradientButton(
+                        label: 'Log in',
+                        isLoading: formState.isSubmitting && _pendingPurpose == OtpPurpose.login,
+                        onPressed: (formState.isValid && !formState.isSubmitting)
+                            ? () {
+                                _pendingPurpose = OtpPurpose.login;
+                                ref.read(loginFormProvider.notifier).submit(OtpPurpose.login);
+                              }
+                            : null,
+                        height: 48.h,
+                        borderRadius: 10.r,
+                      ),
+                      SizedBox(height: 12.h),
+                      SecondaryButton(
+                        label: 'Sign up',
+                        onPressed: (formState.isValid && !formState.isSubmitting)
+                            ? () {
+                                _pendingPurpose = OtpPurpose.signup;
+                                ref.read(loginFormProvider.notifier).submit(OtpPurpose.signup);
+                              }
+                            : null,
+                        height: 48.h,
+                        borderRadius: 10.r,
+                      ),
+                      SizedBox(height: 24.h),
+                      const LegalFooter(),
+                      SizedBox(height: 12.h),
+                    ],
+                  ),
+                ),
               ),
-              SizedBox(height: 80.h),
-              AppTextField(
-                controller: _controller,
-                hintText: 'Enter your phone number or email address',
-                height: 48.h,
-                keyboardType: TextInputType.emailAddress,
-                errorText: formState.errorMessage,
-                onChanged: ref.read(loginFormProvider.notifier).onIdentifierChanged,
-              ),
-              SizedBox(height: 16.h),
-              Text(
-                'We will send you a 6-digit verification code for a '
-                'password-free sign-in',
-                textAlign: TextAlign.center,
-                style: AppTextStyles.bodySecondary,
-              ),
-              const Spacer(),
-              GradientButton(
-                label: 'Log in',
-                isLoading: formState.isSubmitting && _pendingPurpose == OtpPurpose.login,
-                onPressed: (formState.isValid && !formState.isSubmitting)
-                    ? () {
-                        _pendingPurpose = OtpPurpose.login;
-                        ref.read(loginFormProvider.notifier).submit(OtpPurpose.login);
-                      }
-                    : null,
-                height: 48.h,    
-                borderRadius: 10.r,    
-              ),
-              SizedBox(height: 12.h),
-              SecondaryButton(
-                label: 'Sign up',
-                onPressed: (formState.isValid && !formState.isSubmitting)
-                    ? () {
-                        _pendingPurpose = OtpPurpose.signup;
-                        ref.read(loginFormProvider.notifier).submit(OtpPurpose.signup);
-                      }
-                    : null,
-                height: 48.h,
-                borderRadius: 10.r,    
-              ),
-              SizedBox(height: 24.h),
-              const LegalFooter(),
-              SizedBox(height: 12.h),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );
