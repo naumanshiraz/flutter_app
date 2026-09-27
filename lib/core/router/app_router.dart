@@ -45,6 +45,7 @@ import 'package:pms_app/features/account_modification/presentation/pages/admin_a
 import 'package:pms_app/features/account_termination/presentation/pages/account_termination_page.dart';
 import 'package:pms_app/features/family_members/presentation/pages/occupants_page.dart';
 import 'package:pms_app/features/affiliates/presentation/pages/affiliates_management_page.dart';
+import 'package:pms_app/features/affiliates/presentation/pages/greetings_review_page.dart';
 import 'package:pms_app/features/splash/domain/entities/app_destination.dart';
 import 'package:pms_app/features/splash/presentation/pages/splash_page.dart';
 import 'package:pms_app/features/splash/presentation/providers/app_initialization_provider.dart';
@@ -109,7 +110,8 @@ String? _routeGuard(BuildContext context, GoRouterState state, Ref ref) {
           currentPath == RouteNames.adminAccountModification || 
           currentPath == RouteNames.accountTermination ||
           currentPath == RouteNames.occupants ||
-          currentPath == RouteNames.affiliatesManagement;
+          currentPath == RouteNames.affiliatesManagement ||
+          currentPath == RouteNames.greetingsReview;
 
       if (isSplashRoute) {
         return isAuthenticated ? RouteNames.home : RouteNames.login;
@@ -393,6 +395,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: RouteNames.affiliatesManagement,
         name: RouteNames.affiliatesManagement,
         builder: (context, state) => const AffiliatesManagementPage(),
+      ),
+      GoRoute(
+        path: RouteNames.greetingsReview,
+        name: RouteNames.greetingsReview,
+        builder: (context, state) => GreetingsReviewPage(ownerName: state.extra as String? ?? ''),
       ),
     ],
     errorBuilder: (context, state) => PlaceholderPage(

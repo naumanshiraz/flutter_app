@@ -15,7 +15,8 @@ class AffiliateModel with _$AffiliateModel {
     @Default('') String email,
     @Default('') String phone,
     String? relationship,
-    @Default('Pending') String status,
+    @Default(Affiliate.statusPending) String status,
+    @JsonKey(name: 'added_by_name') @Default('') String addedByName,
   }) = _AffiliateModel;
 
   factory AffiliateModel.fromJson(Map<String, dynamic> json) => _$AffiliateModelFromJson(json);
@@ -28,6 +29,7 @@ class AffiliateModel with _$AffiliateModel {
         phone: entity.phone,
         relationship: entity.relationship,
         status: entity.status,
+        addedByName: entity.addedByName,
       );
 
   Affiliate toEntity() => Affiliate(
@@ -38,5 +40,6 @@ class AffiliateModel with _$AffiliateModel {
         phone: phone,
         relationship: relationship,
         status: status,
+        addedByName: addedByName,
       );
 }

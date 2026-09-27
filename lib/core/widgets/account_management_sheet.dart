@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pms_app/core/router/route_names.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
-import 'package:pms_app/features/greetings/presentation/providers/greetings_provider.dart';
+import 'package:pms_app/features/affiliates/presentation/providers/affiliates_provider.dart';
 
 class AccountManagementSheet extends ConsumerWidget {
   const AccountManagementSheet({super.key});
@@ -22,7 +22,7 @@ class AccountManagementSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final greetingsState = ref.watch(greetingsProvider);
+    final affiliatesState = ref.watch(affiliatesProvider(null));
 
     return DraggableScrollableSheet(
       initialChildSize: 0.85,
@@ -48,16 +48,25 @@ class AccountManagementSheet extends ConsumerWidget {
                     ),
                     Text(
                       'Account management',
-                      style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700, fontSize: 16.sp),
+                      style: AppTextStyles.body.copyWith(
+                        fontWeight: FontWeight.w700, 
+                        fontSize: 16.sp
+                      ),
                     ),
                   ],
                 ),
               ),
-              const Divider(height: 1, color: AppColors.border),
+              const Divider(
+                height: 1, 
+                color: AppColors.border
+              ),
               Expanded(
                 child: ListView(
                   controller: scrollController,
-                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.w, 
+                    vertical: 8.h
+                  ),
                   children: [
                     _sectionLabel('Affiliates'),
                     _row(
@@ -67,11 +76,11 @@ class AccountManagementSheet extends ConsumerWidget {
                         context.push(RouteNames.affiliatesManagement);
                       },
                     ),
-                    if (greetingsState.isLoading)
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10.h),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
+                    if (affiliatesState.isLoading)
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10.h),
                           child: SizedBox(
                             width: 16.w,
                             height: 16.w,
@@ -82,7 +91,14 @@ class AccountManagementSheet extends ConsumerWidget {
                         ),
                       )
                     else
-                      for (final greeting in greetingsState.greetings) _row(greeting.label),
+                      for (final ownerName in affiliatesState.pendingGreetingOwners)
+                        _row(
+                          "$ownerName's greetings",
+                          onTap: () {
+                            Navigator.of(context).pop();
+                            context.push(RouteNames.greetingsReview, extra: ownerName);
+                          },
+                        ),
                     _sectionLabel('Account'),
                     _row(
                       'Account termination',

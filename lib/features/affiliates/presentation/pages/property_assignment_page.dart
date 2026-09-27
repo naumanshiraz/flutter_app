@@ -124,12 +124,7 @@ class _PropertyAssignmentPageState extends ConsumerState<PropertyAssignmentPage>
               ),
               if (!widget.readOnly) ...[
                 SizedBox(height: 40.h),
-                GradientButton(
-                  label: 'Assign property', 
-                  isLoading: _isSaving, 
-                  onPressed: _onSave,
-                  borderRadius: 10.r,
-                ),
+                GradientButton(label: 'Assign property', isLoading: _isSaving, onPressed: _onSave),
               ],
             ],
           ),

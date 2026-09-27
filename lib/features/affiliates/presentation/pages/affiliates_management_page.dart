@@ -94,7 +94,7 @@ class _AffiliatesManagementPageState extends ConsumerState<AffiliatesManagementP
                     SizedBox(height: 20.h),
                     for (int i = 0; i < state.affiliates.length; i++)
                       Padding(
-                        padding: EdgeInsets.only(bottom: 2.h),
+                        padding: EdgeInsets.only(bottom: 16.h),
                         child: AffiliateManagementCard(
                           affiliate: state.affiliates[i],
                           index: i,
@@ -142,7 +142,6 @@ class _AffiliatesManagementPageState extends ConsumerState<AffiliatesManagementP
                       label: 'Add an affiliate',
                       isLoading: state.isSubmittingDraft,
                       onPressed: _onAddAffiliate,
-                      borderRadius: 10.r,
                     ),
                   ],
                 ),

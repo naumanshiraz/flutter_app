@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
+import 'package:pms_app/core/widgets/entity_summary_card.dart';
 import 'package:pms_app/features/affiliates/domain/entities/affiliate.dart';
 
 enum AffiliateManagementAction { edit, delete, propertyAssignment, propertyAssigned }
@@ -60,30 +61,13 @@ class AffiliateManagementCard extends StatelessWidget {
             const Spacer(),
             PopupMenuButton<AffiliateManagementAction>(
               padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
               icon: Icon(Icons.more_horiz, size: 20.sp, color: AppColors.textSecondary),
               onSelected: onAction,
               itemBuilder: (context) => const [
-                PopupMenuItem(
-                  height: 36,
-                  value: AffiliateManagementAction.edit, 
-                  child: Text('Edit')
-                ),
-                PopupMenuItem(
-                  height: 36,
-                  value: AffiliateManagementAction.delete, 
-                  child: Text('Delete')
-                ),
-                PopupMenuItem(
-                  height: 36,
-                  value: AffiliateManagementAction.propertyAssignment, 
-                  child: Text('Property assignment')
-                ),
-                PopupMenuItem(
-                  height: 36,
-                  value: AffiliateManagementAction.propertyAssigned, 
-                  child: Text('Property assigned')
-                ),
+                PopupMenuItem(value: AffiliateManagementAction.edit, child: Text('Edit')),
+                PopupMenuItem(value: AffiliateManagementAction.delete, child: Text('Delete')),
+                PopupMenuItem(value: AffiliateManagementAction.propertyAssignment, child: Text('Property assignment')),
+                PopupMenuItem(value: AffiliateManagementAction.propertyAssigned, child: Text('Property assigned')),
               ],
             ),
           ],

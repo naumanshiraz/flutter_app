@@ -23,7 +23,8 @@ class AffiliatesRemoteDataSourceImpl implements AffiliatesRemoteDataSource {
         'email': 'gerel@gmail.com',
         'phone': '+976 99885566',
         'relationship': 'Mother',
-        'status': 'Active',
+        'status': 'Engaged',
+        'added_by_name': 'Narandelger Jargal',
       },
       {
         'id': 'aff-2',
@@ -32,7 +33,8 @@ class AffiliatesRemoteDataSourceImpl implements AffiliatesRemoteDataSource {
         'email': 'dulamjav@gmail.com',
         'phone': '+976 99556622',
         'relationship': 'Husband',
-        'status': 'Active',
+        'status': 'Engaged',
+        'added_by_name': 'Narandelger Jargal',
       },
       {
         'id': 'aff-3',
@@ -41,10 +43,22 @@ class AffiliatesRemoteDataSourceImpl implements AffiliatesRemoteDataSource {
         'email': 'nyam@gmail.com',
         'phone': '+976 88225566',
         'relationship': 'Tenant',
-        'status': 'Active',
+        'status': 'Engaged',
+        'added_by_name': 'Narandelger Jargal',
       },
     ],
-    _unassignedKey: [],
+    _unassignedKey: [
+      {
+        'id': 'aff-4',
+        'household_id': null,
+        'name': 'Dulamjav Jargal',
+        'email': 'dulamjav@gmail.com',
+        'phone': '99858623',
+        'relationship': 'Mother',
+        'status': 'Pending',
+        'added_by_name': 'Narandelger Jargal',
+      },
+    ],
   };
 
   @override
@@ -86,6 +100,7 @@ class AffiliatesRemoteDataSourceImpl implements AffiliatesRemoteDataSource {
         'phone': affiliate.phone,
         'relationship': affiliate.relationship,
         'status': affiliate.status,
+        'added_by_name': affiliate.addedByName,
       };
       if (idx >= 0) {
         list[idx] = json;

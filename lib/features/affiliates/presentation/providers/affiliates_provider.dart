@@ -4,6 +4,8 @@ import 'package:pms_app/features/affiliates/domain/entities/affiliate.dart';
 import 'package:pms_app/features/affiliates/presentation/providers/affiliates_di_providers.dart';
 import 'package:pms_app/features/affiliates/presentation/utils/affiliate_validators.dart';
 
+const String kMockCurrentUserName = 'Narandelger Jargal';
+
 class AffiliatesState {
   final bool isLoading;
   final bool isSubmittingDraft;
@@ -21,6 +23,12 @@ class AffiliatesState {
 
   List<Affiliate> get familyMembers => affiliates.where((a) => !a.isTenant).toList();
   List<Affiliate> get tenants => affiliates.where((a) => a.isTenant).toList();
+
+  List<String> get pendingGreetingOwners =>
+      affiliates.where((a) => a.isPending).map((a) => a.addedByName).toSet().toList();
+
+  List<Affiliate> pendingFor(String addedByName) =>
+      affiliates.where((a) => a.isPending && a.addedByName == addedByName).toList();
 
   AffiliatesState copyWith({
     bool? isLoading,
@@ -85,7 +93,8 @@ class AffiliatesNotifier extends StateNotifier<AffiliatesState> {
       email: isEmail ? contact.trim() : '',
       phone: isEmail ? '' : contact.trim(),
       relationship: state.draftRelationship,
-      status: 'Active',
+      status: Affiliate.statusPending,
+      addedByName: kMockCurrentUserName,
     );
 
     final useCase = _ref.read(addOrUpdateAffiliateUseCaseProvider);
@@ -140,6 +149,30 @@ class AffiliatesNotifier extends StateNotifier<AffiliatesState> {
         return false;
       },
     );
+  }
+
+  Future<bool> acceptAffiliates(List<String> ids) async {
+    final useCase = _ref.read(addOrUpdateAffiliateUseCaseProvider);
+    for (final id in ids) {
+      final affiliate = state.affiliates.firstWhere((a) => a.id == id);
+      final updated = affiliate.copyWith(status: Affiliate.statusEngaged);
+      final result = await useCase(updated);
+      final ok = result.when(onSuccess: (_) => true, onFailure: (f) {
+        state = state.copyWith(errorMessage: f.message);
+        return false;
+      });
+      if (!ok) return false;
+      state = state.copyWith(affiliates: state.affiliates.map((a) => a.id == id ? updated : a).toList());
+    }
+    return true;
+  }
+
+  Future<bool> declineAffiliates(List<String> ids) async {
+    for (final id in ids) {
+      final ok = await deleteAffiliate(id);
+      if (!ok) return false;
+    }
+    return true;
   }
 }
 
