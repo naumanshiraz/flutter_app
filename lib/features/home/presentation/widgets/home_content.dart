@@ -120,7 +120,7 @@ class _HomeContentState extends ConsumerState<HomeContent> {
                     crossAxisCount: 2,
                     crossAxisSpacing: 18.w,
                     mainAxisSpacing: 20.h,
-                    childAspectRatio: 1.08,
+                    childAspectRatio: 0.92, // was 1.08; too tight, overflowed on some screen sizes
                   ),
                   delegate: SliverChildBuilderDelegate(
                     (context, index) => PropertyCard(

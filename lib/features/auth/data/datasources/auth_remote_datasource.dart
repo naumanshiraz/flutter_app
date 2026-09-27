@@ -26,6 +26,17 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   AuthRemoteDataSourceImpl(this._dio);
 
+  String _describeDioError(DioException e, String fallbackAction) {
+    final parts = <String>[];
+    final statusCode = e.response?.statusCode;
+    if (statusCode != null) parts.add('HTTP $statusCode');
+    parts.add(e.type.name);
+    if (e.message != null && e.message!.isNotEmpty) parts.add(e.message!);
+    if (e.error != null) parts.add(e.error.toString());
+    final detail = parts.join(' | ');
+    return 'Failed to $fallbackAction. ($detail)';
+  }
+
   @override
   Future<OtpSessionModel> requestOtp({
     required String identifier,
@@ -41,7 +52,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (e.response?.statusCode == 429) {
         throw const ServerException('Too many codes requested. Please wait and try again.');
       }
-      throw ServerException(e.message ?? 'Failed to request OTP.');
+      throw ServerException(_describeDioError(e, 'request OTP'));
     } catch (e) {
       throw ServerException('Unexpected error requesting OTP: $e');
     }
@@ -63,7 +74,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (status == 429) {
         throw const ServerException('Too many attempts. Please request a new code.');
       }
-      throw ServerException(e.message ?? 'Failed to verify OTP.');
+      throw ServerException(_describeDioError(e, 'verify OTP'));
     } catch (e) {
       throw ServerException('Unexpected error verifying OTP: $e');
     }

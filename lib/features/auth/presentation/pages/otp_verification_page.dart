@@ -149,80 +149,90 @@ class OtpVerificationPage extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(height: 100.h),
-              Center(
-                child: Text(
-                  state.formattedRemaining,
-                  style: AppTextStyles.appTitle.copyWith(fontSize: 32.sp),
-                ),
-              ),
-              SizedBox(height: 20.h),
-              Text.rich(
-                TextSpan(
-                  style: AppTextStyles.bodySecondary,
-                  children: [
-                    TextSpan(
-                      text: 'Please enter the 6 digit code we sent to your '
-                          '${state.identifierType == IdentifierType.email ? 'email address' : 'phone number'}: ',
-                    ),
-                    TextSpan(
-                      text: Validators.maskIdentifier(state.identifier),
-                      style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600),
-                    ),
-                  ],
-                ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 32.h),
-              OtpInputBoxes(
-                onChanged: notifier.onCodeChanged,
-                onCompleted: (_) => notifier.verify(),
-              ),
-              if (state.errorMessage != null) ...[
-                SizedBox(height: 12.h),
-                Text(
-                  state.errorMessage!,
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.caption.copyWith(color: AppColors.error),
-                ),
-              ],
-              SizedBox(height: 32.h),
-              GradientButton(
-                label: 'Confirm',
-                isLoading: state.status == OtpVerifyStatus.verifying,
-                onPressed: state.code.length == 6 ? notifier.verify : null,
-                height: 44.h,
-                borderRadius: 10.r,
-              ),
-              SizedBox(height: 20.h),
-              Center(
-                child: Column(
-                  children: [
-                    Text('Having trouble with verification?', style: AppTextStyles.bodySecondary),
-                    SizedBox(height: 4.h),
-                    GestureDetector(
-                      onTap: state.canResend && !state.isResending ? notifier.resend : null,
-                      child: Text(
-                        'Click to re-send',
-                        style: AppTextStyles.linkText.copyWith(
-                          color: state.canResend ? AppColors.primary : AppColors.disabled,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: IntrinsicHeight(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      SizedBox(height: 100.h),
+                      Center(
+                        child: Text(
+                          state.formattedRemaining,
+                          style: AppTextStyles.appTitle.copyWith(fontSize: 32.sp),
                         ),
                       ),
-                    ),
-                  ],
+                      SizedBox(height: 20.h),
+                      Text.rich(
+                        TextSpan(
+                          style: AppTextStyles.bodySecondary,
+                          children: [
+                            TextSpan(
+                              text: 'Please enter the 6 digit code we sent to your '
+                                  '${state.identifierType == IdentifierType.email ? 'email address' : 'phone number'}: ',
+                            ),
+                            TextSpan(
+                              text: Validators.maskIdentifier(state.identifier),
+                              style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 32.h),
+                      OtpInputBoxes(
+                        onChanged: notifier.onCodeChanged,
+                        onCompleted: (_) => notifier.verify(),
+                      ),
+                      if (state.errorMessage != null) ...[
+                        SizedBox(height: 12.h),
+                        Text(
+                          state.errorMessage!,
+                          textAlign: TextAlign.center,
+                          style: AppTextStyles.caption.copyWith(color: AppColors.error),
+                        ),
+                      ],
+                      SizedBox(height: 32.h),
+                      GradientButton(
+                        label: 'Confirm',
+                        isLoading: state.status == OtpVerifyStatus.verifying,
+                        onPressed: state.code.length == 6 ? notifier.verify : null,
+                        height: 44.h,
+                        borderRadius: 10.r,
+                      ),
+                      SizedBox(height: 20.h),
+                      Center(
+                        child: Column(
+                          children: [
+                            Text('Having trouble with verification?', style: AppTextStyles.bodySecondary),
+                            SizedBox(height: 4.h),
+                            GestureDetector(
+                              onTap: state.canResend && !state.isResending ? notifier.resend : null,
+                              child: Text(
+                                'Click to re-send',
+                                style: AppTextStyles.linkText.copyWith(
+                                  color: state.canResend ? AppColors.primary : AppColors.disabled,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Spacer(),
+                      const LegalFooter(),
+                      SizedBox(height: 12.h),
+                    ],
+                  ),
                 ),
               ),
-              const Spacer(),
-              const LegalFooter(),
-              SizedBox(height: 12.h),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );
