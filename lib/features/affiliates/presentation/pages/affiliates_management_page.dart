@@ -113,9 +113,7 @@ class _AffiliatesManagementPageState extends ConsumerState<AffiliatesManagementP
                                 ));
                                 break;
                               case AffiliateManagementAction.propertyAssigned:
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => PropertyAssignmentPage(affiliate: state.affiliates[i], readOnly: true),
-                                ));
+                                context.push(RouteNames.affiliateAssignedProperties, extra: state.affiliates[i]);
                                 break;
                             }
                           },
@@ -142,6 +140,7 @@ class _AffiliatesManagementPageState extends ConsumerState<AffiliatesManagementP
                       label: 'Add an affiliate',
                       isLoading: state.isSubmittingDraft,
                       onPressed: _onAddAffiliate,
+                      borderRadius: 10.r,
                     ),
                   ],
                 ),

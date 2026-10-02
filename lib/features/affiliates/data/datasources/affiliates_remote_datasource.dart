@@ -1,11 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:pms_app/core/error/exceptions.dart';
 import 'package:pms_app/features/affiliates/data/models/affiliate_model.dart';
+import 'package:pms_app/features/main_home/data/models/household_model.dart';
 
 abstract class AffiliatesRemoteDataSource {
   Future<List<AffiliateModel>> getAffiliates({String? householdId});
   Future<void> addOrUpdateAffiliate(AffiliateModel affiliate);
   Future<void> deleteAffiliate(String id);
+  Future<List<HouseholdModel>> getAssignedHouseholds(String affiliateId);
+  Future<void> removeHouseholdAccess({required String affiliateId, required String householdId});
 }
 
 class AffiliatesRemoteDataSourceImpl implements AffiliatesRemoteDataSource {
@@ -13,6 +16,41 @@ class AffiliatesRemoteDataSourceImpl implements AffiliatesRemoteDataSource {
   AffiliatesRemoteDataSourceImpl(this._dio);
 
   static const String _unassignedKey = 'unassigned';
+
+  // GET /user/affiliates/{id}/households. Unknown ids resolve to an empty list.
+  static final Map<String, List<Map<String, dynamic>>> _mockAssignedHouseholds = {
+    'aff-1': [
+      {
+        'id': 'fa5f0c43-430b-49ab-a84d-6d4e72b956c7',
+        'suite': '100',
+        'floor': 1,
+        'unit_type': 'Residential',
+        'claimed': false,
+        'building_id': 'a8e50f37-81cf-4174-95ed-53c994ffa521',
+        'building_name': '215B Block',
+      },
+      {
+        'id': 'b6f2a9a0-11d2-4d2a-9a2a-2f0a5b7f0c11',
+        'suite': '201',
+        'floor': 2,
+        'unit_type': 'Residential',
+        'claimed': true,
+        'building_id': 'a8e50f37-81cf-4174-95ed-53c994ffa521',
+        'building_name': '215B Block',
+      },
+    ],
+    'aff-2': [
+      {
+        'id': '2c1e6a7a-3b3b-4a2e-8b9a-9e7f6a2d5c33',
+        'suite': '305',
+        'floor': 3,
+        'unit_type': 'Commercial',
+        'claimed': false,
+        'building_id': 'e2b4c9d1-6a55-4a0e-9d4f-3c2b1a908f77',
+        'building_name': '212A Tower',
+      },
+    ],
+  };
 
   static final Map<String, List<Map<String, dynamic>>> _mockDb = {
     'fa5f0c43-430b-49ab-a84d-6d4e72b956c7': [
@@ -133,6 +171,41 @@ class AffiliatesRemoteDataSourceImpl implements AffiliatesRemoteDataSource {
       throw ServerException(e.message ?? 'Failed to delete affiliate.');
     } catch (e) {
       throw ServerException('Unexpected error deleting affiliate: $e');
+    }
+  }
+
+  @override
+  Future<List<HouseholdModel>> getAssignedHouseholds(String affiliateId) async {
+    try {
+      // ---- MOCK (no backend yet) ------------------------------------
+      await Future.delayed(const Duration(milliseconds: 500));
+      final rows = _mockAssignedHouseholds[affiliateId] ?? const [];
+      return rows.map(HouseholdModel.fromJson).toList();
+
+      // ---- REAL API (uncomment once the backend is live) -------------
+      // final response = await _dio.get('/user/affiliates/$affiliateId/households');
+      // final data = response.data as List<dynamic>;
+      // return data.map((j) => HouseholdModel.fromJson(j as Map<String, dynamic>)).toList();
+    } on DioException catch (e) {
+      throw ServerException(e.message ?? 'Failed to load assigned properties.');
+    } catch (e) {
+      throw ServerException('Unexpected error loading assigned properties: $e');
+    }
+  }
+
+  @override
+  Future<void> removeHouseholdAccess({required String affiliateId, required String householdId}) async {
+    try {
+      // ---- MOCK (no backend yet) ------------------------------------
+      await Future.delayed(const Duration(milliseconds: 400));
+      _mockAssignedHouseholds[affiliateId]?.removeWhere((m) => (m['id'] as String) == householdId);
+
+      // ---- REAL API (uncomment once the backend is live) -------------
+      // await _dio.delete('/user/affiliates/$affiliateId/households/$householdId');
+    } on DioException catch (e) {
+      throw ServerException(e.message ?? 'Failed to remove access.');
+    } catch (e) {
+      throw ServerException('Unexpected error removing access: $e');
     }
   }
 }

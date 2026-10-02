@@ -83,7 +83,7 @@ class _GreetingsReviewPageState extends ConsumerState<GreetingsReviewPage> {
                             style: OutlinedButton.styleFrom(
                               side: const BorderSide(color: AppColors.primary),
                               padding: EdgeInsets.symmetric(vertical: 16.h),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28.r)),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
                             ),
                             child: Text('Decline', style: AppTextStyles.body.copyWith(color: AppColors.primary, fontWeight: FontWeight.w700)),
                           ),
@@ -95,6 +95,7 @@ class _GreetingsReviewPageState extends ConsumerState<GreetingsReviewPage> {
                       label: 'Accept',
                       isLoading: _isProcessing,
                       onPressed: pending.isEmpty ? () {} : () => _onAccept(pending),
+                      borderRadius: 10.r,
                     ),
                   ],
                 ),

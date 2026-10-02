@@ -45,6 +45,7 @@ import 'package:pms_app/features/account_modification/presentation/pages/admin_a
 import 'package:pms_app/features/account_termination/presentation/pages/account_termination_page.dart';
 import 'package:pms_app/features/family_members/presentation/pages/occupants_page.dart';
 import 'package:pms_app/features/affiliates/presentation/pages/affiliates_management_page.dart';
+import 'package:pms_app/features/affiliates/presentation/pages/assigned_properties_page.dart';
 import 'package:pms_app/features/affiliates/presentation/pages/greetings_review_page.dart';
 import 'package:pms_app/features/splash/domain/entities/app_destination.dart';
 import 'package:pms_app/features/splash/presentation/pages/splash_page.dart';
@@ -111,6 +112,7 @@ String? _routeGuard(BuildContext context, GoRouterState state, Ref ref) {
           currentPath == RouteNames.accountTermination ||
           currentPath == RouteNames.occupants ||
           currentPath == RouteNames.affiliatesManagement ||
+          currentPath == RouteNames.affiliateAssignedProperties ||
           currentPath == RouteNames.greetingsReview;
 
       if (isSplashRoute) {
@@ -395,6 +397,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: RouteNames.affiliatesManagement,
         name: RouteNames.affiliatesManagement,
         builder: (context, state) => const AffiliatesManagementPage(),
+      ),
+      GoRoute(
+        path: RouteNames.affiliateAssignedProperties,
+        name: RouteNames.affiliateAssignedProperties,
+        builder: (context, state) => AssignedPropertiesPage(affiliate: state.extra as Affiliate),
       ),
       GoRoute(
         path: RouteNames.greetingsReview,

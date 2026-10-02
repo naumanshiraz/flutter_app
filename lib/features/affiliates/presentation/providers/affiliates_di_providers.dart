@@ -24,3 +24,11 @@ final addOrUpdateAffiliateUseCaseProvider = Provider<AddOrUpdateAffiliateUseCase
 final deleteAffiliateUseCaseProvider = Provider<DeleteAffiliateUseCase>((ref) {
   return DeleteAffiliateUseCase(ref.watch(affiliatesRepositoryProvider));
 });
+
+final getAssignedHouseholdsUseCaseProvider = Provider<GetAssignedHouseholdsUseCase>((ref) {
+  return GetAssignedHouseholdsUseCase(ref.watch(affiliatesRepositoryProvider));
+});
+
+final removeHouseholdAccessUseCaseProvider = Provider<RemoveHouseholdAccessUseCase>((ref) {
+  return RemoveHouseholdAccessUseCase(ref.watch(affiliatesRepositoryProvider));
+});

@@ -21,6 +21,7 @@ class RouteNames {
   static const String familyMembers = '/profile/family-members';
   static const String occupants = '/main-home/property-detail/occupants';
   static const String affiliatesManagement = '/settings/account-management/affiliates';
+  static const String affiliateAssignedProperties = '/settings/account-management/affiliates/assigned';
   static const String greetingsReview = '/settings/account-management/greetings';
   static const String editFamilyMember = '/profile/family-members/edit';
   static const String properties = '/profile/properties';
