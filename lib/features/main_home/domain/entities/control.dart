@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-/// Entity for a single control shown on the MainHome screen.
 class Control extends Equatable {
   final String id;
   final String title;

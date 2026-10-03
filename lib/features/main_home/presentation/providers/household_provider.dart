@@ -44,16 +44,20 @@ class HouseholdNotifier extends StateNotifier<HouseholdState> {
 
   Future<void> _fetch() async {
     state = state.copyWith(isLoading: true, clearError: true);
-    final getHouseholds = _ref.read(getHouseholdsUseCaseProvider);
-    final result = await getHouseholds(campusId: _campusId);
-    result.when(
-      onSuccess: (households) {
-        state = state.copyWith(isLoading: false, households: households, currentIndex: 0, clearError: true);
-      },
-      onFailure: (failure) {
-        state = state.copyWith(isLoading: false, error: failure.message);
-      },
-    );
+    try {
+      final getHouseholds = _ref.read(getHouseholdsUseCaseProvider);
+      final result = await getHouseholds(campusId: _campusId);
+      result.when(
+        onSuccess: (households) {
+          state = state.copyWith(isLoading: false, households: households, currentIndex: 0, clearError: true);
+        },
+        onFailure: (failure) {
+          state = state.copyWith(isLoading: false, error: failure.message);
+        },
+      );
+    } catch (e) {
+      state = state.copyWith(isLoading: false, error: 'Something went wrong: $e');
+    }
   }
 
   Future<void> refresh() => _fetch();

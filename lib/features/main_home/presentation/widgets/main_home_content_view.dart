@@ -15,8 +15,6 @@ import 'package:pms_app/features/main_home/presentation/widgets/household_carous
 import 'package:pms_app/features/main_home/presentation/widgets/visitor_vehicle_signup_card.dart';
 import 'package:pms_app/core/utils/svg_icons.dart';
 
-const String _kDefaultCampusId = 'gerlug-vista';
-
 class MainHomeContentView extends ConsumerWidget {
   final String? campusId;
 
@@ -24,7 +22,9 @@ class MainHomeContentView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final resolvedCampusId = campusId ?? _kDefaultCampusId;
+    // No hardcoded fallback: an absent campusId is passed through as empty,
+    // so getHouseholds() takes its "no project_id, just limit=10" path.
+    final resolvedCampusId = campusId ?? '';
     final householdState = ref.watch(householdNotifierProvider(resolvedCampusId));
     final householdNotifier = ref.read(householdNotifierProvider(resolvedCampusId).notifier);
     final currentHouseholdId = householdState.current?.id;

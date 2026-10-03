@@ -157,6 +157,18 @@ class HouseholdCarouselCard extends StatelessWidget {
                           color: AppColors.textSecondary,
                         ),
                       ),
+                      if (household.displayAddress != null) ...[
+                        SizedBox(height: 2.h),
+                        Text(
+                          household.displayAddress!,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTextStyles.caption.copyWith(
+                            fontSize: 12.sp,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),

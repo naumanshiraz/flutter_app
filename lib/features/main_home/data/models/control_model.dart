@@ -10,9 +10,9 @@ class ControlModel with _$ControlModel {
 
   const factory ControlModel({
     required String id,
-    required String title,
-    required String subtitle,
-    String? iconName,
+    @JsonKey(name: 'name') required String title,
+    @JsonKey(name: 'kind') String? iconName,
+    @JsonKey(name: 'building_id') String? buildingId,
     @Default(false) bool isOn,
   }) = _ControlModel;
 
@@ -22,9 +22,11 @@ class ControlModel with _$ControlModel {
     return Control(
       id: id,
       title: title,
-      subtitle: subtitle,
+      subtitle: _statusLabel,
       iconName: iconName,
       isOn: isOn,
     );
   }
+
+  String get _statusLabel => isOn ? 'Open' : 'Ready';
 }

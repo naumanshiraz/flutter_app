@@ -5,7 +5,8 @@ import 'package:pms_app/features/main_home/domain/repositories/visitor_repositor
 class GetVisitorSchedulesUseCase {
   final VisitorRepository repository;
   const GetVisitorSchedulesUseCase(this.repository);
-  Future<Result<List<VisitorSchedule>>> call() => repository.getSchedules();
+  Future<Result<List<VisitorSchedule>>> call({required String householdId}) =>
+      repository.getSchedules(householdId: householdId);
 }
 
 class AddOrUpdateVisitorScheduleUseCase {

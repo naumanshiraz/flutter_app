@@ -32,15 +32,20 @@ class MainHomeNotifier extends StateNotifier<MainHomeState> {
 
   Future<void> _fetch() async {
     state = state.copyWith(isLoading: true, clearError: true);
-    final result = await _getControlsUseCase(householdId: _householdId);
-    result.when(
-      onSuccess: (controls) {
-        state = state.copyWith(isLoading: false, controls: controls);
-      },
-      onFailure: (failure) {
-        state = state.copyWith(isLoading: false, error: failure.message);
-      },
-    );
+    try {
+      final result = await _getControlsUseCase(householdId: _householdId);
+      result.when(
+        onSuccess: (controls) {
+          state = state.copyWith(isLoading: false, controls: controls);
+        },
+        onFailure: (failure) {
+          state = state.copyWith(isLoading: false, error: failure.message);
+        },
+      );
+    } catch (e) {
+      // Safety net: see HouseholdNotifier._fetch for why this is needed.
+      state = state.copyWith(isLoading: false, error: 'Something went wrong: $e');
+    }
   }
 
   Future<void> refresh() => _fetch();

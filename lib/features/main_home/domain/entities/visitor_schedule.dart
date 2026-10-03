@@ -7,6 +7,7 @@ class VisitorSchedule extends Equatable {
   final String licensePlate;
   final String time; // HH:mm
   final String date; // ISO yyyy-MM-dd
+  final bool signedUpByMe;
 
   const VisitorSchedule({
     required this.id,
@@ -15,6 +16,7 @@ class VisitorSchedule extends Equatable {
     required this.licensePlate,
     required this.time,
     required this.date,
+    this.signedUpByMe = false,
   });
 
   VisitorSchedule copyWith({
@@ -35,5 +37,5 @@ class VisitorSchedule extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, householdId, guestName, licensePlate, time, date];
+  List<Object?> get props => [id, householdId, guestName, licensePlate, time, date, signedUpByMe];
 }

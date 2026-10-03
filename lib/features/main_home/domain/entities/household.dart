@@ -9,6 +9,10 @@ class Household extends Equatable {
   final String buildingId;
   final String buildingName;
   final String? imageUrl;
+  final double? area;
+  final String? unitOfMeasure;
+  final String? city;
+  final String? country;
 
   const Household({
     required this.id,
@@ -19,14 +23,28 @@ class Household extends Equatable {
     required this.buildingId,
     required this.buildingName,
     this.imageUrl,
+    this.area,
+    this.unitOfMeasure,
+    this.city,
+    this.country,
   });
 
-  /// Title shown on the household carousel card.
   String get displayName => buildingName;
 
-  /// Subtitle shown under [displayName].
-  String get displaySubtitle => 'Suite $suite • Floor $floor • $unitType';
+  String get displaySubtitle {
+    final parts = <String>['Suite $suite', 'Floor $floor', unitType];
+    if (area != null && area! > 0) {
+      parts.add('${area!.toStringAsFixed(0)} ${unitOfMeasure ?? 'sqm'}');
+    }
+    return parts.join(' • ');
+  }
+
+  String? get displayAddress {
+    final parts = [city, country].where((p) => p != null && p.trim().isNotEmpty).toList();
+    return parts.isEmpty ? null : parts.join(', ');
+  }
 
   @override
-  List<Object?> get props => [id, suite, floor, unitType, claimed, buildingId, buildingName, imageUrl];
+  List<Object?> get props =>
+      [id, suite, floor, unitType, claimed, buildingId, buildingName, imageUrl, area, unitOfMeasure, city, country];
 }

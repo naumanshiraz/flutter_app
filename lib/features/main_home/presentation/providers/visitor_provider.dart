@@ -19,9 +19,6 @@ class VisitorState {
   }
 }
 
-/// Visitor schedules for a single household (identified by [_householdId]),
-/// so switching households (prev/next arrows) shows that household's own
-/// schedule.
 class VisitorNotifier extends StateNotifier<VisitorState> {
   final GetVisitorSchedulesUseCase _getUseCase;
   final AddOrUpdateVisitorScheduleUseCase _addUpdateUseCase;
@@ -35,16 +32,19 @@ class VisitorNotifier extends StateNotifier<VisitorState> {
 
   Future<void> _fetch() async {
     state = state.copyWith(isLoading: true, clearError: true);
-    final result = await _getUseCase();
-    result.when(
-      onSuccess: (schedules) {
-        final filtered = schedules.where((s) => s.householdId == _householdId).toList();
-        state = state.copyWith(isLoading: false, schedules: filtered);
-      },
-      onFailure: (f) {
-        state = state.copyWith(isLoading: false, error: f.message);
-      },
-    );
+    try {
+      final result = await _getUseCase(householdId: _householdId);
+      result.when(
+        onSuccess: (schedules) {
+          state = state.copyWith(isLoading: false, schedules: schedules);
+        },
+        onFailure: (f) {
+          state = state.copyWith(isLoading: false, error: f.message);
+        },
+      );
+    } catch (e) {
+      state = state.copyWith(isLoading: false, error: 'Something went wrong: $e');
+    }
   }
 
   Future<void> refresh() => _fetch();

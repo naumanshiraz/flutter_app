@@ -22,12 +22,23 @@ class VisitorVehicleSignupCard extends ConsumerWidget {
     final has = state.schedules.isNotEmpty;
     final first = has ? state.schedules.first : null;
 
+    if (state.isLoading) {
+      return SizedBox(
+        height: 140.h,
+        child: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Visitor vehicle sign-up',
             style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700, fontSize: 16.sp),),
         SizedBox(height: 8.h),
+        if (state.error != null) ...[
+          Text(state.error!, style: AppTextStyles.caption.copyWith(color: AppColors.error)),
+          SizedBox(height: 8.h),
+        ],
         Container(
           padding: EdgeInsets.all(12.w),
           decoration:
@@ -38,7 +49,13 @@ class VisitorVehicleSignupCard extends ConsumerWidget {
               Row(
                 children: [
                   Expanded(child: _InfoItem(title: 'License plate number', value: first!.licensePlate)),
-                  Expanded(child: _InfoItem(title: 'Guest name', value: first.guestName)),
+                  Expanded(
+                    child: _InfoItem(
+                      title: 'Guest name',
+                      value: first.guestName,
+                      badge: first.signedUpByMe ? 'Signed up by me' : null,
+                    ),
+                  ),
                 ],
               ),
               SizedBox(height: 12.h),
@@ -141,7 +158,8 @@ class VisitorVehicleSignupCard extends ConsumerWidget {
 class _InfoItem extends StatelessWidget {
   final String title;
   final String value;
-  const _InfoItem({required this.title, required this.value});
+  final String? badge;
+  const _InfoItem({required this.title, required this.value, this.badge});
 
   @override
   Widget build(BuildContext context) {
@@ -149,6 +167,17 @@ class _InfoItem extends StatelessWidget {
       Text(title, style: AppTextStyles.caption),
       SizedBox(height: 6.h),
       Text(value, style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700)),
+      if (badge != null) ...[
+        SizedBox(height: 4.h),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+          decoration: BoxDecoration(
+            color: AppColors.primary.withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(8.r),
+          ),
+          child: Text(badge!, style: AppTextStyles.caption.copyWith(color: AppColors.primary, fontSize: 10.sp)),
+        ),
+      ],
     ],);
   }
 }

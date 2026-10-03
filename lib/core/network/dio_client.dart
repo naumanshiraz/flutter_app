@@ -138,7 +138,14 @@ class ConnectivityInterceptor extends Interceptor {
   @override
   void onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
-    final connectivityResult = await Connectivity().checkConnectivity();
+    List<ConnectivityResult> connectivityResult;
+    try {
+      connectivityResult = await Connectivity()
+          .checkConnectivity()
+          .timeout(const Duration(seconds: 3));
+    } catch (_) {
+      connectivityResult = const [ConnectivityResult.wifi];
+    }
 
     final hasConnection = connectivityResult.isNotEmpty &&
         !connectivityResult.contains(ConnectivityResult.none);
@@ -206,6 +213,7 @@ class DioClient {
               error: appError,
               type: error.type,
               response: error.response,
+              message: appError.userMessage,
             ),
           );
         },

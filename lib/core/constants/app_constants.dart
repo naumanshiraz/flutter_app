@@ -47,4 +47,15 @@ class AppConstants {
   /// GET /api/app/campuses/{campusId}/households
   static String endpointCampusHouseholds(String campusId) =>
       '/api/app/campuses/$campusId/households';
+
+  /// GET /api/app/households?project_id={campusId}
+  static const String endpointHouseholds = '/api/app/households';
+
+  /// GET /api/app/households/{householdId}/devices
+  static String endpointHouseholdDevices(String householdId) =>
+      '/api/app/households/$householdId/devices';
+
+  /// GET /api/app/households/{householdId}/visitors
+  static String endpointHouseholdVisitors(String householdId) =>
+      '/api/app/households/$householdId/visitors';
 }
