@@ -38,7 +38,6 @@ class _SetUpScheduleSheetState extends State<SetUpScheduleSheet> {
       _date = DateTime.tryParse(i.date) ?? DateTime.now();
     }
 
-    // Debug focus events
     _guestFocus.addListener(() => debugPrint('Guest focus: ${_guestFocus.hasFocus}'));
     _plateFocus.addListener(() => debugPrint('Plate focus: ${_plateFocus.hasFocus}'));
   }
@@ -67,8 +66,8 @@ class _SetUpScheduleSheetState extends State<SetUpScheduleSheet> {
     final timeStr = '${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
     final dateStr = _date.toIso8601String().split('T').first;
     final schedule = VisitorSchedule(
-      id: widget.initial?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
-      householdId: 'fa5f0c43-430b-49ab-a84d-6d4e72b956c7',
+      id: widget.initial?.id ?? '',
+      householdId: widget.initial?.householdId ?? '',
       guestName: _guestCtrl.text.trim(),
       licensePlate: _plateCtrl.text.trim(),
       time: timeStr,
@@ -133,7 +132,27 @@ class _SetUpScheduleSheetState extends State<SetUpScheduleSheet> {
                           controller: _guestCtrl,
                           focusNode: _guestFocus,
                           autofocus: true,
-                          decoration: const InputDecoration(labelText: 'Guest name'),
+                          decoration: InputDecoration(
+                            labelText: 'Guest name',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(
+                                color: Color(0xFFDFE4EA),
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(
+                                color: Color(0xFFDFE4EA),
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(
+                                color: Color(0xFFDFE4EA),
+                              ),
+                            ),
+                          ),
                           textInputAction: TextInputAction.next,
                           keyboardType: TextInputType.name,
                           onTap: () {
@@ -145,7 +164,27 @@ class _SetUpScheduleSheetState extends State<SetUpScheduleSheet> {
                         TextFormField(
                           controller: _plateCtrl,
                           focusNode: _plateFocus,
-                          decoration: const InputDecoration(labelText: 'License plate number'),
+                          decoration: InputDecoration(
+                            labelText: 'License plate number',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(
+                                color: Color(0xFFDFE4EA),
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(
+                                color: Color(0xFFDFE4EA),
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(
+                                color: Color(0xFFDFE4EA),
+                              ),
+                            ),
+                          ),
                           textInputAction: TextInputAction.done,
                           keyboardType: TextInputType.text,
                           onTap: () {
@@ -157,7 +196,27 @@ class _SetUpScheduleSheetState extends State<SetUpScheduleSheet> {
                         InkWell(
                           onTap: _pickTime,
                           child: InputDecorator(
-                            decoration: const InputDecoration(labelText: 'Time'),
+                            decoration: InputDecoration(
+                              labelText: 'Time',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                  borderSide: const BorderSide(
+                                  color: Color(0xFFDFE4EA),
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(
+                                  color: Color(0xFFDFE4EA),
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(
+                                  color: Color(0xFFDFE4EA),
+                                ),
+                              ),
+                            ),
                             child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(_time.format(context)), const Icon(Icons.keyboard_arrow_down)]),
                           ),
                         ),
@@ -165,7 +224,27 @@ class _SetUpScheduleSheetState extends State<SetUpScheduleSheet> {
                         InkWell(
                           onTap: _pickDate,
                           child: InputDecorator(
-                            decoration: const InputDecoration(labelText: 'Date'),
+                            decoration: InputDecoration(
+                              labelText: 'Date',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(
+                                  color: Color(0xFFDFE4EA),
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(
+                                  color: Color(0xFFDFE4EA),
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(
+                                  color: Color(0xFFDFE4EA),
+                                ),
+                              ),
+                            ),
                             child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(_date.toLocal().toIso8601String().split('T').first), const Icon(Icons.keyboard_arrow_down)]),
                           ),
                         ),

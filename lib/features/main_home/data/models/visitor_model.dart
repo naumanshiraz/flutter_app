@@ -8,6 +8,7 @@ class VisitorModel {
   final String time;
   final String date;
   final bool signedUpByMe;
+  final DateTime? createdAt;
 
   const VisitorModel({
     required this.id,
@@ -17,8 +18,12 @@ class VisitorModel {
     required this.time,
     required this.date,
     this.signedUpByMe = false,
+    this.createdAt,
   });
 
+  /// [householdId] isn't in the payload — the API scopes visitors by the
+  /// household in the URL (GET /households/{householdId}/visitors) — so the
+  /// datasource passes it in after fetching.
   factory VisitorModel.fromJson(Map<String, dynamic> json, {String householdId = ''}) {
     return VisitorModel(
       id: json['id'] as String,
@@ -28,16 +33,17 @@ class VisitorModel {
       time: json['expected_time'] as String,
       date: json['expected_on'] as String,
       signedUpByMe: json['signed_up_by_me'] as bool? ?? false,
+      createdAt: json['created_at'] == null ? null : DateTime.tryParse(json['created_at'] as String),
     );
   }
 
-  Map<String, dynamic> toJson() => {
-    'id': id,
+  /// Body for POST /households/{householdId}/visitors — only the 4 fields
+  /// the API accepts for creating a schedule.
+  Map<String, dynamic> toCreateJson() => {
     'guest_name': guestName,
     'license_plate': licensePlate,
     'expected_on': date,
     'expected_time': time,
-    'signed_up_by_me': signedUpByMe,
   };
 
   VisitorSchedule toEntity() => VisitorSchedule(
@@ -48,6 +54,7 @@ class VisitorModel {
     time: time,
     date: date,
     signedUpByMe: signedUpByMe,
+    createdAt: createdAt,
   );
 
   static VisitorModel fromEntity(VisitorSchedule e) => VisitorModel(
@@ -58,5 +65,6 @@ class VisitorModel {
     time: e.time,
     date: e.date,
     signedUpByMe: e.signedUpByMe,
+    createdAt: e.createdAt,
   );
 }

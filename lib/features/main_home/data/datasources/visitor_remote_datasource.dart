@@ -6,7 +6,7 @@ import 'package:pms_app/features/main_home/data/models/visitor_model.dart';
 abstract class VisitorRemoteDataSource {
   Future<List<VisitorModel>> getSchedules({required String householdId});
   Future<void> addOrUpdateSchedule(VisitorModel model);
-  Future<void> deleteSchedule(String id);
+  Future<void> deleteSchedule({required String householdId, required String visitorId});
 }
 
 class VisitorRemoteDataSourceImpl implements VisitorRemoteDataSource {
@@ -35,11 +35,12 @@ class VisitorRemoteDataSourceImpl implements VisitorRemoteDataSource {
     try {
       final isNew = model.id.isEmpty;
       if (isNew) {
-        await _dio.post(AppConstants.endpointHouseholdVisitors(model.householdId), data: model.toJson());
+        // ---- LIVE API: POST /api/app/households/{householdId}/visitors ----
+        await _dio.post(AppConstants.endpointHouseholdVisitors(model.householdId), data: model.toCreateJson());
       } else {
         await _dio.put(
           '${AppConstants.endpointHouseholdVisitors(model.householdId)}/${model.id}',
-          data: model.toJson(),
+          data: model.toCreateJson(),
         );
       }
     } on DioException catch (e) {
@@ -50,9 +51,10 @@ class VisitorRemoteDataSourceImpl implements VisitorRemoteDataSource {
   }
 
   @override
-  Future<void> deleteSchedule(String id) async {
+  Future<void> deleteSchedule({required String householdId, required String visitorId}) async {
     try {
-      await _dio.delete('/api/app/visitors/$id');
+      // ---- LIVE API: DELETE /api/app/households/{householdId}/visitors/{visitorId} ----
+      await _dio.delete('${AppConstants.endpointHouseholdVisitors(householdId)}/$visitorId');
     } on DioException catch (e) {
       throw ServerException(e.message ?? 'Failed to delete visitor schedule on server.');
     } catch (e) {

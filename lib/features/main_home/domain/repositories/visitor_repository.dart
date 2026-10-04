@@ -4,5 +4,5 @@ import 'package:pms_app/features/main_home/domain/entities/visitor_schedule.dart
 abstract class VisitorRepository {
   Future<Result<List<VisitorSchedule>>> getSchedules({required String householdId});
   Future<Result<void>> addOrUpdateSchedule(VisitorSchedule schedule);
-  Future<Result<void>> deleteSchedule(String id);
+  Future<Result<void>> deleteSchedule({required String householdId, required String visitorId});
 }

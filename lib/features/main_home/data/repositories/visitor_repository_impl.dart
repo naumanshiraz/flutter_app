@@ -37,9 +37,9 @@ class VisitorRepositoryImpl implements VisitorRepository {
   }
 
   @override
-  Future<Result<void>> deleteSchedule(String id) async {
+  Future<Result<void>> deleteSchedule({required String householdId, required String visitorId}) async {
     try {
-      await remote.deleteSchedule(id);
+      await remote.deleteSchedule(householdId: householdId, visitorId: visitorId);
       return const Success(null);
     } on ServerException catch (e) {
       return ResultError(ServerFailure(e.message));

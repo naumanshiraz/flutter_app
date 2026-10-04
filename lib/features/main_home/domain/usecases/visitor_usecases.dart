@@ -18,5 +18,6 @@ class AddOrUpdateVisitorScheduleUseCase {
 class DeleteVisitorScheduleUseCase {
   final VisitorRepository repository;
   const DeleteVisitorScheduleUseCase(this.repository);
-  Future<Result<void>> call(String id) => repository.deleteSchedule(id);
+  Future<Result<void>> call({required String householdId, required String visitorId}) =>
+      repository.deleteSchedule(householdId: householdId, visitorId: visitorId);
 }

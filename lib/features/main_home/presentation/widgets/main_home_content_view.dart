@@ -22,8 +22,6 @@ class MainHomeContentView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // No hardcoded fallback: an absent campusId is passed through as empty,
-    // so getHouseholds() takes its "no project_id, just limit=10" path.
     final resolvedCampusId = campusId ?? '';
     final householdState = ref.watch(householdNotifierProvider(resolvedCampusId));
     final householdNotifier = ref.read(householdNotifierProvider(resolvedCampusId).notifier);
