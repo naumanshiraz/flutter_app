@@ -19,9 +19,6 @@ class VisitorState {
   }
 }
 
-/// Visitor schedules for a single household (identified by [_householdId]),
-/// so switching households (prev/next arrows) shows that household's own
-/// schedule.
 class VisitorNotifier extends StateNotifier<VisitorState> {
   final GetVisitorSchedulesUseCase _getUseCase;
   final AddOrUpdateVisitorScheduleUseCase _addUpdateUseCase;
@@ -39,7 +36,6 @@ class VisitorNotifier extends StateNotifier<VisitorState> {
       final result = await _getUseCase(householdId: _householdId);
       result.when(
         onSuccess: (schedules) {
-          // Newest first, so a just-created schedule is the one shown/acted on.
           final sorted = [...schedules]..sort((a, b) {
             if (a.createdAt == null || b.createdAt == null) return 0;
             return b.createdAt!.compareTo(a.createdAt!);
@@ -51,7 +47,6 @@ class VisitorNotifier extends StateNotifier<VisitorState> {
         },
       );
     } catch (e) {
-      // Safety net: see HouseholdNotifier._fetch for why this is needed.
       state = state.copyWith(isLoading: false, error: 'Something went wrong: $e');
     }
   }

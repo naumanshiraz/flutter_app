@@ -21,9 +21,6 @@ class VisitorModel {
     this.createdAt,
   });
 
-  /// [householdId] isn't in the payload — the API scopes visitors by the
-  /// household in the URL (GET /households/{householdId}/visitors) — so the
-  /// datasource passes it in after fetching.
   factory VisitorModel.fromJson(Map<String, dynamic> json, {String householdId = ''}) {
     return VisitorModel(
       id: json['id'] as String,
@@ -37,8 +34,6 @@ class VisitorModel {
     );
   }
 
-  /// Body for POST /households/{householdId}/visitors — only the 4 fields
-  /// the API accepts for creating a schedule.
   Map<String, dynamic> toCreateJson() => {
     'guest_name': guestName,
     'license_plate': licensePlate,
