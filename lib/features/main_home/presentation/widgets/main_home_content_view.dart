@@ -94,10 +94,12 @@ class MainHomeContentView extends ConsumerWidget {
                         _sectionChip(
                           'Services',
                           selected: false,
-                          onTap: () => context.push(
-                            RouteNames.propertyDetail,
-                            extra: 'gerlug-vista',
-                          ),
+                          onTap: householdState.current == null
+                              ? null
+                              : () => context.push(
+                                    RouteNames.propertyDetail,
+                                    extra: householdState.current!.id,
+                                  ),
                         ),
                       ],
                     ),

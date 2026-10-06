@@ -4,9 +4,22 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 import 'package:pms_app/core/widgets/gradient_button.dart';
+import 'package:pms_app/features/affiliates/domain/entities/affiliate.dart';
 import 'package:pms_app/features/affiliates/presentation/providers/affiliates_provider.dart';
 import 'package:pms_app/features/affiliates/presentation/widgets/affiliate_form_fields.dart';
 import 'package:pms_app/features/affiliates/presentation/widgets/affiliate_summary_card.dart';
+import 'package:pms_app/features/family_members/domain/entities/occupant.dart';
+import 'package:pms_app/features/family_members/presentation/providers/occupants_provider.dart';
+
+/// The members API (GET .../members) doesn't return email/phone/status,
+/// so those display as '-' / 'Active' here — same convention
+/// AffiliateSummaryCard already uses for any blank field.
+Affiliate _occupantToAffiliate(Occupant o) => Affiliate(
+      id: o.userId,
+      name: o.fullName,
+      relationship: o.relation ?? (o.isPrimary ? 'Primary' : null),
+      status: 'Active',
+    );
 
 class OccupantsPage extends ConsumerStatefulWidget {
   final String householdId;
@@ -44,6 +57,8 @@ class _OccupantsPageState extends ConsumerState<OccupantsPage> {
   Widget build(BuildContext context) {
     final state = ref.watch(affiliatesProvider(widget.householdId));
     final notifier = ref.read(affiliatesProvider(widget.householdId).notifier);
+    final occupantsState = ref.watch(occupantsProvider(widget.householdId));
+    final occupantsNotifier = ref.read(occupantsProvider(widget.householdId).notifier);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -62,6 +77,56 @@ class _OccupantsPageState extends ConsumerState<OccupantsPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    if (occupantsState.isLoading)
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16.h),
+                        child: const Center(child: CircularProgressIndicator()),
+                      )
+                    else if (occupantsState.error != null)
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16.h),
+                        child: Column(
+                          children: [
+                            Text(
+                              occupantsState.error!,
+                              textAlign: TextAlign.center,
+                              style: AppTextStyles.caption.copyWith(color: AppColors.error),
+                            ),
+                            SizedBox(height: 8.h),
+                            TextButton(onPressed: occupantsNotifier.refresh, child: const Text('Retry')),
+                          ],
+                        ),
+                      )
+                    else if (occupantsState.occupants.isEmpty)
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16.h),
+                        child: Center(
+                          child: Text('No occupants found for this household.', style: AppTextStyles.bodySecondary),
+                        ),
+                      )
+                    else ...[
+                      for (int i = 0; i < occupantsState.familyMembers.length; i++)
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 2.h),
+                          child: AffiliateSummaryCard(
+                            affiliate: _occupantToAffiliate(occupantsState.familyMembers[i]),
+                            index: i,
+                            total: occupantsState.familyMembers.length,
+                            onAction: (_) {},
+                          ),
+                        ),
+                      for (int i = 0; i < occupantsState.tenants.length; i++)
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 2.h),
+                          child: AffiliateSummaryCard(
+                            affiliate: _occupantToAffiliate(occupantsState.tenants[i]),
+                            index: i,
+                            total: occupantsState.tenants.length,
+                            onAction: (_) {},
+                          ),
+                        ),
+                    ],
+                    SizedBox(height: 8.h),
                     for (int i = 0; i < state.familyMembers.length; i++)
                       Padding(
                         padding: EdgeInsets.only(bottom: 2.h),

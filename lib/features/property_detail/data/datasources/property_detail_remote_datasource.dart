@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:pms_app/core/constants/app_constants.dart';
 import 'package:pms_app/core/error/exceptions.dart';
 import 'package:pms_app/features/property_detail/data/models/property_detail_model.dart';
 import 'package:pms_app/features/property_detail/data/models/service_listing_model.dart';
@@ -27,10 +28,6 @@ class PropertyDetailRemoteDataSourceImpl implements PropertyDetailRemoteDataSour
     'servicesLayout': _mockServicesLayout,
   };
 
-  /// Order matters: `ServicesMasonryGrid` positions the first (or first
-  /// three, in `vertical` mode) items specially based on
-  /// `servicesLayout`, then falls back to a plain 2-column grid for the
-  /// rest — matching all 3 "Detailed view" screenshots exactly.
   static const List<Map<String, dynamic>> _mockServices = [
     {
       'id': 'california_bakery',
@@ -73,11 +70,10 @@ class PropertyDetailRemoteDataSourceImpl implements PropertyDetailRemoteDataSour
   @override
   Future<PropertyDetailModel> getPropertyDetail(String propertyId) async {
     try {
-      await Future.delayed(const Duration(milliseconds: 500));
-      return PropertyDetailModel.fromJson(_mockPropertyDetail);
-
-      // final response = await _dio.get('/properties/$propertyId/detail');
-      // return PropertyDetailModel.fromJson(response.data as Map<String, dynamic>);
+      // ---- LIVE API: GET /api/app/households/{householdId} ----
+      // propertyId is the householdId passed in from Main Home.
+      final response = await _dio.get(AppConstants.endpointHouseholdDetail(propertyId));
+      return PropertyDetailModel.fromHouseholdJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
       throw ServerException(e.message ?? 'Failed to fetch property detail.');
     } catch (e) {

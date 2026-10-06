@@ -20,6 +20,31 @@ class PropertyDetailModel with _$PropertyDetailModel {
   factory PropertyDetailModel.fromJson(Map<String, dynamic> json) =>
       _$PropertyDetailModelFromJson(json);
 
+  factory PropertyDetailModel.fromHouseholdJson(Map<String, dynamic> json) {
+    final buildingAddress = json['building_address'] as Map<String, dynamic>?;
+    final developmentAddress = json['development_address'] as Map<String, dynamic>?;
+    final address = buildingAddress ?? developmentAddress;
+
+    final addressParts = [
+      address?['address_line_1'],
+      address?['city'],
+      address?['country'],
+    ].whereType<String>().where((p) => p.trim().isNotEmpty).toList();
+
+    final buildingThumbUrl = json['building_thumb_url'] as String?;
+    final developmentThumbUrl = json['development_thumb_url'] as String?;
+    final thumb = (buildingThumbUrl != null && buildingThumbUrl.trim().isNotEmpty)
+        ? buildingThumbUrl
+        : developmentThumbUrl;
+
+    return PropertyDetailModel(
+      id: json['household_id'] as String? ?? '',
+      name: (json['building_name'] as String?) ?? (json['development_name'] as String?) ?? '',
+      address: addressParts.join(', '),
+      heroImageUrls: (thumb == null || thumb.trim().isEmpty) ? const [] : [thumb],
+    );
+  }
+
   PropertyDetail toEntity() => PropertyDetail(
         id: id,
         name: name,

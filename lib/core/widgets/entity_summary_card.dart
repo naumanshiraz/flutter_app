@@ -100,7 +100,10 @@ class _Field extends StatelessWidget {
         SizedBox(height: 2.h),
         Text(
           value,
-          style: AppTextStyles.body.copyWith(fontSize: 13.sp),
+          style: AppTextStyles.body.copyWith(
+            fontSize: 13.sp,
+            color: Colors.black,
+          ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
