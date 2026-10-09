@@ -1,19 +1,20 @@
 import 'package:pms_app/core/utils/result.dart';
+import 'package:pms_app/features/properties/domain/entities/available_suite.dart';
 import 'package:pms_app/features/properties/domain/entities/property.dart';
 import 'package:pms_app/features/properties/domain/repositories/properties_repository.dart';
 
-class GetPropertiesUseCase {
+class GetAvailableSuitesUseCase {
   final PropertiesRepository _repository;
-  const GetPropertiesUseCase(this._repository);
+  const GetAvailableSuitesUseCase(this._repository);
 
-  Future<Result<List<Property>>> call() => _repository.getProperties();
+  Future<Result<List<AvailableSuite>>> call(String campusId) => _repository.getAvailableSuites(campusId);
 }
 
-class AddPropertyUseCase {
+class SubmitClaimRequestUseCase {
   final PropertiesRepository _repository;
-  const AddPropertyUseCase(this._repository);
+  const SubmitClaimRequestUseCase(this._repository);
 
-  Future<Result<void>> call(Property property) => _repository.addProperty(property);
+  Future<Result<void>> call(String householdId) => _repository.submitClaimRequest(householdId);
 }
 
 class UpdatePropertyUseCase {

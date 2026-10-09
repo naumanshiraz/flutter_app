@@ -9,8 +9,9 @@ import 'package:pms_app/core/widgets/gradient_button.dart';
 import 'package:pms_app/core/widgets/step_scaffold.dart';
 import 'package:pms_app/features/properties/domain/entities/property.dart';
 import 'package:pms_app/features/properties/presentation/providers/properties_provider.dart';
-import 'package:pms_app/features/properties/presentation/widgets/property_form_fields.dart';
+import 'package:pms_app/features/properties/presentation/widgets/property_options.dart';
 import 'package:pms_app/features/properties/presentation/widgets/property_summary_card.dart';
+import 'package:pms_app/features/properties/presentation/widgets/suite_selection_fields.dart';
 
 class PropertiesPage extends ConsumerStatefulWidget {
   const PropertiesPage({super.key});
@@ -20,21 +21,6 @@ class PropertiesPage extends ConsumerStatefulWidget {
 }
 
 class _PropertiesPageState extends ConsumerState<PropertiesPage> {
-  final _suiteController = TextEditingController();
-
-  @override
-  void dispose() {
-    _suiteController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _onAddProperty() async {
-    final notifier = ref.read(propertiesProvider.notifier);
-    notifier.updateDraft(suite: _suiteController.text.trim());
-    final ok = await notifier.addDraftAsProperty();
-    if (ok) _suiteController.clear();
-  }
-
   Future<void> _onEditProperty(Property property) async {
     await context.push(RouteNames.editProperty, extra: property);
   }
@@ -62,9 +48,7 @@ class _PropertiesPageState extends ConsumerState<PropertiesPage> {
     }
   }
 
-  Future<void> _onNext() async {
-    context.push(RouteNames.familyMembers);
-  }
+  void _onNext() => context.push(RouteNames.familyMembers);
 
   @override
   Widget build(BuildContext context) {
@@ -89,13 +73,18 @@ class _PropertiesPageState extends ConsumerState<PropertiesPage> {
       bottomButton: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SecondaryButton(
-            label: 'Add property',
-            isLoading: state.isSubmittingDraft,
-            onPressed: _onAddProperty,
+          if (state.properties.isEmpty) ...[
+            SecondaryButton(
+              label: 'Add property',
+              isLoading: state.isSubmittingClaim,
+              onPressed: notifier.addProperty,
+            ),
+            SizedBox(height: 12.h),
+          ],
+          GradientButton(
+            label: 'Next',
+            onPressed: state.properties.isEmpty ? null : _onNext,
           ),
-          SizedBox(height: 12.h),
-          GradientButton(label: 'Next', onPressed: _onNext),
         ],
       ),
       child: Column(
@@ -135,15 +124,12 @@ class _PropertiesPageState extends ConsumerState<PropertiesPage> {
             ),
             SizedBox(height: 20.h),
           ],
-          PropertyFormFields(
-            suiteController: _suiteController,
-            floor: state.draft.floor,
-            type: state.draft.type,
-            building: state.draft.building,
-            onFloorChanged: (v) => notifier.updateDraft(floor: v),
-            onTypeChanged: (v) => notifier.updateDraft(type: v),
-            onBuildingChanged: (v) => notifier.updateDraft(building: v),
-          ),
+          if (state.properties.isEmpty)
+            SuiteSelectionFields(
+              suites: state.suites,
+              selected: state.selectedSuite,
+              onSuiteChanged: notifier.selectSuite,
+            ),
           if (state.errorMessage != null) ...[
             SizedBox(height: 16.h),
             Text(

@@ -27,7 +27,7 @@ class MainHomeContentView extends ConsumerWidget {
     final householdNotifier = ref.read(householdNotifierProvider(resolvedCampusId).notifier);
     final currentHouseholdId = householdState.current?.id;
     final state = currentHouseholdId == null
-        ? const MainHomeState(isLoading: true)
+        ? const MainHomeState(isLoading: false)
         : ref.watch(mainHomeNotifierProvider(currentHouseholdId));
     final notifier = currentHouseholdId == null
         ? null

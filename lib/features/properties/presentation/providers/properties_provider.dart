@@ -1,23 +1,25 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:uuid/uuid.dart';
+import 'package:pms_app/features/properties/domain/entities/available_suite.dart';
 import 'package:pms_app/features/properties/domain/entities/property.dart';
 import 'package:pms_app/features/properties/presentation/providers/properties_di_providers.dart';
 import 'package:pms_app/features/residency/presentation/providers/residency_di_providers.dart';
 
 class PropertiesState {
   final bool isLoading;
-  final bool isSubmittingDraft;
+  final bool isSubmittingClaim;
   final List<Property> properties;
-  final Property draft;
+  final List<AvailableSuite> suites;
+  final AvailableSuite? selectedSuite;
   final String? errorMessage;
   final String residencyName;
   final String place;
 
   const PropertiesState({
     this.isLoading = true,
-    this.isSubmittingDraft = false,
+    this.isSubmittingClaim = false,
     this.properties = const [],
-    required this.draft,
+    this.suites = const [],
+    this.selectedSuite,
     this.errorMessage,
     this.residencyName = '',
     this.place = '',
@@ -25,9 +27,11 @@ class PropertiesState {
 
   PropertiesState copyWith({
     bool? isLoading,
-    bool? isSubmittingDraft,
+    bool? isSubmittingClaim,
     List<Property>? properties,
-    Property? draft,
+    List<AvailableSuite>? suites,
+    AvailableSuite? selectedSuite,
+    bool clearSelection = false,
     String? errorMessage,
     bool clearError = false,
     String? residencyName,
@@ -35,9 +39,10 @@ class PropertiesState {
   }) {
     return PropertiesState(
       isLoading: isLoading ?? this.isLoading,
-      isSubmittingDraft: isSubmittingDraft ?? this.isSubmittingDraft,
+      isSubmittingClaim: isSubmittingClaim ?? this.isSubmittingClaim,
       properties: properties ?? this.properties,
-      draft: draft ?? this.draft,
+      suites: suites ?? this.suites,
+      selectedSuite: clearSelection ? null : (selectedSuite ?? this.selectedSuite),
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
       residencyName: residencyName ?? this.residencyName,
       place: place ?? this.place,
@@ -47,90 +52,93 @@ class PropertiesState {
 
 class PropertiesNotifier extends StateNotifier<PropertiesState> {
   final Ref _ref;
-  static const _uuid = Uuid();
 
-  PropertiesNotifier(this._ref) : super(PropertiesState(draft: Property(id: _uuid.v4()))) {
+  PropertiesNotifier(this._ref) : super(const PropertiesState()) {
     _load();
   }
 
   Future<void> _load() async {
-    final propertiesUseCase = _ref.read(getPropertiesUseCaseProvider);
-    final residencyUseCase = _ref.read(getCachedResidencyAddressUseCaseProvider);
-
-    final propertiesResult = await propertiesUseCase();
-    final residencyResult = await residencyUseCase();
-
+    final residencyResult = await _ref.read(getCachedResidencyAddressUseCaseProvider)();
     final residencyName = residencyResult.when(
       onSuccess: (address) => address.campusName ?? '',
       onFailure: (_) => '',
     );
     final place = residencyResult.when(
-      onSuccess: (address) {
-        final parts = [address.city, address.country]
-            .where((p) => p != null && p.isNotEmpty)
-            .toList();
-        return parts.join(', ');
-      },
+      onSuccess: (address) => [address.city, address.country].where((p) => p != null && p.isNotEmpty).join(', '),
       onFailure: (_) => '',
     );
+    final campusId = residencyResult.when(
+      onSuccess: (address) => address.campusId,
+      onFailure: (_) => null,
+    );
 
-    propertiesResult.when(
-      onSuccess: (properties) {
-        state = state.copyWith(
-          isLoading: false,
-          properties: properties,
-          residencyName: residencyName,
-          place: place,
-        );
-      },
-      onFailure: (failure) {
-        state = state.copyWith(
-          isLoading: false,
-          errorMessage: failure.message,
-          residencyName: residencyName,
-          place: place,
-        );
-      },
+    if (campusId == null || campusId.isEmpty) {
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: 'No residency selected.',
+        residencyName: residencyName,
+        place: place,
+      );
+      return;
+    }
+
+    final result = await _ref.read(getAvailableSuitesUseCaseProvider)(campusId);
+    result.when(
+      onSuccess: (suites) => state = state.copyWith(
+        isLoading: false,
+        suites: suites,
+        residencyName: residencyName,
+        place: place,
+      ),
+      onFailure: (f) => state = state.copyWith(
+        isLoading: false,
+        errorMessage: f.message,
+        residencyName: residencyName,
+        place: place,
+      ),
     );
   }
 
-  void updateDraft({String? suite, String? floor, String? type, String? building}) {
-    state = state.copyWith(
-      draft: state.draft.copyWith(suite: suite, floor: floor, type: type, building: building),
-      clearError: true,
-    );
+  void selectSuite(AvailableSuite suite) {
+    state = state.copyWith(selectedSuite: suite, clearError: true);
   }
 
-  Future<bool> addDraftAsProperty() async {
-    if (!state.draft.isValid) {
-      state = state.copyWith(errorMessage: 'Please complete every field before adding.');
+  Future<bool> addProperty() async {
+    final suite = state.selectedSuite;
+    if (suite == null) {
+      state = state.copyWith(errorMessage: 'Please select a suite.');
       return false;
     }
-    state = state.copyWith(isSubmittingDraft: true, clearError: true);
-
-    final useCase = _ref.read(addPropertyUseCaseProvider);
-    final result = await useCase(state.draft);
-
+    state = state.copyWith(isSubmittingClaim: true, clearError: true);
+    final result = await _ref.read(submitClaimRequestUseCaseProvider)(suite.id);
     return result.when(
       onSuccess: (_) {
         state = state.copyWith(
-          isSubmittingDraft: false,
-          properties: [...state.properties, state.draft],
-          draft: Property(id: _uuid.v4()),
+          isSubmittingClaim: false,
+          properties: [
+            ...state.properties,
+            Property(
+              id: suite.id,
+              suite: suite.suite,
+              floor: suite.floor,
+              type: suite.unitType,
+              building: suite.buildingName,
+            ),
+          ],
+          suites: state.suites.where((s) => s.id != suite.id).toList(),
+          clearSelection: true,
         );
         return true;
       },
       onFailure: (failure) {
-        state = state.copyWith(isSubmittingDraft: false, errorMessage: failure.message);
+        state = state.copyWith(isSubmittingClaim: false, errorMessage: failure.message);
         return false;
       },
     );
   }
 
   Future<bool> updateProperty(Property updated) async {
-    final useCase = _ref.read(updatePropertyUseCaseProvider);
-    final result = await useCase(updated);
-
+    final result = await _ref.read(updatePropertyUseCaseProvider)(updated);
     return result.when(
       onSuccess: (_) {
         state = state.copyWith(
@@ -146,9 +154,7 @@ class PropertiesNotifier extends StateNotifier<PropertiesState> {
   }
 
   Future<bool> deleteProperty(String id) async {
-    final useCase = _ref.read(deletePropertyUseCaseProvider);
-    final result = await useCase(id);
-
+    final result = await _ref.read(deletePropertyUseCaseProvider)(id);
     return result.when(
       onSuccess: (_) {
         state = state.copyWith(properties: state.properties.where((p) => p.id != id).toList());

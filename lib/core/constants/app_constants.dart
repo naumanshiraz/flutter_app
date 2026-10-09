@@ -66,4 +66,7 @@ class AppConstants {
   /// GET /api/app/households/{householdId}/members
   static String endpointHouseholdMembers(String householdId) =>
       '/api/app/households/$householdId/members';
+
+  /// POST /api/app/residency-requests
+  static const String endpointResidencyRequests = '/api/app/residency-requests';    
 }
