@@ -11,9 +11,6 @@ import 'package:pms_app/features/affiliates/presentation/widgets/affiliate_summa
 import 'package:pms_app/features/family_members/domain/entities/occupant.dart';
 import 'package:pms_app/features/family_members/presentation/providers/occupants_provider.dart';
 
-/// The members API (GET .../members) doesn't return email/phone/status,
-/// so those display as '-' / 'Active' here — same convention
-/// AffiliateSummaryCard already uses for any blank field.
 Affiliate _occupantToAffiliate(Occupant o) => Affiliate(
       id: o.userId,
       name: o.fullName,
