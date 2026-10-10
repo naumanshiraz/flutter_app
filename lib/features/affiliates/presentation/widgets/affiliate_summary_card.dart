@@ -10,6 +10,7 @@ class AffiliateSummaryCard extends StatelessWidget {
   final int index;
   final int total;
   final ValueChanged<AffiliateCardAction> onAction;
+  final bool showEdit;
 
   const AffiliateSummaryCard({
     super.key,
@@ -18,6 +19,7 @@ class AffiliateSummaryCard extends StatelessWidget {
     required this.total,
     required this.onAction,
     this.itemLabel = 'Family member',
+    this.showEdit = true,
   });
 
   @override
@@ -27,6 +29,7 @@ class AffiliateSummaryCard extends StatelessWidget {
       index: index,
       total: total,
       onAction: onAction,
+      showEdit: showEdit,
       rows: [
         [
           SummaryField(label: 'Name', value: affiliate.name.isEmpty ? '-' : affiliate.name),

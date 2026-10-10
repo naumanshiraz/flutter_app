@@ -19,6 +19,7 @@ class EntitySummaryCard extends StatelessWidget {
   final int index;
   final int total;
   final ValueChanged<EntitySummaryCardAction> onAction;
+  final bool showEdit;
 
   const EntitySummaryCard({
     super.key,
@@ -27,6 +28,7 @@ class EntitySummaryCard extends StatelessWidget {
     required this.index,
     required this.total,
     required this.onAction,
+    this.showEdit = true,
   });
 
   @override
@@ -66,16 +68,17 @@ class EntitySummaryCard extends StatelessWidget {
               padding: EdgeInsets.zero,
               icon: Icon(Icons.more_horiz, size: 20.sp, color: AppColors.textSecondary),
               onSelected: onAction,
-              itemBuilder: (context) => const [
-                PopupMenuItem(
+              itemBuilder: (context) => [
+                if (showEdit)
+                  const PopupMenuItem(
+                    height: 36,
+                    value: EntitySummaryCardAction.edit,
+                    child: Text('Edit'),
+                  ),
+                const PopupMenuItem(
                   height: 36,
-                  value: EntitySummaryCardAction.edit, 
-                  child: Text('Edit')
-                ),
-                PopupMenuItem(
-                  height: 36,
-                  value: EntitySummaryCardAction.delete, 
-                  child: Text('Delete')
+                  value: EntitySummaryCardAction.delete,
+                  child: Text('Delete'),
                 ),
               ],
             ),
@@ -100,10 +103,7 @@ class _Field extends StatelessWidget {
         SizedBox(height: 2.h),
         Text(
           value,
-          style: AppTextStyles.body.copyWith(
-            fontSize: 13.sp,
-            color: Colors.black,
-          ),
+          style: AppTextStyles.body.copyWith(fontSize: 13.sp),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),

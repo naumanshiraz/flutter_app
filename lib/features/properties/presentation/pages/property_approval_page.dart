@@ -27,7 +27,7 @@ class PropertyApprovalPage extends ConsumerWidget {
       );
       return;
     }
-    context.push(RouteNames.familyMembers);
+    context.push(RouteNames.familyMembers, extra: state.current?.householdId);
   }
 
   @override

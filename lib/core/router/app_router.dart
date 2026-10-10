@@ -17,7 +17,6 @@ import 'package:pms_app/features/chat/presentation/pages/public_chat_page.dart';
 import 'package:pms_app/features/chat/presentation/pages/group_info_page.dart';
 import 'package:pms_app/features/concierge/presentation/pages/concierge_page.dart';
 import 'package:pms_app/features/affiliates/domain/entities/affiliate.dart';
-import 'package:pms_app/features/family_members/presentation/pages/edit_family_member_page.dart';
 import 'package:pms_app/features/family_members/presentation/pages/family_members_page.dart';
 import 'package:pms_app/features/home/presentation/pages/home_page.dart';
 import 'package:pms_app/features/profile/presentation/pages/edit_profile_page.dart';
@@ -279,18 +278,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: RouteNames.familyMembers,
         name: RouteNames.familyMembers,
-        builder: (context, state) => const FamilyMembersPage(),
-      ),
-      GoRoute(
-        path: RouteNames.editFamilyMember,
-        name: RouteNames.editFamilyMember,
-        builder: (context, state) {
-          final member = state.extra as Affiliate?;
-          if (member == null) {
-            return const EditFamilyMemberFallbackPage();
-          }
-          return EditFamilyMemberPage(affiliate: member);
-        },
+        builder: (context, state) => FamilyMembersPage(householdId: state.extra as String?),
       ),
       GoRoute(
         path: RouteNames.properties,
