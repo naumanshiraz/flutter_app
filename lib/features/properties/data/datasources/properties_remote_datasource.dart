@@ -3,10 +3,12 @@ import 'package:pms_app/core/constants/app_constants.dart';
 import 'package:pms_app/core/error/exceptions.dart';
 import 'package:pms_app/features/properties/data/models/available_suite_model.dart';
 import 'package:pms_app/features/properties/data/models/property_model.dart';
+import 'package:pms_app/features/properties/data/models/residency_request_model.dart';
 
 abstract class PropertiesRemoteDataSource {
   Future<List<AvailableSuiteModel>> getAvailableSuites(String campusId);
   Future<void> submitClaimRequest(String householdId);
+  Future<List<ResidencyRequestModel>> getResidencyRequests();
   Future<void> updateProperty(PropertyModel property);
   Future<void> deleteProperty(String id);
 }
@@ -43,6 +45,19 @@ class PropertiesRemoteDataSourceImpl implements PropertiesRemoteDataSource {
       throw ServerException(_message(e, 'Failed to submit request.'));
     } catch (e) {
       throw ServerException('Unexpected error submitting request: $e');
+    }
+  }
+
+  @override
+  Future<List<ResidencyRequestModel>> getResidencyRequests() async {
+    try {
+      final response = await _dio.get(AppConstants.endpointResidencyRequests);
+      final rows = response.data as List<dynamic>;
+      return rows.map((row) => ResidencyRequestModel.fromApi(row as Map<String, dynamic>)).toList();
+    } on DioException catch (e) {
+      throw ServerException(_message(e, 'Failed to load requests.'));
+    } catch (e) {
+      throw ServerException('Unexpected error loading requests: $e');
     }
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pms_app/features/properties/domain/entities/available_suite.dart';
 import 'package:pms_app/features/properties/domain/entities/property.dart';
+import 'package:pms_app/features/properties/domain/entities/residency_request.dart';
 import 'package:pms_app/features/properties/presentation/providers/properties_di_providers.dart';
 import 'package:pms_app/features/residency/presentation/providers/residency_di_providers.dart';
 
@@ -8,6 +9,7 @@ class PropertiesState {
   final bool isLoading;
   final bool isSubmittingClaim;
   final List<Property> properties;
+  final List<ResidencyRequest> requests;
   final List<AvailableSuite> suites;
   final AvailableSuite? selectedSuite;
   final String? errorMessage;
@@ -18,6 +20,7 @@ class PropertiesState {
     this.isLoading = true,
     this.isSubmittingClaim = false,
     this.properties = const [],
+    this.requests = const [],
     this.suites = const [],
     this.selectedSuite,
     this.errorMessage,
@@ -29,6 +32,7 @@ class PropertiesState {
     bool? isLoading,
     bool? isSubmittingClaim,
     List<Property>? properties,
+    List<ResidencyRequest>? requests,
     List<AvailableSuite>? suites,
     AvailableSuite? selectedSuite,
     bool clearSelection = false,
@@ -41,6 +45,7 @@ class PropertiesState {
       isLoading: isLoading ?? this.isLoading,
       isSubmittingClaim: isSubmittingClaim ?? this.isSubmittingClaim,
       properties: properties ?? this.properties,
+      requests: requests ?? this.requests,
       suites: suites ?? this.suites,
       selectedSuite: clearSelection ? null : (selectedSuite ?? this.selectedSuite),
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
@@ -52,6 +57,7 @@ class PropertiesState {
 
 class PropertiesNotifier extends StateNotifier<PropertiesState> {
   final Ref _ref;
+  String? _campusId;
 
   PropertiesNotifier(this._ref) : super(const PropertiesState()) {
     _load();
@@ -71,6 +77,23 @@ class PropertiesNotifier extends StateNotifier<PropertiesState> {
       onSuccess: (address) => address.campusId,
       onFailure: (_) => null,
     );
+
+    _campusId = campusId;
+
+    final requestsResult = await _ref.read(getResidencyRequestsUseCaseProvider)();
+    final requests = requestsResult.when(
+      onSuccess: (list) => list,
+      onFailure: (_) => <ResidencyRequest>[],
+    );
+    if (requests.isNotEmpty) {
+      state = state.copyWith(
+        isLoading: false,
+        requests: requests,
+        residencyName: residencyName,
+        place: place,
+      );
+      return;
+    }
 
     if (campusId == null || campusId.isEmpty) {
       state = state.copyWith(
@@ -97,6 +120,25 @@ class PropertiesNotifier extends StateNotifier<PropertiesState> {
         place: place,
       ),
     );
+  }
+
+  Future<List<AvailableSuite>?> fetchSuites() async {
+    final campusId = _campusId;
+    if (campusId == null || campusId.isEmpty) return null;
+    final result = await _ref.read(getAvailableSuitesUseCaseProvider)(campusId);
+    return result.when(onSuccess: (list) => list, onFailure: (_) => null);
+  }
+
+  Future<bool> changeClaim(String householdId) async {
+    final result = await _ref.read(submitClaimRequestUseCaseProvider)(householdId);
+    final ok = result.when(onSuccess: (_) => true, onFailure: (_) => false);
+    if (!ok) return false;
+    final requestsResult = await _ref.read(getResidencyRequestsUseCaseProvider)();
+    requestsResult.when(
+      onSuccess: (list) => state = state.copyWith(requests: list),
+      onFailure: (_) {},
+    );
+    return true;
   }
 
   void selectSuite(AvailableSuite suite) {

@@ -41,7 +41,7 @@ class PropertySummaryCard extends StatelessWidget {
         [
           SummaryField(label: 'Building', value: property.building ?? '-'),
           SummaryField(label: 'Type', value: property.type ?? '-'),
-          SummaryField(label: 'Place', value: place.isEmpty ? '-' : place, flex: 2),
+          SummaryField(label: 'Place', value: place.isEmpty ? '-' : place),
         ],
       ],
     );

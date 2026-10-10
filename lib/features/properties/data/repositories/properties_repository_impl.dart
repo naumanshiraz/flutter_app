@@ -5,6 +5,7 @@ import 'package:pms_app/features/properties/data/datasources/properties_remote_d
 import 'package:pms_app/features/properties/data/models/property_model.dart';
 import 'package:pms_app/features/properties/domain/entities/available_suite.dart';
 import 'package:pms_app/features/properties/domain/entities/property.dart';
+import 'package:pms_app/features/properties/domain/entities/residency_request.dart';
 import 'package:pms_app/features/properties/domain/repositories/properties_repository.dart';
 
 class PropertiesRepositoryImpl implements PropertiesRepository {
@@ -34,6 +35,18 @@ class PropertiesRepositoryImpl implements PropertiesRepository {
       return ResultError(ServerFailure(e.message));
     } catch (e) {
       return ResultError(UnknownFailure('Failed to submit request: $e'));
+    }
+  }
+
+  @override
+  Future<Result<List<ResidencyRequest>>> getResidencyRequests() async {
+    try {
+      final models = await _remoteDataSource.getResidencyRequests();
+      return Success(models.map((m) => m.toEntity()).toList());
+    } on ServerException catch (e) {
+      return ResultError(ServerFailure(e.message));
+    } catch (e) {
+      return ResultError(UnknownFailure('Failed to load requests: $e'));
     }
   }
 

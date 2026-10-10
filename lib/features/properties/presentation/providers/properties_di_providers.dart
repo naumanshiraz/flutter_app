@@ -28,3 +28,7 @@ final updatePropertyUseCaseProvider = Provider<UpdatePropertyUseCase>((ref) {
 final deletePropertyUseCaseProvider = Provider<DeletePropertyUseCase>((ref) {
   return DeletePropertyUseCase(ref.watch(propertiesRepositoryProvider));
 });
+
+final getResidencyRequestsUseCaseProvider = Provider<GetResidencyRequestsUseCase>((ref) {
+  return GetResidencyRequestsUseCase(ref.watch(propertiesRepositoryProvider));
+});

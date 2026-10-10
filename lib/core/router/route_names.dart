@@ -26,6 +26,7 @@ class RouteNames {
   static const String editFamilyMember = '/profile/family-members/edit';
   static const String properties = '/profile/properties';
   static const String editProperty = '/profile/properties/edit';
+  static const String propertyApproval = '/profile/properties/approval';
   static const String vehicles = '/profile/vehicles';
   static const String editVehicle = '/profile/vehicles/edit';
   static const String pets = '/profile/pets';

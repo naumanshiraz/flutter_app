@@ -1,6 +1,7 @@
 import 'package:pms_app/core/utils/result.dart';
 import 'package:pms_app/features/properties/domain/entities/available_suite.dart';
 import 'package:pms_app/features/properties/domain/entities/property.dart';
+import 'package:pms_app/features/properties/domain/entities/residency_request.dart';
 import 'package:pms_app/features/properties/domain/repositories/properties_repository.dart';
 
 class GetAvailableSuitesUseCase {
@@ -29,4 +30,11 @@ class DeletePropertyUseCase {
   const DeletePropertyUseCase(this._repository);
 
   Future<Result<void>> call(String id) => _repository.deleteProperty(id);
+}
+
+class GetResidencyRequestsUseCase {
+  final PropertiesRepository _repository;
+  const GetResidencyRequestsUseCase(this._repository);
+
+  Future<Result<List<ResidencyRequest>>> call() => _repository.getResidencyRequests();
 }

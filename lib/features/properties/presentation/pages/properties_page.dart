@@ -9,6 +9,7 @@ import 'package:pms_app/core/widgets/gradient_button.dart';
 import 'package:pms_app/core/widgets/step_scaffold.dart';
 import 'package:pms_app/features/properties/domain/entities/property.dart';
 import 'package:pms_app/features/properties/presentation/providers/properties_provider.dart';
+import 'package:pms_app/features/properties/presentation/widgets/edit_claim_sheet.dart';
 import 'package:pms_app/features/properties/presentation/widgets/property_options.dart';
 import 'package:pms_app/features/properties/presentation/widgets/property_summary_card.dart';
 import 'package:pms_app/features/properties/presentation/widgets/suite_selection_fields.dart';
@@ -48,7 +49,7 @@ class _PropertiesPageState extends ConsumerState<PropertiesPage> {
     }
   }
 
-  void _onNext() => context.push(RouteNames.familyMembers);
+  void _onNext() => context.push(RouteNames.propertyApproval);
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +74,7 @@ class _PropertiesPageState extends ConsumerState<PropertiesPage> {
       bottomButton: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (state.properties.isEmpty) ...[
+          if (state.properties.isEmpty && state.requests.isEmpty) ...[
             SecondaryButton(
               label: 'Add property',
               isLoading: state.isSubmittingClaim,
@@ -83,7 +84,7 @@ class _PropertiesPageState extends ConsumerState<PropertiesPage> {
           ],
           GradientButton(
             label: 'Next',
-            onPressed: state.properties.isEmpty ? null : _onNext,
+            onPressed: state.properties.isEmpty && state.requests.isEmpty ? null : _onNext,
           ),
         ],
       ),
@@ -124,7 +125,35 @@ class _PropertiesPageState extends ConsumerState<PropertiesPage> {
             ),
             SizedBox(height: 20.h),
           ],
-          if (state.properties.isEmpty)
+          for (int i = 0; i < state.requests.length; i++) ...[
+            PropertySummaryCard(
+              property: Property(
+                id: state.requests[i].householdId,
+                suite: state.requests[i].suite,
+                floor: state.requests[i].floor.isEmpty ? null : state.requests[i].floor,
+                type: state.requests[i].unitType,
+                building: state.requests[i].buildingName,
+              ),
+              index: i,
+              total: state.requests.length,
+              residencyName: state.requests[i].developmentName.isNotEmpty
+                  ? state.requests[i].developmentName
+                  : state.residencyName,
+              place: state.place,
+              onAction: (action) {
+                if (action == PropertyCardAction.edit) {
+                  EditClaimSheet.show(
+                    context,
+                    request: state.requests[i],
+                    loadSuites: notifier.fetchSuites,
+                    onSave: (suite) => notifier.changeClaim(suite.id),
+                  );
+                }
+              },
+            ),
+            SizedBox(height: 20.h),
+          ],
+          if (state.properties.isEmpty && state.requests.isEmpty)
             SuiteSelectionFields(
               suites: state.suites,
               selected: state.selectedSuite,

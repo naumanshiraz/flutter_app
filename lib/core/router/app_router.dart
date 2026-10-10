@@ -26,6 +26,7 @@ import 'package:pms_app/features/profile/presentation/pages/update_contact_page.
 import 'package:pms_app/features/properties/domain/entities/property.dart';
 import 'package:pms_app/features/properties/presentation/pages/edit_property_page.dart';
 import 'package:pms_app/features/properties/presentation/pages/properties_page.dart';
+import 'package:pms_app/features/properties/presentation/pages/property_approval_page.dart';
 import 'package:pms_app/features/residency/presentation/pages/residency_identification_page.dart';
 import 'package:pms_app/features/vehicles/domain/entities/vehicle.dart';
 import 'package:pms_app/features/vehicles/presentation/pages/edit_vehicle_page.dart';
@@ -97,6 +98,7 @@ String? _routeGuard(BuildContext context, GoRouterState state, Ref ref) {
           currentPath == RouteNames.editFamilyMember ||
           currentPath == RouteNames.properties ||
           currentPath == RouteNames.editProperty ||
+          currentPath == RouteNames.propertyApproval ||
           currentPath == RouteNames.vehicles ||
           currentPath == RouteNames.editVehicle ||
           currentPath == RouteNames.pets ||
@@ -294,6 +296,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: RouteNames.properties,
         name: RouteNames.properties,
         builder: (context, state) => const PropertiesPage(),
+      ),
+      GoRoute(
+        path: RouteNames.propertyApproval,
+        name: RouteNames.propertyApproval,
+        builder: (context, state) => const PropertyApprovalPage(),
       ),
       GoRoute(
         path: RouteNames.editProperty,
