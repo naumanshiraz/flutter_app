@@ -38,15 +38,20 @@ class PetsState {
 
 class PetsNotifier extends StateNotifier<PetsState> {
   final Ref _ref;
+  final String _householdId;
   static const _uuid = Uuid();
 
-  PetsNotifier(this._ref) : super(PetsState(draft: Pet(id: _uuid.v4()))) {
+  PetsNotifier(this._ref, this._householdId) : super(PetsState(draft: Pet(id: _uuid.v4()))) {
     _load();
   }
 
   Future<void> _load() async {
+    if (_householdId.isEmpty) {
+      state = state.copyWith(isLoading: false, errorMessage: 'No household selected.');
+      return;
+    }
     final useCase = _ref.read(getPetsUseCaseProvider);
-    final result = await useCase();
+    final result = await useCase(_householdId);
     result.when(
       onSuccess: (pets) => state = state.copyWith(isLoading: false, pets: pets),
       onFailure: (failure) => state = state.copyWith(isLoading: false, errorMessage: failure.message),
@@ -72,27 +77,29 @@ class PetsNotifier extends StateNotifier<PetsState> {
     state = state.copyWith(isSubmittingDraft: true, clearError: true);
 
     final useCase = _ref.read(addPetUseCaseProvider);
-    final result = await useCase(state.draft);
+    final result = await useCase(_householdId, state.draft);
 
-    return result.when(
-      onSuccess: (_) {
-        state = state.copyWith(
-          isSubmittingDraft: false,
-          pets: [...state.pets, state.draft],
-          draft: Pet(id: _uuid.v4()),
-        );
-        return true;
-      },
+    final ok = result.when(
+      onSuccess: (_) => true,
       onFailure: (failure) {
         state = state.copyWith(isSubmittingDraft: false, errorMessage: failure.message);
         return false;
       },
     );
+    if (!ok) return false;
+
+    state = state.copyWith(isSubmittingDraft: false, draft: Pet(id: _uuid.v4()));
+    final listResult = await _ref.read(getPetsUseCaseProvider)(_householdId);
+    listResult.when(
+      onSuccess: (list) => state = state.copyWith(pets: list),
+      onFailure: (_) {},
+    );
+    return true;
   }
 
   Future<bool> updatePet(Pet updated) async {
     final useCase = _ref.read(updatePetUseCaseProvider);
-    final result = await useCase(updated);
+    final result = await useCase(_householdId, updated);
     return result.when(
       onSuccess: (_) {
         state = state.copyWith(
@@ -109,7 +116,7 @@ class PetsNotifier extends StateNotifier<PetsState> {
 
   Future<bool> deletePet(String id) async {
     final useCase = _ref.read(deletePetUseCaseProvider);
-    final result = await useCase(id);
+    final result = await useCase(_householdId, id);
     return result.when(
       onSuccess: (_) {
         state = state.copyWith(pets: state.pets.where((p) => p.id != id).toList());
@@ -123,6 +130,6 @@ class PetsNotifier extends StateNotifier<PetsState> {
   }
 }
 
-final petsProvider = StateNotifierProvider.autoDispose<PetsNotifier, PetsState>(
-  (ref) => PetsNotifier(ref),
+final petsProvider = StateNotifierProvider.autoDispose.family<PetsNotifier, PetsState, String>(
+  (ref, householdId) => PetsNotifier(ref, householdId),
 );

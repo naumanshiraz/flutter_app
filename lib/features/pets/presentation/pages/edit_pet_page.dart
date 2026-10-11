@@ -12,7 +12,9 @@ import 'package:pms_app/features/pets/presentation/widgets/pet_form_fields.dart'
 
 class EditPetPage extends ConsumerStatefulWidget {
   final Pet pet;
-  const EditPetPage({super.key, required this.pet});
+  final String householdId;
+
+  const EditPetPage({super.key, required this.pet, required this.householdId});
 
   @override
   ConsumerState<EditPetPage> createState() => _EditPetPageState();
@@ -61,7 +63,7 @@ class _EditPetPageState extends ConsumerState<EditPetPage> {
       _errorMessage = null;
     });
 
-    final ok = await ref.read(petsProvider.notifier).updatePet(updated);
+    final ok = await ref.read(petsProvider(widget.householdId).notifier).updatePet(updated);
 
     if (!mounted) return;
     if (ok) {
@@ -69,7 +71,7 @@ class _EditPetPageState extends ConsumerState<EditPetPage> {
     } else {
       setState(() {
         _isSaving = false;
-        _errorMessage = ref.read(petsProvider).errorMessage;
+        _errorMessage = ref.read(petsProvider(widget.householdId)).errorMessage;
       });
     }
   }

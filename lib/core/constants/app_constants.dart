@@ -73,13 +73,19 @@ class AppConstants {
   /// DELETE /api/app/invitations/{invitationId}
   static String endpointInvitation(String invitationId) => '/api/app/invitations/$invitationId';
 
-  /// POST
+  /// GET POST
   static String endpointHouseholdVehicles(String householdId) => '/api/app/households/$householdId/vehicles';
 
-  /// PATCH
+  /// PATCH DELETE
   static String endpointHouseholdVehicle(String householdId, String vehicleId) =>
       '/api/app/households/$householdId/vehicles/$vehicleId';
 
+  /// GET POST
+  static String endpointHouseholdPets(String householdId) => '/api/app/households/$householdId/pets';
+
+  /// PATCH DELETE
+  static String endpointHouseholdPet(String householdId, String petId) =>
+      '/api/app/households/$householdId/pets/$petId';
   /// GET /api/app/households/{householdId}/members
   static String endpointHouseholdMembers(String householdId) =>
       '/api/app/households/$householdId/members';

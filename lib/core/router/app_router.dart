@@ -316,15 +316,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: RouteNames.pets,
         name: RouteNames.pets,
-        builder: (context, state) => const PetsPage(),
+        builder: (context, state) => PetsPage(householdId: state.extra as String?),
       ),
       GoRoute(
         path: RouteNames.editPet,
         name: RouteNames.editPet,
         builder: (context, state) {
-          final pet = state.extra as Pet?;
-          if (pet == null) return const EditPetFallbackPage();
-          return EditPetPage(pet: pet);
+          final args = state.extra as ({Pet pet, String householdId})?;
+          if (args == null) return const EditPetFallbackPage();
+          return EditPetPage(pet: args.pet, householdId: args.householdId);
         },
       ),
       GoRoute(

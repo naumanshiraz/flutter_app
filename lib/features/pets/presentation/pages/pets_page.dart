@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pms_app/core/router/route_names.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
+import 'package:pms_app/core/widgets/confirm_dialog.dart';
 import 'package:pms_app/core/widgets/gradient_button.dart';
 import 'package:pms_app/core/widgets/step_scaffold.dart';
 import 'package:pms_app/features/home/presentation/providers/profile_summary_provider.dart';
@@ -14,7 +15,9 @@ import 'package:pms_app/features/pets/presentation/widgets/pet_form_fields.dart'
 import 'package:pms_app/features/pets/presentation/widgets/pet_summary_card.dart';
 
 class PetsPage extends ConsumerStatefulWidget {
-  const PetsPage({super.key});
+  final String? householdId;
+
+  const PetsPage({super.key, this.householdId});
 
   @override
   ConsumerState<PetsPage> createState() => _PetsPageState();
@@ -34,7 +37,7 @@ class _PetsPageState extends ConsumerState<PetsPage> {
 
   Future<void> _onAddPet() async {
     setState(() => _showValidationErrors = true);
-    final notifier = ref.read(petsProvider.notifier);
+    final notifier = ref.read(petsProvider(widget.householdId ?? '').notifier);
     notifier.updateDraft(
       breed: _breedController.text.trim(),
       numberOfPets: _numberOfPetsController.text.trim(),
@@ -48,29 +51,20 @@ class _PetsPageState extends ConsumerState<PetsPage> {
   }
 
   Future<void> _onEditPet(Pet pet) async {
-    await context.push(RouteNames.editPet, extra: pet);
+    await context.push(
+      RouteNames.editPet,
+      extra: (pet: pet, householdId: widget.householdId ?? ''),
+    );
   }
 
   Future<void> _onDeletePet(Pet pet) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Remove pet?'),
-        content: Text('This will remove ${pet.species ?? 'this pet'} from your list.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Remove', style: TextStyle(color: AppColors.error)),
-          ),
-        ],
-      ),
+    final confirmed = await ConfirmDialog.show(
+      context,
+      title: 'Remove pet?',
+      message: 'This will remove ${pet.species ?? 'this pet'} from your list. This action cannot be undone.',
     );
-    if (confirmed == true) {
-      await ref.read(petsProvider.notifier).deletePet(pet.id);
+    if (confirmed) {
+      await ref.read(petsProvider(widget.householdId ?? '').notifier).deletePet(pet.id);
     }
   }
 
@@ -89,8 +83,8 @@ class _PetsPageState extends ConsumerState<PetsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(petsProvider);
-    final notifier = ref.read(petsProvider.notifier);
+    final state = ref.watch(petsProvider(widget.householdId ?? ''));
+    final notifier = ref.read(petsProvider(widget.householdId ?? '').notifier);
 
     if (state.isLoading) {
       return const Scaffold(

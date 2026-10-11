@@ -59,7 +59,7 @@ class ResidentialInformationSheet extends StatelessWidget {
                     ),
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
-                      onTap: () => _navigate(context, RouteNames.pets),
+                      onTap: () => _navigate(context, RouteNames.pets, extra: propertyId),
                       child: _row('Pets'),
                     ),
                     SizedBox(height: 12.h),

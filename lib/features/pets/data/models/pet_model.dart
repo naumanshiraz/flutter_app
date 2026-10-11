@@ -4,6 +4,11 @@ import 'package:pms_app/features/pets/domain/entities/pet.dart';
 part 'pet_model.freezed.dart';
 part 'pet_model.g.dart';
 
+String? _label(String? value) {
+  if (value == null || value.trim().isEmpty) return null;
+  return value[0].toUpperCase() + value.substring(1).toLowerCase();
+}
+
 @freezed
 class PetModel with _$PetModel {
   const PetModel._();
@@ -12,7 +17,7 @@ class PetModel with _$PetModel {
     required String id,
     String? species,
     @Default('') String breed,
-    @Default('') String numberOfPets,
+    @JsonKey(name: 'number_of_pets') @Default(1) int numberOfPets,
   }) = _PetModel;
 
   factory PetModel.fromJson(Map<String, dynamic> json) => _$PetModelFromJson(json);
@@ -21,13 +26,19 @@ class PetModel with _$PetModel {
         id: entity.id,
         species: entity.species,
         breed: entity.breed,
-        numberOfPets: entity.numberOfPets,
+        numberOfPets: int.tryParse(entity.numberOfPets.trim()) ?? 1,
       );
+
+  Map<String, dynamic> toRequestJson() => {
+        'species': species?.toLowerCase(),
+        'breed': breed,
+        'number_of_pets': numberOfPets,
+      };
 
   Pet toEntity() => Pet(
         id: id,
-        species: species,
+        species: _label(species),
         breed: breed,
-        numberOfPets: numberOfPets,
+        numberOfPets: numberOfPets.toString(),
       );
 }

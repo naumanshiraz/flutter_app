@@ -62,7 +62,7 @@ class _VehiclesPageState extends ConsumerState<VehiclesPage> {
   }
 
   Future<void> _onNext() async {
-    context.push(RouteNames.pets);
+    context.push(RouteNames.pets, extra: widget.householdId);
   }
 
   @override
