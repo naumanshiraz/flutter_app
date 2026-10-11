@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pms_app/core/router/route_names.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
+import 'package:pms_app/core/widgets/confirm_dialog.dart';
 import 'package:pms_app/core/widgets/gradient_button.dart';
 import 'package:pms_app/core/widgets/step_scaffold.dart';
 import 'package:pms_app/features/vehicles/domain/entities/vehicle.dart';
@@ -13,7 +14,9 @@ import 'package:pms_app/features/vehicles/presentation/widgets/vehicle_form_fiel
 import 'package:pms_app/features/vehicles/presentation/widgets/vehicle_summary_card.dart';
 
 class VehiclesPage extends ConsumerStatefulWidget {
-  const VehiclesPage({super.key});
+  final String? householdId;
+
+  const VehiclesPage({super.key, this.householdId});
 
   @override
   ConsumerState<VehiclesPage> createState() => _VehiclesPageState();
@@ -31,7 +34,7 @@ class _VehiclesPageState extends ConsumerState<VehiclesPage> {
 
   Future<void> _onAddVehicle() async {
     setState(() => _showValidationErrors = true);
-    final notifier = ref.read(vehiclesProvider.notifier);
+    final notifier = ref.read(vehiclesProvider(widget.householdId ?? '').notifier);
     notifier.updateDraft(licensePlate: _licensePlateController.text.trim());
     final ok = await notifier.addDraftAsVehicle();
     if (ok) {
@@ -41,29 +44,20 @@ class _VehiclesPageState extends ConsumerState<VehiclesPage> {
   }
 
   Future<void> _onEditVehicle(Vehicle vehicle) async {
-    await context.push(RouteNames.editVehicle, extra: vehicle);
+    await context.push(
+      RouteNames.editVehicle,
+      extra: (vehicle: vehicle, householdId: widget.householdId ?? ''),
+    );
   }
 
   Future<void> _onDeleteVehicle(Vehicle vehicle) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Remove vehicle?'),
-        content: Text('This will remove ${vehicle.licensePlate} from your vehicles.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Remove', style: TextStyle(color: AppColors.error)),
-          ),
-        ],
-      ),
+    final confirmed = await ConfirmDialog.show(
+      context,
+      title: 'Remove vehicle?',
+      message: 'This will remove ${vehicle.licensePlate} from your vehicles. This action cannot be undone.',
     );
-    if (confirmed == true) {
-      await ref.read(vehiclesProvider.notifier).deleteVehicle(vehicle.id);
+    if (confirmed) {
+      await ref.read(vehiclesProvider(widget.householdId ?? '').notifier).deleteVehicle(vehicle.id);
     }
   }
 
@@ -73,8 +67,8 @@ class _VehiclesPageState extends ConsumerState<VehiclesPage> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(vehiclesProvider);
-    final notifier = ref.read(vehiclesProvider.notifier);
+    final state = ref.watch(vehiclesProvider(widget.householdId ?? ''));
+    final notifier = ref.read(vehiclesProvider(widget.householdId ?? '').notifier);
 
     if (state.isLoading) {
       return const Scaffold(

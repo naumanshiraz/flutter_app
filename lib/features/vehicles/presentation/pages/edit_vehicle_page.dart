@@ -12,8 +12,9 @@ import 'package:pms_app/features/vehicles/presentation/widgets/vehicle_form_fiel
 
 class EditVehiclePage extends ConsumerStatefulWidget {
   final Vehicle vehicle;
+  final String householdId;
 
-  const EditVehiclePage({super.key, required this.vehicle});
+  const EditVehiclePage({super.key, required this.vehicle, required this.householdId});
 
   @override
   ConsumerState<EditVehiclePage> createState() => _EditVehiclePageState();
@@ -63,7 +64,7 @@ class _EditVehiclePageState extends ConsumerState<EditVehiclePage> {
       _errorMessage = null;
     });
 
-    final ok = await ref.read(vehiclesProvider.notifier).updateVehicle(updated);
+    final ok = await ref.read(vehiclesProvider(widget.householdId).notifier).updateVehicle(updated);
 
     if (!mounted) return;
     if (ok) {
@@ -71,7 +72,7 @@ class _EditVehiclePageState extends ConsumerState<EditVehiclePage> {
     } else {
       setState(() {
         _isSaving = false;
-        _errorMessage = ref.read(vehiclesProvider).errorMessage;
+        _errorMessage = ref.read(vehiclesProvider(widget.householdId)).errorMessage;
       });
     }
   }

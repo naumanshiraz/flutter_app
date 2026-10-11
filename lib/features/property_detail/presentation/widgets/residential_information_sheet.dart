@@ -54,7 +54,7 @@ class ResidentialInformationSheet extends StatelessWidget {
                     ),
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
-                      onTap: () => _navigate(context, RouteNames.vehicles),
+                      onTap: () => _navigate(context, RouteNames.vehicles, extra: propertyId),
                       child: _row('Vehicles'),
                     ),
                     GestureDetector(

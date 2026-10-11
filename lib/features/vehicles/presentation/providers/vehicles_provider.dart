@@ -41,15 +41,20 @@ class VehiclesState {
 /// pattern as `familyMembersProvider` / `propertiesProvider`.
 class VehiclesNotifier extends StateNotifier<VehiclesState> {
   final Ref _ref;
+  final String _householdId;
   static const _uuid = Uuid();
 
-  VehiclesNotifier(this._ref) : super(VehiclesState(draft: Vehicle(id: _uuid.v4()))) {
+  VehiclesNotifier(this._ref, this._householdId) : super(VehiclesState(draft: Vehicle(id: _uuid.v4()))) {
     _load();
   }
 
   Future<void> _load() async {
+    if (_householdId.isEmpty) {
+      state = state.copyWith(isLoading: false, errorMessage: 'No household selected.');
+      return;
+    }
     final useCase = _ref.read(getVehiclesUseCaseProvider);
-    final result = await useCase();
+    final result = await useCase(_householdId);
     result.when(
       onSuccess: (vehicles) {
         state = state.copyWith(isLoading: false, vehicles: vehicles);
@@ -82,27 +87,29 @@ class VehiclesNotifier extends StateNotifier<VehiclesState> {
     state = state.copyWith(isSubmittingDraft: true, clearError: true);
 
     final useCase = _ref.read(addVehicleUseCaseProvider);
-    final result = await useCase(state.draft);
+    final result = await useCase(_householdId, state.draft);
 
-    return result.when(
-      onSuccess: (_) {
-        state = state.copyWith(
-          isSubmittingDraft: false,
-          vehicles: [...state.vehicles, state.draft],
-          draft: Vehicle(id: _uuid.v4()),
-        );
-        return true;
-      },
+    final ok = result.when(
+      onSuccess: (_) => true,
       onFailure: (failure) {
         state = state.copyWith(isSubmittingDraft: false, errorMessage: failure.message);
         return false;
       },
     );
+    if (!ok) return false;
+
+    state = state.copyWith(isSubmittingDraft: false, draft: Vehicle(id: _uuid.v4()));
+    final listResult = await _ref.read(getVehiclesUseCaseProvider)(_householdId);
+    listResult.when(
+      onSuccess: (list) => state = state.copyWith(vehicles: list),
+      onFailure: (_) {},
+    );
+    return true;
   }
 
   Future<bool> updateVehicle(Vehicle updated) async {
     final useCase = _ref.read(updateVehicleUseCaseProvider);
-    final result = await useCase(updated);
+    final result = await useCase(_householdId, updated);
 
     return result.when(
       onSuccess: (_) {
@@ -120,7 +127,7 @@ class VehiclesNotifier extends StateNotifier<VehiclesState> {
 
   Future<bool> deleteVehicle(String id) async {
     final useCase = _ref.read(deleteVehicleUseCaseProvider);
-    final result = await useCase(id);
+    final result = await useCase(_householdId, id);
 
     return result.when(
       onSuccess: (_) {
@@ -135,6 +142,6 @@ class VehiclesNotifier extends StateNotifier<VehiclesState> {
   }
 }
 
-final vehiclesProvider = StateNotifierProvider.autoDispose<VehiclesNotifier, VehiclesState>(
-  (ref) => VehiclesNotifier(ref),
+final vehiclesProvider = StateNotifierProvider.autoDispose.family<VehiclesNotifier, VehiclesState, String>(
+  (ref, householdId) => VehiclesNotifier(ref, householdId),
 );

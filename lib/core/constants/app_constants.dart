@@ -48,13 +48,16 @@ class AppConstants {
   static String endpointCampusHouseholds(String campusId) =>
       '/api/app/campuses/$campusId/households';
 
+  /// POST
+  static const String endpointResidencyRequests = '/api/app/residency-requests';
+
   /// GET /api/app/households?project_id={campusId}
   static const String endpointHouseholds = '/api/app/households';
 
   /// GET /api/app/households/{householdId}
   static String endpointHouseholdDetail(String householdId) =>
       '/api/app/households/$householdId';
-      
+
   /// GET /api/app/households/{householdId}/devices
   static String endpointHouseholdDevices(String householdId) =>
       '/api/app/households/$householdId/devices';
@@ -66,14 +69,18 @@ class AppConstants {
   /// GET /api/app/households/{householdId}/invitations
   static String endpointHouseholdInvitations(String householdId) =>
       '/api/app/households/$householdId/invitations';
-      
+
+  /// DELETE /api/app/invitations/{invitationId}
+  static String endpointInvitation(String invitationId) => '/api/app/invitations/$invitationId';
+
+  /// POST
+  static String endpointHouseholdVehicles(String householdId) => '/api/app/households/$householdId/vehicles';
+
+  /// PATCH
+  static String endpointHouseholdVehicle(String householdId, String vehicleId) =>
+      '/api/app/households/$householdId/vehicles/$vehicleId';
+
   /// GET /api/app/households/{householdId}/members
   static String endpointHouseholdMembers(String householdId) =>
       '/api/app/households/$householdId/members';
-
-  /// POST /api/app/residency-requests
-  static const String endpointResidencyRequests = '/api/app/residency-requests';  
-
-  /// DELETE /api/app/invitations/{invitationId}
-  static String endpointInvitation(String invitationId) => '/api/app/invitations/$invitationId';  
 }

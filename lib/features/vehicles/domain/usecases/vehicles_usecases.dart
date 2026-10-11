@@ -6,26 +6,28 @@ class GetVehiclesUseCase {
   final VehiclesRepository _repository;
   const GetVehiclesUseCase(this._repository);
 
-  Future<Result<List<Vehicle>>> call() => _repository.getVehicles();
+  Future<Result<List<Vehicle>>> call(String householdId) => _repository.getVehicles(householdId);
 }
 
 class AddVehicleUseCase {
   final VehiclesRepository _repository;
   const AddVehicleUseCase(this._repository);
 
-  Future<Result<void>> call(Vehicle vehicle) => _repository.addVehicle(vehicle);
+  Future<Result<void>> call(String householdId, Vehicle vehicle) => _repository.addVehicle(householdId, vehicle);
 }
 
 class UpdateVehicleUseCase {
   final VehiclesRepository _repository;
   const UpdateVehicleUseCase(this._repository);
 
-  Future<Result<void>> call(Vehicle vehicle) => _repository.updateVehicle(vehicle);
+  Future<Result<void>> call(String householdId, Vehicle vehicle) =>
+      _repository.updateVehicle(householdId, vehicle);
 }
 
 class DeleteVehicleUseCase {
   final VehiclesRepository _repository;
   const DeleteVehicleUseCase(this._repository);
 
-  Future<Result<void>> call(String id) => _repository.deleteVehicle(id);
+  Future<Result<void>> call(String householdId, String vehicleId) =>
+      _repository.deleteVehicle(householdId, vehicleId);
 }

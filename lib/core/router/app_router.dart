@@ -302,15 +302,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: RouteNames.vehicles,
         name: RouteNames.vehicles,
-        builder: (context, state) => const VehiclesPage(),
+        builder: (context, state) => VehiclesPage(householdId: state.extra as String?),
       ),
       GoRoute(
         path: RouteNames.editVehicle,
         name: RouteNames.editVehicle,
         builder: (context, state) {
-          final vehicle = state.extra as Vehicle?;
-          if (vehicle == null) return const EditVehicleFallbackPage();
-          return EditVehiclePage(vehicle: vehicle);
+          final args = state.extra as ({Vehicle vehicle, String householdId})?;
+          if (args == null) return const EditVehicleFallbackPage();
+          return EditVehiclePage(vehicle: args.vehicle, householdId: args.householdId);
         },
       ),
       GoRoute(
