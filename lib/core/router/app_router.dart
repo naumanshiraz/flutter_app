@@ -45,6 +45,8 @@ import 'package:pms_app/features/account_modification/presentation/pages/admin_a
 import 'package:pms_app/features/account_termination/presentation/pages/account_termination_page.dart';
 import 'package:pms_app/features/family_members/presentation/pages/occupants_page.dart';
 import 'package:pms_app/features/affiliates/presentation/pages/affiliates_management_page.dart';
+import 'package:pms_app/features/join_requests/presentation/pages/join_requests_page.dart';
+import 'package:pms_app/features/join_requests/domain/entities/received_invitation.dart';
 import 'package:pms_app/features/affiliates/presentation/pages/assigned_properties_page.dart';
 import 'package:pms_app/features/affiliates/presentation/pages/greetings_review_page.dart';
 import 'package:pms_app/features/splash/domain/entities/app_destination.dart';
@@ -113,6 +115,7 @@ String? _routeGuard(BuildContext context, GoRouterState state, Ref ref) {
           currentPath == RouteNames.accountTermination ||
           currentPath == RouteNames.occupants ||
           currentPath == RouteNames.affiliatesManagement ||
+          currentPath == RouteNames.joinRequests ||
           currentPath == RouteNames.affiliateAssignedProperties ||
           currentPath == RouteNames.greetingsReview;
 
@@ -389,6 +392,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => OccupantsPage(householdId: state.extra as String? ?? 'fa5f0c43-430b-49ab-a84d-6d4e72b956c7'),
       ),
       GoRoute(
+        path: RouteNames.joinRequests,
+        name: RouteNames.joinRequests,
+        builder: (context, state) => const JoinRequestsPage(),
+      ),
+      GoRoute(
         path: RouteNames.affiliatesManagement,
         name: RouteNames.affiliatesManagement,
         builder: (context, state) => const AffiliatesManagementPage(),
@@ -401,7 +409,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: RouteNames.greetingsReview,
         name: RouteNames.greetingsReview,
-        builder: (context, state) => GreetingsReviewPage(ownerName: state.extra as String? ?? ''),
+        builder: (context, state)  {
+          final invitation = state.extra as ReceivedInvitation?;
+          if (invitation == null) {
+            return PlaceholderPage(title: 'Not Found', routeName: state.matchedLocation);
+          }
+          return GreetingsReviewPage(invitation: invitation);
+        },
       ),
     ],
     errorBuilder: (context, state) => PlaceholderPage(

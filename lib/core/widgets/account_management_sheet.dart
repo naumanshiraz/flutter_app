@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pms_app/core/router/route_names.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
-import 'package:pms_app/features/affiliates/presentation/providers/affiliates_provider.dart';
+import 'package:pms_app/features/join_requests/presentation/providers/join_requests_provider.dart';
 
 class AccountManagementSheet extends ConsumerWidget {
   const AccountManagementSheet({super.key});
@@ -22,7 +22,7 @@ class AccountManagementSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final affiliatesState = ref.watch(affiliatesProvider(null));
+    final invitationsState = ref.watch(receivedInvitationsProvider);
 
     return DraggableScrollableSheet(
       initialChildSize: 0.85,
@@ -76,7 +76,14 @@ class AccountManagementSheet extends ConsumerWidget {
                         context.push(RouteNames.affiliatesManagement);
                       },
                     ),
-                    if (affiliatesState.isLoading)
+                    _row(
+                      'Join requests',
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        context.push(RouteNames.joinRequests);
+                      },
+                    ),
+                    if (invitationsState.isLoading)
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Padding(
@@ -84,19 +91,19 @@ class AccountManagementSheet extends ConsumerWidget {
                           child: SizedBox(
                             width: 16.w,
                             height: 16.w,
-                            child: const CircularProgressIndicator(
-                              strokeWidth: 2,
-                            ),
+                            child: const CircularProgressIndicator(strokeWidth: 2),
                           ),
                         ),
                       )
                     else
-                      for (final ownerName in affiliatesState.pendingGreetingOwners)
+                      for (final invitation in invitationsState.items)
                         _row(
-                          "$ownerName's greetings",
+                          invitation.inviterName.isNotEmpty
+                              ? "${invitation.inviterName}'s greetings"
+                              : 'Invitation',
                           onTap: () {
                             Navigator.of(context).pop();
-                            context.push(RouteNames.greetingsReview, extra: ownerName);
+                            context.push(RouteNames.greetingsReview, extra: invitation);
                           },
                         ),
                     _sectionLabel('Account'),

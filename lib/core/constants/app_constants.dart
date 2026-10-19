@@ -70,6 +70,16 @@ class AppConstants {
   static String endpointHouseholdInvitations(String householdId) =>
       '/api/app/households/$householdId/invitations';
 
+  static const String endpointResidencyRequestsIncoming = '/api/app/residency-requests/incoming';
+
+  static String endpointResidencyRequestApprove(String id) => '/api/app/residency-requests/$id/approve';
+
+  static String endpointResidencyRequestReject(String id) => '/api/app/residency-requests/$id/reject';
+
+  static const String endpointInvitations = '/api/app/invitations';
+
+  static String endpointInvitationAccept(String id) => '/api/app/invitations/$id/accept';    
+
   /// DELETE /api/app/invitations/{invitationId}
   static String endpointInvitation(String invitationId) => '/api/app/invitations/$invitationId';
 
