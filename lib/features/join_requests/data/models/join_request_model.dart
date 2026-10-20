@@ -25,11 +25,16 @@ class JoinRequestModel with _$JoinRequestModel {
     required String identifier,
     required String relation,
     required String status,
-    required String household,
+    required String developmentName,
+    required String buildingName,
+    required String suite,
+    required String floor,
+    required String unitType,
   }) = _JoinRequestModel;
 
   factory JoinRequestModel.fromApi(Map<String, dynamic> json) {
     final requester = json['requester'] is Map<String, dynamic> ? json['requester'] as Map<String, dynamic> : const {};
+    final household = json['household'] is Map<String, dynamic> ? json['household'] as Map<String, dynamic> : json;
     return JoinRequestModel(
       id: _text(json['id']),
       requesterName: _text(
@@ -38,7 +43,11 @@ class JoinRequestModel with _$JoinRequestModel {
       identifier: _text(json['identifier'] ?? requester['identifier'] ?? requester['email'] ?? requester['phone']),
       relation: _text(json['relation']),
       status: _text(json['status']),
-      household: householdLabel(json),
+      developmentName: _text(household['development_name'] ?? household['project_name']),
+      buildingName: _text(household['building_name']),
+      suite: _text(household['suite']),
+      floor: _text(household['floor']),
+      unitType: _text(household['unit_type']),
     );
   }
 
@@ -48,6 +57,10 @@ class JoinRequestModel with _$JoinRequestModel {
         identifier: identifier,
         relation: relation,
         status: status,
-        household: household,
+        developmentName: developmentName,
+        buildingName: buildingName,
+        suite: suite,
+        floor: floor,
+        unitType: unitType,
       );
 }

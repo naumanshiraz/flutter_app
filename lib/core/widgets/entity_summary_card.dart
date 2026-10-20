@@ -20,6 +20,7 @@ class EntitySummaryCard extends StatelessWidget {
   final int total;
   final ValueChanged<EntitySummaryCardAction> onAction;
   final bool showEdit;
+  final bool showMenu;
 
   const EntitySummaryCard({
     super.key,
@@ -29,6 +30,7 @@ class EntitySummaryCard extends StatelessWidget {
     required this.total,
     required this.onAction,
     this.showEdit = true,
+    this.showMenu = true,
   });
 
   @override
@@ -64,6 +66,7 @@ class EntitySummaryCard extends StatelessWidget {
           children: [
             Text('$itemLabel ${index + 1} of $total', style: AppTextStyles.caption),
             const Spacer(),
+            if (showMenu)
             PopupMenuButton<EntitySummaryCardAction>(
               padding: EdgeInsets.zero,
               icon: Icon(Icons.more_horiz, size: 20.sp, color: AppColors.textSecondary),

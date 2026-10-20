@@ -45,6 +45,8 @@ import 'package:pms_app/features/account_modification/presentation/pages/admin_a
 import 'package:pms_app/features/account_termination/presentation/pages/account_termination_page.dart';
 import 'package:pms_app/features/family_members/presentation/pages/occupants_page.dart';
 import 'package:pms_app/features/affiliates/presentation/pages/affiliates_management_page.dart';
+import 'package:pms_app/features/join_requests/domain/entities/join_request.dart';
+import 'package:pms_app/features/join_requests/presentation/pages/join_request_review_page.dart';
 import 'package:pms_app/features/join_requests/presentation/pages/join_requests_page.dart';
 import 'package:pms_app/features/join_requests/domain/entities/received_invitation.dart';
 import 'package:pms_app/features/affiliates/presentation/pages/assigned_properties_page.dart';
@@ -116,6 +118,7 @@ String? _routeGuard(BuildContext context, GoRouterState state, Ref ref) {
           currentPath == RouteNames.occupants ||
           currentPath == RouteNames.affiliatesManagement ||
           currentPath == RouteNames.joinRequests ||
+          currentPath == RouteNames.joinRequestReview ||
           currentPath == RouteNames.affiliateAssignedProperties ||
           currentPath == RouteNames.greetingsReview;
 
@@ -392,6 +395,17 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => OccupantsPage(householdId: state.extra as String? ?? 'fa5f0c43-430b-49ab-a84d-6d4e72b956c7'),
       ),
       GoRoute(
+        path: RouteNames.joinRequestReview,
+        name: RouteNames.joinRequestReview,
+        builder: (context, state) {
+          final request = state.extra as JoinRequest?;
+          if (request == null) {
+            return PlaceholderPage(title: 'Not Found', routeName: state.matchedLocation);
+          }
+          return JoinRequestReviewPage(request: request);
+        },
+      ),
+      GoRoute(
         path: RouteNames.joinRequests,
         name: RouteNames.joinRequests,
         builder: (context, state) => const JoinRequestsPage(),
@@ -409,7 +423,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: RouteNames.greetingsReview,
         name: RouteNames.greetingsReview,
-        builder: (context, state)  {
+        builder: (context, state) {
           final invitation = state.extra as ReceivedInvitation?;
           if (invitation == null) {
             return PlaceholderPage(title: 'Not Found', routeName: state.matchedLocation);

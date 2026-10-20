@@ -20,6 +20,7 @@ class RouteNames {
   static const String residencyIdentification = '/profile/residency';
   static const String familyMembers = '/profile/family-members';
   static const String occupants = '/main-home/property-detail/occupants';
+  static const String joinRequestReview = '/settings/account-management/join-requests/review';
   static const String joinRequests = '/settings/account-management/join-requests';
   static const String affiliatesManagement = '/settings/account-management/affiliates';
   static const String affiliateAssignedProperties = '/settings/account-management/affiliates/assigned';

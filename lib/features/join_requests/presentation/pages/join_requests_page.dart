@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:pms_app/core/router/route_names.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
-import 'package:pms_app/core/widgets/confirm_dialog.dart';
 import 'package:pms_app/features/join_requests/presentation/providers/join_requests_provider.dart';
-import 'package:pms_app/features/join_requests/presentation/widgets/reason_dialog.dart';
-import 'package:pms_app/features/join_requests/presentation/widgets/request_card.dart';
+import 'package:pms_app/features/join_requests/presentation/widgets/join_request_card.dart';
 
 class JoinRequestsPage extends ConsumerWidget {
   const JoinRequestsPage({super.key});
-
-  void _toast(BuildContext context, String? error) {
-    if (error != null) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,25 +37,22 @@ class JoinRequestsPage extends ConsumerWidget {
         child: ListView.builder(
           physics: const AlwaysScrollableScrollPhysics(),
           padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 24.h),
-          itemCount: state.items.length,
+          itemCount: state.items.length + 1,
           itemBuilder: (context, i) {
-            final item = state.items[i];
-            return RequestCard(
-              title: item.requesterName.isNotEmpty ? item.requesterName : item.identifier,
-              details: [
-                MapEntry('Contact', item.identifier),
-                MapEntry('Relation', item.relation),
-                MapEntry('Household', item.household),
-                MapEntry('Status', item.status),
-              ],
-              primaryLabel: 'Approve',
-              secondaryLabel: 'Reject',
-              onPrimary: () async => _toast(context, await notifier.approve(item.id)),
-              onSecondary: () async {
-                final reason = await ReasonDialog.show(context);
-                if (reason == null || !context.mounted) return;
-                _toast(context, await notifier.reject(item.id, reason));
-              },
+            if (i == 0) {
+              return Padding(
+                padding: EdgeInsets.only(bottom: 16.h),
+                child: Text('Please review the join requests', textAlign: TextAlign.center, style: AppTextStyles.pageTitle),
+              );
+            }
+            final request = state.items[i - 1];
+            return Padding(
+              padding: EdgeInsets.only(bottom: 12.h),
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => context.push(RouteNames.joinRequestReview, extra: request),
+                child: JoinRequestCard(request: request, index: i - 1, total: state.items.length),
+              ),
             );
           },
         ),
