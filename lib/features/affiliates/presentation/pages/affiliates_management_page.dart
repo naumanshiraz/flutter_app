@@ -41,26 +41,6 @@ class _AffiliatesManagementPageState extends ConsumerState<AffiliatesManagementP
     }
   }
 
-  Future<void> _onDelete(String id) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Remove affiliate?'),
-        content: const Text('This will remove this affiliate.'),
-        actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Cancel')),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Remove', style: TextStyle(color: AppColors.error)),
-          ),
-        ],
-      ),
-    );
-    if (confirmed == true) {
-      await ref.read(affiliatesProvider(null).notifier).deleteAffiliate(id);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(affiliatesProvider(null));
@@ -105,7 +85,6 @@ class _AffiliatesManagementPageState extends ConsumerState<AffiliatesManagementP
                                 context.push(RouteNames.editFamilyMember, extra: state.affiliates[i]);
                                 break;
                               case AffiliateManagementAction.delete:
-                                _onDelete(state.affiliates[i].id);
                                 break;
                               case AffiliateManagementAction.propertyAssignment:
                                 Navigator.of(context).push(MaterialPageRoute(

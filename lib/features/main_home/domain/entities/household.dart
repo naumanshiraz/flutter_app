@@ -32,7 +32,11 @@ class Household extends Equatable {
   String get displayName => buildingName;
 
   String get displaySubtitle {
-    final parts = <String>['Suite $suite', 'Floor $floor', unitType];
+    final parts = <String>[
+      'Suite $suite',
+      if (floor > 0) 'Floor $floor',
+      if (unitType.isNotEmpty) unitType,
+    ];
     if (area != null && area! > 0) {
       parts.add('${area!.toStringAsFixed(0)} ${unitOfMeasure ?? 'sqm'}');
     }

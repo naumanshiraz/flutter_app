@@ -96,6 +96,10 @@ class AppConstants {
   /// PATCH DELETE
   static String endpointHouseholdPet(String householdId, String petId) =>
       '/api/app/households/$householdId/pets/$petId';
+      
+  /// GET /api/app/households/owned/members
+  static const String endpointOwnedMembers = '/api/app/households/owned/members';
+
   /// GET /api/app/households/{householdId}/members
   static String endpointHouseholdMembers(String householdId) =>
       '/api/app/households/$householdId/members';

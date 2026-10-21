@@ -9,7 +9,10 @@ import 'package:pms_app/core/widgets/single_select_sheet.dart';
 import 'package:pms_app/features/affiliates/domain/entities/affiliate.dart';
 import 'package:pms_app/features/affiliates/presentation/providers/affiliates_provider.dart';
 
+const String kSelectHouseholdLabel = 'Select Household';
+
 const List<String> kAssignableProperties = [
+  kSelectHouseholdLabel,
   '215, 21-B, Gerlug Vista',
   '201, 21-B, Gerlug Vista',
   '305, 21-A, Gerlug Vista',
@@ -40,7 +43,7 @@ class _PropertyAssignmentPageState extends ConsumerState<PropertyAssignmentPage>
     _emailController = TextEditingController(text: widget.affiliate.email);
     _phoneController = TextEditingController(text: widget.affiliate.phone);
     _relationshipController = TextEditingController(text: widget.affiliate.relationship ?? '');
-    _selectedProperty = kAssignableProperties.first;
+    _selectedProperty = kSelectHouseholdLabel;
   }
 
   @override
@@ -58,13 +61,17 @@ class _PropertyAssignmentPageState extends ConsumerState<PropertyAssignmentPage>
       context,
       options: kAssignableProperties,
       current: _selectedProperty,
-      title: 'Property assignment',
+      title: 'Household assignment',
     );
     if (selected != null) setState(() => _selectedProperty = selected);
   }
 
   Future<void> _onSave() async {
     if (widget.readOnly) return;
+    if (_selectedProperty == null || _selectedProperty == kSelectHouseholdLabel) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select a household.')));
+      return;
+    }
     setState(() => _isSaving = true);
     await Future.delayed(const Duration(milliseconds: 400));
     if (!mounted) return;
@@ -85,7 +92,7 @@ class _PropertyAssignmentPageState extends ConsumerState<PropertyAssignmentPage>
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          'Property assignment',
+          'Household assignment',
           style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700, fontSize: 16.sp),
         ),
         actions: [
@@ -117,9 +124,9 @@ class _PropertyAssignmentPageState extends ConsumerState<PropertyAssignmentPage>
               LabeledFormField(label: 'Relationship', controller: _relationshipController, enabled: false),
               SizedBox(height: 20.h),
               LabeledPickerField(
-                label: 'Property assignment',
-                displayValue: _selectedProperty ?? 'Choose',
-                isPlaceholder: _selectedProperty == null,
+                label: 'Household assignment',
+                displayValue: _selectedProperty ?? kSelectHouseholdLabel,
+                isPlaceholder: _selectedProperty == null || _selectedProperty == kSelectHouseholdLabel,
                 onTap: _pickProperty,
               ),
               if (!widget.readOnly) ...[

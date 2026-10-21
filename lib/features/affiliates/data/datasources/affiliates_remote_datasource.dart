@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:pms_app/core/constants/app_constants.dart';
 import 'package:pms_app/core/error/exceptions.dart';
 import 'package:pms_app/features/affiliates/data/models/affiliate_model.dart';
 import 'package:pms_app/features/main_home/data/models/household_model.dart';
@@ -99,9 +100,33 @@ class AffiliatesRemoteDataSourceImpl implements AffiliatesRemoteDataSource {
     ],
   };
 
+  Future<List<Map<String, dynamic>>> _fetchOwnedMembers() async {
+    final response = await _dio.get(AppConstants.endpointOwnedMembers);
+    final rows = response.data as List<dynamic>;
+    return rows.map((r) => r as Map<String, dynamic>).toList();
+  }
+
+  AffiliateModel _memberToAffiliate(Map<String, dynamic> m) {
+    final relation = m['relation']?.toString() ?? '';
+    return AffiliateModel.fromJson({
+      'id': m['user_id']?.toString() ?? '',
+      'household_id': m['household_id']?.toString(),
+      'name': m['full_name']?.toString() ?? '',
+      'email': m['email']?.toString() ?? '',
+      'phone': m['phone_number']?.toString() ?? '',
+      'relationship': relation.isEmpty ? null : relation[0].toUpperCase() + relation.substring(1).toLowerCase(),
+      'status': 'Engaged',
+      'added_by_name': '',
+    });
+  }
+
   @override
   Future<List<AffiliateModel>> getAffiliates({String? householdId}) async {
     try {
+      if (householdId == null) {
+        final members = await _fetchOwnedMembers();
+        return members.map(_memberToAffiliate).toList();
+      }
       // ---- MOCK (no backend yet) ------------------------------------
       await Future.delayed(const Duration(milliseconds: 500));
       final rows = householdId == null
@@ -177,10 +202,18 @@ class AffiliatesRemoteDataSourceImpl implements AffiliatesRemoteDataSource {
   @override
   Future<List<HouseholdModel>> getAssignedHouseholds(String affiliateId) async {
     try {
-      // ---- MOCK (no backend yet) ------------------------------------
-      await Future.delayed(const Duration(milliseconds: 500));
-      final rows = _mockAssignedHouseholds[affiliateId] ?? const [];
-      return rows.map(HouseholdModel.fromJson).toList();
+      final members = await _fetchOwnedMembers();
+      return members
+          .where((m) => m['user_id']?.toString() == affiliateId)
+          .map((m) => HouseholdModel.fromJson({
+                'household_id': m['household_id'],
+                'suite': m['suite']?.toString() ?? '',
+                'floor': 0,
+                'unit_type': '',
+                'building_id': '',
+                'building_name': m['building_name']?.toString() ?? '',
+              }))
+          .toList();
 
       // ---- REAL API (uncomment once the backend is live) -------------
       // final response = await _dio.get('/user/affiliates/$affiliateId/households');

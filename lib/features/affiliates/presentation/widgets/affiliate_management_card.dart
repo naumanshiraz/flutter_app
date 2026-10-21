@@ -65,9 +65,8 @@ class AffiliateManagementCard extends StatelessWidget {
               onSelected: onAction,
               itemBuilder: (context) => const [
                 PopupMenuItem(value: AffiliateManagementAction.edit, child: Text('Edit')),
-                PopupMenuItem(value: AffiliateManagementAction.delete, child: Text('Delete')),
-                PopupMenuItem(value: AffiliateManagementAction.propertyAssignment, child: Text('Property assignment')),
-                PopupMenuItem(value: AffiliateManagementAction.propertyAssigned, child: Text('Property assigned')),
+                PopupMenuItem(value: AffiliateManagementAction.propertyAssignment, child: Text('Household assignment')),
+                PopupMenuItem(value: AffiliateManagementAction.propertyAssigned, child: Text('Household assigned')),
               ],
             ),
           ],

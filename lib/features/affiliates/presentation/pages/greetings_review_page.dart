@@ -154,7 +154,7 @@ class _GreetingsReviewPageState extends ConsumerState<GreetingsReviewPage> {
               icon: Icon(Icons.more_horiz, size: 20.sp, color: AppColors.textSecondary),
               onSelected: (_) => _onAssignPropertyNow(affiliate),
               itemBuilder: (context) => const [
-                PopupMenuItem(value: 'assign', child: Text('Property assignment')),
+                PopupMenuItem(value: 'assign', child: Text('Household assignment')),
               ],
             ),
           ],

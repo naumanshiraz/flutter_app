@@ -45,6 +45,7 @@ import 'package:pms_app/features/account_modification/presentation/pages/admin_a
 import 'package:pms_app/features/account_termination/presentation/pages/account_termination_page.dart';
 import 'package:pms_app/features/family_members/presentation/pages/occupants_page.dart';
 import 'package:pms_app/features/affiliates/presentation/pages/affiliates_management_page.dart';
+import 'package:pms_app/features/affiliates/presentation/pages/edit_affiliate_page.dart';
 import 'package:pms_app/features/join_requests/domain/entities/join_request.dart';
 import 'package:pms_app/features/join_requests/presentation/pages/join_request_review_page.dart';
 import 'package:pms_app/features/join_requests/presentation/pages/join_requests_page.dart';
@@ -409,6 +410,17 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: RouteNames.joinRequests,
         name: RouteNames.joinRequests,
         builder: (context, state) => const JoinRequestsPage(),
+      ),
+      GoRoute(
+        path: RouteNames.editFamilyMember,
+        name: RouteNames.editFamilyMember,
+        builder: (context, state) {
+          final affiliate = state.extra as Affiliate?;
+          if (affiliate == null) {
+            return PlaceholderPage(title: 'Not Found', routeName: state.matchedLocation);
+          }
+          return EditAffiliatePage(affiliate: affiliate);
+        },
       ),
       GoRoute(
         path: RouteNames.affiliatesManagement,
