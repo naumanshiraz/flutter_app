@@ -1,12 +1,12 @@
 import 'package:pms_app/core/utils/result.dart';
 import 'package:pms_app/features/chat/domain/entities/announcement_post.dart';
-import 'package:pms_app/features/chat/domain/entities/chat_conversation.dart';
-import 'package:pms_app/features/chat/domain/entities/chat_filter.dart';
+import 'package:pms_app/features/chat/domain/entities/chat_conversations_page.dart';
 import 'package:pms_app/features/chat/domain/entities/chat_message.dart';
 
 abstract class ChatRepository {
-  Future<Result<List<ChatConversation>>> getConversations({
-    ChatFilter filter = ChatFilter.all,
+  Future<Result<ChatConversationsPage>> getConversations({
+    required int limit,
+    required int offset,
   });
 
   Future<Result<List<AnnouncementPost>>> getAnnouncementPosts(String conversationId);

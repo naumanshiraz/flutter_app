@@ -43,6 +43,7 @@ class AppConstants {
   static const String endpointProfile = '/api/app/profile';
   static const String endpointProfileAvatar = '/api/app/profile/avatar';
   static const String endpointCampuses = '/api/app/campuses';
+  static const String endpointChatConversations = '/api/app/conversations';
   
   /// GET /api/app/campuses/{campusId}/households
   static String endpointCampusHouseholds(String campusId) =>

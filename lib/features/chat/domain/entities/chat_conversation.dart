@@ -13,6 +13,10 @@ class ChatConversation extends Equatable {
   final bool isGroup;
   final ConversationType type;
   final int subscriberCount;
+  final bool canPost;
+  final bool isArchived;
+  final String? projectId;
+  final DateTime? lastMessageAt;
 
   const ChatConversation({
     required this.id,
@@ -26,6 +30,10 @@ class ChatConversation extends Equatable {
     required this.isGroup,
     required this.type,
     this.subscriberCount = 0,
+    this.canPost = true,
+    this.isArchived = false,
+    this.projectId,
+    this.lastMessageAt,
   });
 
   @override
@@ -41,6 +49,10 @@ class ChatConversation extends Equatable {
         isGroup,
         type,
         subscriberCount,
+        canPost,
+        isArchived,
+        projectId,
+        lastMessageAt,
       ];
 }
 

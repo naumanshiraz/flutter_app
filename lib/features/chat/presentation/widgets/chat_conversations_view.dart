@@ -12,18 +12,66 @@ import 'package:pms_app/features/chat/presentation/providers/chat_conversations_
 import 'package:pms_app/features/chat/presentation/widgets/chat_conversation_tile.dart';
 import 'package:pms_app/features/chat/presentation/widgets/chat_filter_tabs.dart';
 
-class ChatConversationsView extends ConsumerWidget {
+class ChatConversationsView extends ConsumerStatefulWidget {
   const ChatConversationsView({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ChatConversationsView> createState() => _ChatConversationsViewState();
+}
+
+class _ChatConversationsViewState extends ConsumerState<ChatConversationsView> {
+  final ScrollController _controller = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (!_controller.hasClients) return;
+    final pos = _controller.position;
+    if (pos.pixels >= pos.maxScrollExtent - 300) {
+      ref.read(chatConversationsProvider.notifier).loadMore();
+    }
+  }
+
+  /// If the (filtered) list is too short to scroll, keep pulling pages
+  /// until the viewport fills or the server runs out.
+  void _fillViewportIfNeeded(ChatConversationsState state) {
+    if (state.isLoading ||
+        state.isLoadingMore ||
+        !state.hasMore ||
+        state.errorMessage != null ||
+        state.loadMoreError != null) {
+      return;
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_controller.hasClients) return;
+      if (_controller.position.maxScrollExtent <= 0) {
+        ref.read(chatConversationsProvider.notifier).loadMore();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final state = ref.watch(chatConversationsProvider);
     final notifier = ref.read(chatConversationsProvider.notifier);
+    final items = state.visible;
+    _fillViewportIfNeeded(state);
 
     return RefreshIndicator(
       onRefresh: notifier.refresh,
       color: AppColors.primary,
       child: CustomScrollView(
+        controller: _controller,
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
           SliverPadding(
@@ -68,20 +116,30 @@ class ChatConversationsView extends ConsumerWidget {
                 ),
               ),
             )
-          else if (state.conversations.isEmpty)
+          else if (items.isEmpty && !state.hasMore)
             SliverFillRemaining(
               hasScrollBody: false,
               child: Center(
                 child: Text('No conversations found.', style: AppTextStyles.bodySecondary),
               ),
             )
+          else if (items.isEmpty)
+            const SliverFillRemaining(
+              hasScrollBody: false,
+              child: Center(
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.4,
+                  valueColor: AlwaysStoppedAnimation(AppColors.primary),
+                ),
+              ),
+            )
           else
             SliverPadding(
-              padding: EdgeInsets.fromLTRB(20.w, 4.h, 20.w, 24.h),
+              padding: EdgeInsets.fromLTRB(20.w, 4.h, 20.w, 8.h),
               sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
-                    final conversation = state.conversations[index];
+                    final conversation = items[index];
                     return Column(
                       children: [
                         ChatConversationTile(
@@ -108,13 +166,41 @@ class ChatConversationsView extends ConsumerWidget {
                             }
                           },
                         ),
-                        if (index != state.conversations.length - 1)
+                        if (index != items.length - 1)
                           const Divider(height: 1, color: AppColors.border),
                       ],
                     );
                   },
-                  childCount: state.conversations.length,
+                  childCount: items.length,
                 ),
+              ),
+            ),
+          if (!state.isLoading && state.errorMessage == null && items.isNotEmpty)
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 24.h),
+                child: state.isLoadingMore
+                    ? Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16.h),
+                        child: const Center(
+                          child: SizedBox(
+                            width: 22,
+                            height: 22,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.2,
+                              valueColor: AlwaysStoppedAnimation(AppColors.primary),
+                            ),
+                          ),
+                        ),
+                      )
+                    : state.loadMoreError != null
+                        ? Center(
+                            child: TextButton(
+                              onPressed: notifier.loadMore,
+                              child: Text('${state.loadMoreError} Tap to retry'),
+                            ),
+                          )
+                        : const SizedBox.shrink(),
               ),
             ),
         ],

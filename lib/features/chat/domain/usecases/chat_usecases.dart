@@ -1,7 +1,6 @@
 import 'package:pms_app/core/utils/result.dart';
 import 'package:pms_app/features/chat/domain/entities/announcement_post.dart';
-import 'package:pms_app/features/chat/domain/entities/chat_conversation.dart';
-import 'package:pms_app/features/chat/domain/entities/chat_filter.dart';
+import 'package:pms_app/features/chat/domain/entities/chat_conversations_page.dart';
 import 'package:pms_app/features/chat/domain/entities/chat_message.dart';
 import 'package:pms_app/features/chat/domain/repositories/chat_repository.dart';
 
@@ -9,8 +8,8 @@ class GetChatConversationsUseCase {
   final ChatRepository _repository;
   const GetChatConversationsUseCase(this._repository);
 
-  Future<Result<List<ChatConversation>>> call({ChatFilter filter = ChatFilter.all}) {
-    return _repository.getConversations(filter: filter);
+  Future<Result<ChatConversationsPage>> call({required int limit, required int offset}) {
+    return _repository.getConversations(limit: limit, offset: offset);
   }
 }
 
