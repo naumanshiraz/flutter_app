@@ -11,8 +11,6 @@ pubspec.lock
 .vscode/
 **/*.g.dart
 **/*.freezed.dart
-android/
-ios/
 web/
 linux/
 macos/
