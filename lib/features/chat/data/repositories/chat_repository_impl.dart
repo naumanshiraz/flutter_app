@@ -30,6 +30,7 @@ class ChatRepositoryImpl implements ChatRepository {
       });
   }
 
+  /// Current user id = `sub` claim of the stored access token (used for isMine).
   Future<String?> _currentUserId() async {
     try {
       final token = await _secureStorage.getAuthToken();
@@ -67,6 +68,7 @@ class ChatRepositoryImpl implements ChatRepository {
   Future<Result<List<AnnouncementPost>>> getAnnouncementPosts(String conversationId) async {
     try {
       final models = await _remoteDataSource.getAnnouncementPosts(conversationId);
+      // Newest first.
       final sorted = [...models]..sort((a, b) {
           final ad = a.sentAtDate, bd = b.sentAtDate;
           if (ad == null || bd == null) return 0;
@@ -106,6 +108,7 @@ class ChatRepositoryImpl implements ChatRepository {
     try {
       final models = await _remoteDataSource.getMessages(conversationId);
       final myId = await _currentUserId();
+      // Oldest → newest so the newest message renders at the bottom.
       final sorted = _sortBySentAt(models);
       return Success(
         sorted.map((m) => m.toEntity(isMine: myId != null && m.senderId == myId)).toList(),

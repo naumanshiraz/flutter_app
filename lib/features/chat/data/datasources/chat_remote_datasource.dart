@@ -23,6 +23,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
 
   static const int _messagesLimit = 50;
 
+  /// LIVE: GET /api/app/conversations?limit=&offset=
   @override
   Future<List<ChatConversationModel>> getConversations({
     required int limit,
@@ -54,6 +55,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     }
   }
 
+  /// LIVE: GET /api/app/conversations/{id}/messages?limit=50
   Future<List<Map<String, dynamic>>> _fetchRows(String path) async {
     try {
       final response = await _dio.get(
@@ -91,6 +93,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     return rows.map(ChatMessageModel.fromJson).toList();
   }
 
+  /// LIVE: GET /api/app/conversations/{id}/posts/{postId}/comments?limit=50
   @override
   Future<List<ChatMessageModel>> getPostComments({
     required String conversationId,
@@ -103,7 +106,15 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   @override
   Future<ChatMessageModel> sendMessage({required String threadId, required String text}) async {
     try {
-      await Future.delayed(const Duration(milliseconds: 300));
+      final response = await _dio.post(
+        AppConstants.endpointChatMessages(threadId),
+        data: {'content': text, 'parent_id': null},
+      );
+      final body = response.data;
+      if (body is Map<String, dynamic> && body['id'] != null) {
+        return ChatMessageModel.fromJson(body);
+      }
+      // Server returned no message body — show what was sent.
       return ChatMessageModel(
         id: 'local-${DateTime.now().microsecondsSinceEpoch}',
         groupId: threadId,
@@ -111,15 +122,10 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         content: text,
         sentAt: DateTime.now().toUtc().toIso8601String(),
       );
-
-      // ---- REAL API (uncomment once the backend exists) ---------------
-      // final response = await _dio.post(
-      //   AppConstants.endpointChatSendMessage,
-      //   data: {'threadId': threadId, 'text': text},
-      // );
-      // return ChatMessageModel.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
-      throw ServerException(e.message ?? 'Failed to send message.');
+      final data = e.response?.data;
+      final serverMessage = data is Map ? (data['message'] ?? data['detail'])?.toString() : null;
+      throw ServerException(serverMessage ?? e.message ?? 'Failed to send message.');
     } catch (e) {
       throw ServerException('Unexpected error sending message: $e');
     }

@@ -39,6 +39,13 @@ class PublicChatPage extends ConsumerWidget {
     );
     final state = ref.watch(chatThreadProvider(threadKey));
     final notifier = ref.read(chatThreadProvider(threadKey).notifier);
+    ref.listen<ChatThreadState>(chatThreadProvider(threadKey), (prev, next) {
+      if (next.sendError != null && next.sendError != prev?.sendError) {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(SnackBar(content: Text(next.sendError!)));
+      }
+    });
 
     return Scaffold(
       backgroundColor: AppColors.greyBackground,

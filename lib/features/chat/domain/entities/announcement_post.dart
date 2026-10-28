@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+/// One post in a group's read-only announcement feed.
 class AnnouncementPost extends Equatable {
   final String id;
   final String authorName;

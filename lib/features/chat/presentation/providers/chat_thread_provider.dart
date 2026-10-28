@@ -9,12 +9,14 @@ class ChatThreadState {
   final bool isLoading;
   final bool isSending;
   final String? errorMessage;
+  final String? sendError;
 
   const ChatThreadState({
     this.messages = const [],
     this.isLoading = true,
     this.isSending = false,
     this.errorMessage,
+    this.sendError,
   });
 
   ChatThreadState copyWith({
@@ -22,13 +24,16 @@ class ChatThreadState {
     bool? isLoading,
     bool? isSending,
     String? errorMessage,
+    String? sendError,
     bool clearError = false,
+    bool clearSendError = false,
   }) {
     return ChatThreadState(
       messages: messages ?? this.messages,
       isLoading: isLoading ?? this.isLoading,
       isSending: isSending ?? this.isSending,
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
+      sendError: clearSendError ? null : (sendError ?? this.sendError),
     );
   }
 }
@@ -57,15 +62,33 @@ class ChatThreadNotifier extends StateNotifier<ChatThreadState> {
     final trimmed = text.trim();
     if (trimmed.isEmpty || state.isSending) return;
 
-    state = state.copyWith(isSending: true, clearError: true);
+    // Post comments: POST comment API not wired yet — keep a local echo.
+    if (key.isPostComments) {
+      state = state.copyWith(messages: [
+        ...state.messages,
+        ChatMessage(
+          id: 'local-${DateTime.now().microsecondsSinceEpoch}',
+          senderName: 'You',
+          senderInitials: 'YO',
+          text: trimmed,
+          timeLabel: 'Now',
+          isMine: true,
+        ),
+      ]);
+      return;
+    }
+
+    state = state.copyWith(isSending: true, clearSendError: true);
     final useCase = _ref.read(sendMessageUseCaseProvider);
     final result = await useCase(threadId: key.threadId, text: trimmed);
+    if (!mounted) return;
     result.when(
       onSuccess: (message) {
+        // TODO: replace with WebSocket / server events when available.
         state = state.copyWith(messages: [...state.messages, message], isSending: false);
       },
       onFailure: (failure) {
-        state = state.copyWith(isSending: false, errorMessage: failure.message);
+        state = state.copyWith(isSending: false, sendError: failure.message);
       },
     );
   }
