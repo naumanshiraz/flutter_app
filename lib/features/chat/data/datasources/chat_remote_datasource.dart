@@ -18,169 +18,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
 
   ChatRemoteDataSourceImpl(this._dio);
 
-  static const String _postBody =
-      'Should you require any additional information or have any further '
-      'inquiries regarding this issue, please feel free to reach out to us '
-      'at your earliest convenience.\n\nWe are available to provide any '
-      'details you may need.';
-
-  static final Map<String, List<Map<String, dynamic>>> _mockPostsByConversation = {
-    'c1': [
-      {
-        'id': 'c1-p1',
-        'authorName': 'Gerlug Vista',
-        'authorSubtitle': '15th Khoroo, Khan Uul District, Ulaanbaatar, Mongolia',
-        'authorInitials': 'GV',
-        'body': _postBody,
-        'imageUrl': 'https://picsum.photos/seed/announcement1/700/500',
-        'likeCount': 5,
-        'commentCount': 18,
-      },
-      {
-        'id': 'c1-p2',
-        'authorName': 'Gerlug Vista',
-        'authorSubtitle': '15th Khoroo, Khan Uul District, Ulaanbaatar, Mongolia',
-        'authorInitials': 'GV',
-        'body': _postBody,
-        'imageUrl': 'https://picsum.photos/seed/announcement2/700/500',
-        'likeCount': 2,
-        'commentCount': 4,
-      },
-    ],
-  };
-
-  static final List<Map<String, dynamic>> _defaultPostsJson = [
-    {
-      'id': 'default-p1',
-      'authorName': 'Group Admin',
-      'authorSubtitle': 'Announcement',
-      'authorInitials': 'GA',
-      'body': _postBody,
-      'imageUrl': 'https://picsum.photos/seed/announcementdefault/700/500',
-      'likeCount': 1,
-      'commentCount': 0,
-    },
-  ];
-
-  static final Map<String, List<Map<String, dynamic>>> _mockCommentsByPost = {
-    'c1-p1': [
-      {
-        'id': 'cm1',
-        'senderName': 'Zobayar Tuvshuu',
-        'senderInitials': 'ZT',
-        'text': 'I would like to participate. Is there any special dressing code?',
-        'timeLabel': '6/24',
-        'isMine': false,
-      },
-      {
-        'id': 'cm2',
-        'senderName': 'Dorj Jargalsaikhan',
-        'senderInitials': 'DJ',
-        'text': 'When and where will this event happen. Can I bring our guest?',
-        'timeLabel': '6/25',
-        'isMine': false,
-      },
-      {
-        'id': 'cm3',
-        'senderName': 'You',
-        'senderInitials': 'ME',
-        'text': 'When and where will this event?',
-        'timeLabel': '18:15',
-        'isMine': true,
-        'isRead': true,
-      },
-    ],
-  };
-
-  static final Map<String, List<Map<String, dynamic>>> _mockMessagesByConversation = {
-    'c3': [
-      {
-        'id': 'm1',
-        'senderName': 'Zobayar Tuvshuu',
-        'senderInitials': 'ZT',
-        'text': 'I would like to participate. Is there any special dressing code?',
-        'timeLabel': '6/21',
-        'isMine': false,
-      },
-      {
-        'id': 'm2',
-        'senderName': 'Dorj Jargalsaikhan',
-        'senderInitials': 'DJ',
-        'text': 'When and where will this event happen. Can I bring our guest?',
-        'timeLabel': '6/22',
-        'isMine': false,
-      },
-      {
-        'id': 'm3',
-        'senderName': 'You',
-        'senderInitials': 'ME',
-        'text': 'When and where will this event?',
-        'timeLabel': '18:15',
-        'isMine': true,
-        'isRead': true,
-      },
-      {
-        'id': 'm4',
-        'senderName': 'You',
-        'senderInitials': 'ME',
-        'text': 'How can I register in this event?',
-        'timeLabel': '18:15',
-        'isMine': true,
-        'isRead': true,
-      },
-      {
-        'id': 'm5',
-        'senderName': 'You',
-        'senderInitials': 'ME',
-        'text': 'Is there anyone?',
-        'timeLabel': '18:15',
-        'isMine': true,
-        'isRead': true,
-      },
-      {
-        'id': 'm6',
-        'senderName': 'Zobayar Tuvshuu',
-        'senderInitials': 'ZT',
-        'text': 'I would like to participate. Is there any special dressing code?',
-        'timeLabel': '6/23',
-        'isMine': false,
-      },
-      {
-        'id': 'm7',
-        'senderName': 'You',
-        'senderInitials': 'ME',
-        'text': 'When and where will this event?',
-        'timeLabel': '18:15',
-        'isMine': true,
-        'isRead': true,
-      },
-      {
-        'id': 'm8',
-        'senderName': 'Zobayar Tuvshuu',
-        'senderInitials': 'ZT',
-        'text': 'I would like to participate. Is there any special dressing code?',
-        'timeLabel': '6/24',
-        'isMine': false,
-      },
-      {
-        'id': 'm9',
-        'senderName': 'Dorj Jargalsaikhan',
-        'senderInitials': 'DJ',
-        'text': 'When and where will this event happen. Can I bring our guest?',
-        'timeLabel': '6/25',
-        'isMine': false,
-      },
-      {
-        'id': 'm10',
-        'senderName': 'You',
-        'senderInitials': 'ME',
-        'text': 'When and where will this event?',
-        'timeLabel': '18:15',
-        'isMine': true,
-        'isRead': true,
-      },
-    ],
-  };
+  static const int _messagesLimit = 50;
 
   @override
   Future<List<ChatConversationModel>> getConversations({
@@ -213,27 +51,79 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     }
   }
 
+  static final Map<String, List<Map<String, dynamic>>> _mockCommentsByPost = {
+    'c1-p1': [
+      {
+        'id': 'cm1',
+        'sender_id': 'mock-1',
+        'sender_name': 'Zobayar Tuvshuu',
+        'content': 'I would like to participate. Is there any special dressing code?',
+        'sent_at': '2026-06-24T10:00:00Z',
+      },
+      {
+        'id': 'cm2',
+        'sender_id': 'mock-2',
+        'sender_name': 'Dorj Jargalsaikhan',
+        'content': 'When and where will this event happen. Can I bring our guest?',
+        'sent_at': '2026-06-25T10:00:00Z',
+      },
+    ],
+  };
+
+  Future<List<Map<String, dynamic>>> _fetchMessageRows(String conversationId) async {
+    try {
+      final response = await _dio.get(
+        AppConstants.endpointChatMessages(conversationId),
+        queryParameters: {'limit': _messagesLimit},
+      );
+      final body = response.data;
+      final rows = body is List
+          ? body
+          : (body is Map ? (body['items'] ?? body['data'] ?? body['results']) : null);
+      if (rows is! List) {
+        throw const ServerException('Unexpected messages response.');
+      }
+      return rows.cast<Map<String, dynamic>>();
+    } on DioException catch (e) {
+      final data = e.response?.data;
+      final serverMessage = data is Map ? (data['message'] ?? data['detail'])?.toString() : null;
+      throw ServerException(serverMessage ?? e.message ?? 'Failed to load messages.');
+    } on ServerException {
+      rethrow;
+    } catch (e) {
+      throw ServerException('Unexpected error loading messages: $e');
+    }
+  }
+
   @override
   Future<List<AnnouncementPostModel>> getAnnouncementPosts(String conversationId) async {
-    try {
-      // ---- MOCK (no backend yet) ---------------------------------------
-      await Future.delayed(const Duration(milliseconds: 500));
-      final json = _mockPostsByConversation[conversationId] ?? _defaultPostsJson;
-      return json.map(AnnouncementPostModel.fromJson).toList();
-    } on DioException catch (e) {
-      throw ServerException(e.message ?? 'Failed to load announcement posts.');
-    } catch (e) {
-      throw ServerException('Unexpected error loading announcement posts: $e');
-    }
+    final rows = await _fetchMessageRows(conversationId);
+    return rows.map(AnnouncementPostModel.fromJson).toList();
+  }
+
+  @override
+  Future<List<ChatMessageModel>> getMessages(String conversationId) async {
+    final rows = await _fetchMessageRows(conversationId);
+    return rows.map(ChatMessageModel.fromJson).toList();
   }
 
   @override
   Future<List<ChatMessageModel>> getPostComments(String postId) async {
     try {
+      // ---- MOCK (no backend yet) ---------------------------------------
       await Future.delayed(const Duration(milliseconds: 450));
       final json = _mockCommentsByPost[postId] ?? const <Map<String, dynamic>>[];
       return json.map(ChatMessageModel.fromJson).toList();
 
+      // ---- REAL API (uncomment once the backend exists) ---------------
+      // final response = await _dio.get(
+      //   AppConstants.endpointChatPostComments,
+      //   queryParameters: {'postId': postId},
+      // );
+      // final data = response.data as List<dynamic>;
+      // return data
+      //     .map((json) => ChatMessageModel.fromJson(json as Map<String, dynamic>))
+      //     .toList();
     } on DioException catch (e) {
       throw ServerException(e.message ?? 'Failed to load comments.');
     } catch (e) {
@@ -242,33 +132,23 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   }
 
   @override
-  Future<List<ChatMessageModel>> getMessages(String conversationId) async {
-    try {
-      await Future.delayed(const Duration(milliseconds: 500));
-      final json = _mockMessagesByConversation[conversationId] ?? const <Map<String, dynamic>>[];
-      return json.map(ChatMessageModel.fromJson).toList();
-
-    } on DioException catch (e) {
-      throw ServerException(e.message ?? 'Failed to load messages.');
-    } catch (e) {
-      throw ServerException('Unexpected error loading messages: $e');
-    }
-  }
-
-  @override
   Future<ChatMessageModel> sendMessage({required String threadId, required String text}) async {
     try {
-    
       await Future.delayed(const Duration(milliseconds: 300));
       return ChatMessageModel(
         id: 'local-${DateTime.now().microsecondsSinceEpoch}',
+        groupId: threadId,
         senderName: 'You',
-        senderInitials: 'ME',
-        text: text,
-        timeLabel: 'Now',
-        isMine: true,
-        isRead: false,
+        content: text,
+        sentAt: DateTime.now().toUtc().toIso8601String(),
       );
+
+      // ---- REAL API (uncomment once the backend exists) ---------------
+      // final response = await _dio.post(
+      //   AppConstants.endpointChatSendMessage,
+      //   data: {'threadId': threadId, 'text': text},
+      // );
+      // return ChatMessageModel.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
       throw ServerException(e.message ?? 'Failed to send message.');
     } catch (e) {

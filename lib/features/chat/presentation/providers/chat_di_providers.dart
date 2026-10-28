@@ -10,7 +10,10 @@ final chatRemoteDataSourceProvider = Provider<ChatRemoteDataSource>((ref) {
 });
 
 final chatRepositoryProvider = Provider<ChatRepository>((ref) {
-  return ChatRepositoryImpl(remoteDataSource: ref.watch(chatRemoteDataSourceProvider));
+  return ChatRepositoryImpl(
+    remoteDataSource: ref.watch(chatRemoteDataSourceProvider),
+    secureStorage: ref.watch(secureStorageServiceProvider),
+  );
 });
 
 final getChatConversationsUseCaseProvider = Provider<GetChatConversationsUseCase>((ref) {

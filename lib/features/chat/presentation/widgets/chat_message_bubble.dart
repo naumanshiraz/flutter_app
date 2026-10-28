@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
@@ -25,16 +26,7 @@ class ChatMessageBubble extends StatelessWidget {
           return Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              CircleAvatar(
-                radius: 21.r,
-                child: Text(
-                  message.senderInitials,
-                  style: AppTextStyles.avatarInitials.copyWith(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
+              _SenderAvatar(message: message),
 
               SizedBox(width: 6.w),
 
@@ -139,6 +131,39 @@ class ChatMessageBubble extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _SenderAvatar extends StatelessWidget {
+  final ChatMessage message;
+  const _SenderAvatar({required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    final url = message.senderAvatarUrl;
+    final initials = Text(
+      message.senderInitials,
+      style: AppTextStyles.avatarInitials.copyWith(
+        fontSize: 16.sp,
+        fontWeight: FontWeight.w700,
+      ),
+    );
+
+    return CircleAvatar(
+      radius: 21.r,
+      child: (url != null && url.isNotEmpty)
+          ? ClipOval(
+              child: CachedNetworkImage(
+                imageUrl: url,
+                width: 42.r,
+                height: 42.r,
+                fit: BoxFit.cover,
+                placeholder: (_, __) => Center(child: initials),
+                errorWidget: (_, __, ___) => Center(child: initials),
+              ),
+            )
+          : initials,
     );
   }
 }

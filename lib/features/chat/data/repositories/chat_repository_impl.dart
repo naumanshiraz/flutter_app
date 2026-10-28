@@ -1,7 +1,12 @@
+import 'dart:convert';
+
 import 'package:pms_app/core/error/exceptions.dart';
 import 'package:pms_app/core/error/failures.dart';
+import 'package:pms_app/core/services/secure_storage_service.dart';
 import 'package:pms_app/core/utils/result.dart';
 import 'package:pms_app/features/chat/data/datasources/chat_remote_datasource.dart';
+import 'package:pms_app/features/chat/data/models/announcement_post_model.dart';
+import 'package:pms_app/features/chat/data/models/chat_message_model.dart';
 import 'package:pms_app/features/chat/domain/entities/announcement_post.dart';
 import 'package:pms_app/features/chat/domain/entities/chat_conversations_page.dart';
 import 'package:pms_app/features/chat/domain/entities/chat_message.dart';
@@ -9,9 +14,35 @@ import 'package:pms_app/features/chat/domain/repositories/chat_repository.dart';
 
 class ChatRepositoryImpl implements ChatRepository {
   final ChatRemoteDataSource _remoteDataSource;
+  final SecureStorageService _secureStorage;
 
-  ChatRepositoryImpl({required ChatRemoteDataSource remoteDataSource})
-      : _remoteDataSource = remoteDataSource;
+  ChatRepositoryImpl({
+    required ChatRemoteDataSource remoteDataSource,
+    required SecureStorageService secureStorage,
+  })  : _remoteDataSource = remoteDataSource,
+        _secureStorage = secureStorage;
+
+  List<ChatMessageModel> _sortBySentAt(List<ChatMessageModel> models) {
+    return [...models]..sort((a, b) {
+        final ad = a.sentAtDate, bd = b.sentAtDate;
+        if (ad == null || bd == null) return 0;
+        return ad.compareTo(bd);
+      });
+  }
+
+  /// Current user id = `sub` claim of the stored access token (used for isMine).
+  Future<String?> _currentUserId() async {
+    try {
+      final token = await _secureStorage.getAuthToken();
+      final parts = token?.split('.');
+      if (parts == null || parts.length < 2) return null;
+      final payload = jsonDecode(utf8.decode(base64Url.decode(base64Url.normalize(parts[1]))));
+      if (payload is! Map) return null;
+      return (payload['sub'] ?? payload['user_id'] ?? payload['uid'])?.toString();
+    } catch (_) {
+      return null;
+    }
+  }
 
   @override
   Future<Result<ChatConversationsPage>> getConversations({
@@ -37,7 +68,13 @@ class ChatRepositoryImpl implements ChatRepository {
   Future<Result<List<AnnouncementPost>>> getAnnouncementPosts(String conversationId) async {
     try {
       final models = await _remoteDataSource.getAnnouncementPosts(conversationId);
-      return Success(models.map((m) => m.toEntity()).toList());
+      // Newest first.
+      final sorted = [...models]..sort((a, b) {
+          final ad = a.sentAtDate, bd = b.sentAtDate;
+          if (ad == null || bd == null) return 0;
+          return bd.compareTo(ad);
+        });
+      return Success(sorted.map((m) => m.toEntity()).toList());
     } on ServerException catch (e) {
       return ResultError(ServerFailure(e.message));
     } catch (e) {
@@ -49,7 +86,10 @@ class ChatRepositoryImpl implements ChatRepository {
   Future<Result<List<ChatMessage>>> getPostComments(String postId) async {
     try {
       final models = await _remoteDataSource.getPostComments(postId);
-      return Success(models.map((m) => m.toEntity()).toList());
+      final myId = await _currentUserId();
+      return Success(
+        models.map((m) => m.toEntity(isMine: myId != null && m.senderId == myId)).toList(),
+      );
     } on ServerException catch (e) {
       return ResultError(ServerFailure(e.message));
     } catch (e) {
@@ -61,7 +101,12 @@ class ChatRepositoryImpl implements ChatRepository {
   Future<Result<List<ChatMessage>>> getMessages(String conversationId) async {
     try {
       final models = await _remoteDataSource.getMessages(conversationId);
-      return Success(models.map((m) => m.toEntity()).toList());
+      final myId = await _currentUserId();
+      // Oldest → newest so the newest message renders at the bottom.
+      final sorted = _sortBySentAt(models);
+      return Success(
+        sorted.map((m) => m.toEntity(isMine: myId != null && m.senderId == myId)).toList(),
+      );
     } on ServerException catch (e) {
       return ResultError(ServerFailure(e.message));
     } catch (e) {
@@ -73,7 +118,7 @@ class ChatRepositoryImpl implements ChatRepository {
   Future<Result<ChatMessage>> sendMessage({required String threadId, required String text}) async {
     try {
       final model = await _remoteDataSource.sendMessage(threadId: threadId, text: text);
-      return Success(model.toEntity());
+      return Success(model.toEntity(isMine: true));
     } on ServerException catch (e) {
       return ResultError(ServerFailure(e.message));
     } catch (e) {

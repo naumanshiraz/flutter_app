@@ -18,6 +18,13 @@ class AnnouncementPostCard extends StatelessWidget {
     this.highlighted = false,
   });
 
+  IconData get _attachmentIcon {
+    final type = post.attachmentContentType ?? '';
+    if (type.contains('pdf')) return Icons.picture_as_pdf_outlined;
+    if (type.startsWith('image/')) return Icons.image_outlined;
+    return Icons.attach_file;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -48,7 +55,22 @@ class AnnouncementPostCard extends StatelessWidget {
               CircleAvatar(
                 radius: 18.r,
                 backgroundColor: AppColors.border,
-                child: Text(post.authorInitials, style: AppTextStyles.avatarInitials),
+                child: (post.authorAvatarUrl != null && post.authorAvatarUrl!.isNotEmpty)
+                    ? ClipOval(
+                        child: CachedNetworkImage(
+                          imageUrl: post.authorAvatarUrl!,
+                          width: 36.r,
+                          height: 36.r,
+                          fit: BoxFit.cover,
+                          placeholder: (_, __) => Center(
+                            child: Text(post.authorInitials, style: AppTextStyles.avatarInitials),
+                          ),
+                          errorWidget: (_, __, ___) => Center(
+                            child: Text(post.authorInitials, style: AppTextStyles.avatarInitials),
+                          ),
+                        ),
+                      )
+                    : Text(post.authorInitials, style: AppTextStyles.avatarInitials),
               ),
               SizedBox(width: 10.w),
               Expanded(
@@ -66,7 +88,32 @@ class AnnouncementPostCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: 10.h),
-          Text(post.body, style: AppTextStyles.body.copyWith(fontSize: 13.sp)),
+          if (post.body.isNotEmpty)
+            Text(post.body, style: AppTextStyles.body.copyWith(fontSize: 13.sp)),
+          if (post.attachmentName != null) ...[
+            SizedBox(height: 10.h),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+              decoration: BoxDecoration(
+                color: AppColors.greyBackground,
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: Row(
+                children: [
+                  Icon(_attachmentIcon, size: 20.sp, color: AppColors.textBlack),
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    child: Text(
+                      post.attachmentName!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.body.copyWith(fontSize: 13.sp),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
           if (post.imageUrl != null) ...[
             SizedBox(height: 10.h),
             ClipRRect(

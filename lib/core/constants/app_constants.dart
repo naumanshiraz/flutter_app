@@ -45,6 +45,9 @@ class AppConstants {
   static const String endpointCampuses = '/api/app/campuses';
   static const String endpointChatConversations = '/api/app/conversations';
   
+  static String endpointChatMessages(String conversationId) =>
+      '/api/app/conversations/$conversationId/messages';
+  
   /// GET /api/app/campuses/{campusId}/households
   static String endpointCampusHouseholds(String campusId) =>
       '/api/app/campuses/$campusId/households';
