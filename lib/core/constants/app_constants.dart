@@ -45,6 +45,9 @@ class AppConstants {
   static const String endpointCampuses = '/api/app/campuses';
   static const String endpointChatConversations = '/api/app/conversations';
   
+  static String endpointChatPostComments(String conversationId, String postId) =>
+      '/api/app/conversations/$conversationId/posts/$postId/comments';
+      
   static String endpointChatMessages(String conversationId) =>
       '/api/app/conversations/$conversationId/messages';
   

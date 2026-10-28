@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pms_app/features/chat/domain/entities/chat_message.dart';
 import 'package:pms_app/features/chat/presentation/providers/chat_di_providers.dart';
 
-typedef ChatThreadKey = ({String threadId, bool isPostComments});
+typedef ChatThreadKey = ({String conversationId, String threadId, bool isPostComments});
 
 class ChatThreadState {
   final List<ChatMessage> messages;
@@ -44,7 +44,7 @@ class ChatThreadNotifier extends StateNotifier<ChatThreadState> {
   Future<void> _fetch() async {
     state = state.copyWith(isLoading: true, clearError: true);
     final result = key.isPostComments
-        ? await _ref.read(getPostCommentsUseCaseProvider)(key.threadId)
+        ? await _ref.read(getPostCommentsUseCaseProvider)(conversationId: key.conversationId, postId: key.threadId)
         : await _ref.read(getMessagesUseCaseProvider)(key.threadId);
     result.when(
       onSuccess: (messages) => state = state.copyWith(messages: messages, isLoading: false),

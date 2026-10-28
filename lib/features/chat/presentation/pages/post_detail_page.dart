@@ -38,7 +38,11 @@ class PostDetailPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final feedState = ref.watch(announcementFeedProvider(args.conversationId));
-    final threadKey = (threadId: args.postId, isPostComments: true);
+    final threadKey = (
+      conversationId: args.conversationId,
+      threadId: args.postId,
+      isPostComments: true,
+    );
     final threadState = ref.watch(chatThreadProvider(threadKey));
     final threadNotifier = ref.read(chatThreadProvider(threadKey).notifier);
 

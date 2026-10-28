@@ -26,8 +26,8 @@ class GetPostCommentsUseCase {
   final ChatRepository _repository;
   const GetPostCommentsUseCase(this._repository);
 
-  Future<Result<List<ChatMessage>>> call(String postId) {
-    return _repository.getPostComments(postId);
+  Future<Result<List<ChatMessage>>> call({required String conversationId, required String postId}) {
+    return _repository.getPostComments(conversationId: conversationId, postId: postId);
   }
 }
 

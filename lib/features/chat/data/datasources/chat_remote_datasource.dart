@@ -8,7 +8,10 @@ import 'package:pms_app/features/chat/data/models/chat_message_model.dart';
 abstract class ChatRemoteDataSource {
   Future<List<ChatConversationModel>> getConversations({required int limit, required int offset});
   Future<List<AnnouncementPostModel>> getAnnouncementPosts(String conversationId);
-  Future<List<ChatMessageModel>> getPostComments(String postId);
+  Future<List<ChatMessageModel>> getPostComments({
+    required String conversationId,
+    required String postId,
+  });
   Future<List<ChatMessageModel>> getMessages(String conversationId);
   Future<ChatMessageModel> sendMessage({required String threadId, required String text});
 }
@@ -51,29 +54,10 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     }
   }
 
-  static final Map<String, List<Map<String, dynamic>>> _mockCommentsByPost = {
-    'c1-p1': [
-      {
-        'id': 'cm1',
-        'sender_id': 'mock-1',
-        'sender_name': 'Zobayar Tuvshuu',
-        'content': 'I would like to participate. Is there any special dressing code?',
-        'sent_at': '2026-06-24T10:00:00Z',
-      },
-      {
-        'id': 'cm2',
-        'sender_id': 'mock-2',
-        'sender_name': 'Dorj Jargalsaikhan',
-        'content': 'When and where will this event happen. Can I bring our guest?',
-        'sent_at': '2026-06-25T10:00:00Z',
-      },
-    ],
-  };
-
-  Future<List<Map<String, dynamic>>> _fetchMessageRows(String conversationId) async {
+  Future<List<Map<String, dynamic>>> _fetchRows(String path) async {
     try {
       final response = await _dio.get(
-        AppConstants.endpointChatMessages(conversationId),
+        path,
         queryParameters: {'limit': _messagesLimit},
       );
       final body = response.data;
@@ -81,7 +65,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
           ? body
           : (body is Map ? (body['items'] ?? body['data'] ?? body['results']) : null);
       if (rows is! List) {
-        throw const ServerException('Unexpected messages response.');
+        throw const ServerException('Unexpected response.');
       }
       return rows.cast<Map<String, dynamic>>();
     } on DioException catch (e) {
@@ -97,38 +81,23 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
 
   @override
   Future<List<AnnouncementPostModel>> getAnnouncementPosts(String conversationId) async {
-    final rows = await _fetchMessageRows(conversationId);
+    final rows = await _fetchRows(AppConstants.endpointChatMessages(conversationId));
     return rows.map(AnnouncementPostModel.fromJson).toList();
   }
 
   @override
   Future<List<ChatMessageModel>> getMessages(String conversationId) async {
-    final rows = await _fetchMessageRows(conversationId);
+    final rows = await _fetchRows(AppConstants.endpointChatMessages(conversationId));
     return rows.map(ChatMessageModel.fromJson).toList();
   }
 
   @override
-  Future<List<ChatMessageModel>> getPostComments(String postId) async {
-    try {
-      // ---- MOCK (no backend yet) ---------------------------------------
-      await Future.delayed(const Duration(milliseconds: 450));
-      final json = _mockCommentsByPost[postId] ?? const <Map<String, dynamic>>[];
-      return json.map(ChatMessageModel.fromJson).toList();
-
-      // ---- REAL API (uncomment once the backend exists) ---------------
-      // final response = await _dio.get(
-      //   AppConstants.endpointChatPostComments,
-      //   queryParameters: {'postId': postId},
-      // );
-      // final data = response.data as List<dynamic>;
-      // return data
-      //     .map((json) => ChatMessageModel.fromJson(json as Map<String, dynamic>))
-      //     .toList();
-    } on DioException catch (e) {
-      throw ServerException(e.message ?? 'Failed to load comments.');
-    } catch (e) {
-      throw ServerException('Unexpected error loading comments: $e');
-    }
+  Future<List<ChatMessageModel>> getPostComments({
+    required String conversationId,
+    required String postId,
+  }) async {
+    final rows = await _fetchRows(AppConstants.endpointChatPostComments(conversationId, postId));
+    return rows.map(ChatMessageModel.fromJson).toList();
   }
 
   @override

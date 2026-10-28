@@ -11,7 +11,10 @@ abstract class ChatRepository {
 
   Future<Result<List<AnnouncementPost>>> getAnnouncementPosts(String conversationId);
 
-  Future<Result<List<ChatMessage>>> getPostComments(String postId);
+  Future<Result<List<ChatMessage>>> getPostComments({
+    required String conversationId,
+    required String postId,
+  });
 
   Future<Result<List<ChatMessage>>> getMessages(String conversationId);
 

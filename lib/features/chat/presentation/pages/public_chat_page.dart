@@ -32,7 +32,11 @@ class PublicChatPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final threadKey = (threadId: args.conversationId, isPostComments: false);
+    final threadKey = (
+      conversationId: args.conversationId,
+      threadId: args.conversationId,
+      isPostComments: false,
+    );
     final state = ref.watch(chatThreadProvider(threadKey));
     final notifier = ref.read(chatThreadProvider(threadKey).notifier);
 
