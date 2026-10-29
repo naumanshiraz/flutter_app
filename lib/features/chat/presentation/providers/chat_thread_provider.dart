@@ -62,25 +62,13 @@ class ChatThreadNotifier extends StateNotifier<ChatThreadState> {
     final trimmed = text.trim();
     if (trimmed.isEmpty || state.isSending) return;
 
-    // Post comments: POST comment API not wired yet — keep a local echo.
-    if (key.isPostComments) {
-      state = state.copyWith(messages: [
-        ...state.messages,
-        ChatMessage(
-          id: 'local-${DateTime.now().microsecondsSinceEpoch}',
-          senderName: 'You',
-          senderInitials: 'YO',
-          text: trimmed,
-          timeLabel: 'Now',
-          isMine: true,
-        ),
-      ]);
-      return;
-    }
-
     state = state.copyWith(isSending: true, clearSendError: true);
     final useCase = _ref.read(sendMessageUseCaseProvider);
-    final result = await useCase(threadId: key.threadId, text: trimmed);
+    final result = await useCase(
+      threadId: key.isPostComments ? key.conversationId : key.threadId,
+      text: trimmed,
+      parentId: key.isPostComments ? key.threadId : null,
+    );
     if (!mounted) return;
     result.when(
       onSuccess: (message) {

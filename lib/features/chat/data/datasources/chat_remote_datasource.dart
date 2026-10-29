@@ -13,7 +13,11 @@ abstract class ChatRemoteDataSource {
     required String postId,
   });
   Future<List<ChatMessageModel>> getMessages(String conversationId);
-  Future<ChatMessageModel> sendMessage({required String threadId, required String text});
+  Future<ChatMessageModel> sendMessage({
+    required String threadId,
+    required String text,
+    String? parentId,
+  });
 }
 
 class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
@@ -104,11 +108,15 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   }
 
   @override
-  Future<ChatMessageModel> sendMessage({required String threadId, required String text}) async {
+  Future<ChatMessageModel> sendMessage({
+    required String threadId,
+    required String text,
+    String? parentId,
+  }) async {
     try {
       final response = await _dio.post(
         AppConstants.endpointChatMessages(threadId),
-        data: {'content': text, 'parent_id': null},
+        data: {'content': text, 'parent_id': parentId},
       );
       final body = response.data;
       if (body is Map<String, dynamic> && body['id'] != null) {

@@ -121,9 +121,17 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
-  Future<Result<ChatMessage>> sendMessage({required String threadId, required String text}) async {
+  Future<Result<ChatMessage>> sendMessage({
+    required String threadId,
+    required String text,
+    String? parentId,
+  }) async {
     try {
-      final model = await _remoteDataSource.sendMessage(threadId: threadId, text: text);
+      final model = await _remoteDataSource.sendMessage(
+        threadId: threadId,
+        text: text,
+        parentId: parentId,
+      );
       return Success(model.toEntity(isMine: true));
     } on ServerException catch (e) {
       return ResultError(ServerFailure(e.message));

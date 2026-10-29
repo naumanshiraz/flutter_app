@@ -44,7 +44,11 @@ class SendMessageUseCase {
   final ChatRepository _repository;
   const SendMessageUseCase(this._repository);
 
-  Future<Result<ChatMessage>> call({required String threadId, required String text}) {
-    return _repository.sendMessage(threadId: threadId, text: text);
+  Future<Result<ChatMessage>> call({
+    required String threadId,
+    required String text,
+    String? parentId,
+  }) {
+    return _repository.sendMessage(threadId: threadId, text: text, parentId: parentId);
   }
 }
