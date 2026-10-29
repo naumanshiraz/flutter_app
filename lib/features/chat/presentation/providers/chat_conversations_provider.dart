@@ -6,7 +6,6 @@ import 'package:pms_app/features/chat/presentation/providers/chat_di_providers.d
 const int kChatConversationsPageSize = 50;
 
 class ChatConversationsState {
-  /// Every conversation loaded so far (unfiltered, in server order).
   final List<ChatConversation> conversations;
   final ChatFilter filter;
   final bool isLoading;
@@ -61,7 +60,7 @@ class ChatConversationsState {
 
 class ChatConversationsNotifier extends StateNotifier<ChatConversationsState> {
   final Ref _ref;
-  int _epoch = 0; // bumps on refresh so stale responses are dropped
+  int _epoch = 0;
 
   ChatConversationsNotifier(this._ref) : super(const ChatConversationsState()) {
     refresh();
@@ -92,7 +91,6 @@ class ChatConversationsNotifier extends StateNotifier<ChatConversationsState> {
         );
       },
       onFailure: (failure) {
-        // Keep already-loaded rows on a failed pull-to-refresh.
         state = state.copyWith(
           isLoading: false,
           errorMessage: hadData ? null : failure.message,
@@ -124,6 +122,28 @@ class ChatConversationsNotifier extends StateNotifier<ChatConversationsState> {
       },
       onFailure: (failure) {
         state = state.copyWith(isLoadingMore: false, loadMoreError: failure.message);
+      },
+    );
+  }
+
+  Future<void> markRead(String conversationId) async {
+    final target = state.conversations.where((c) => c.id == conversationId).firstOrNull;
+    if (target == null || !target.isUnread) return;
+    state = state.copyWith(
+      conversations: [
+        for (final c in state.conversations) c.id == conversationId ? c.copyWith(isUnread: false) : c,
+      ],
+    );
+    final result = await _ref.read(markConversationReadUseCaseProvider)(conversationId);
+    if (!mounted) return;
+    result.when(
+      onSuccess: (_) {},
+      onFailure: (_) {
+        state = state.copyWith(
+          conversations: [
+            for (final c in state.conversations) c.id == conversationId ? c.copyWith(isUnread: true) : c,
+          ],
+        );
       },
     );
   }

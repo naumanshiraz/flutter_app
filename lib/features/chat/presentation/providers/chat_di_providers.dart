@@ -16,6 +16,10 @@ final chatRepositoryProvider = Provider<ChatRepository>((ref) {
   );
 });
 
+final markConversationReadUseCaseProvider = Provider<MarkConversationReadUseCase>((ref) {
+  return MarkConversationReadUseCase(ref.watch(chatRepositoryProvider));
+});
+
 final getChatConversationsUseCaseProvider = Provider<GetChatConversationsUseCase>((ref) {
   return GetChatConversationsUseCase(ref.watch(chatRepositoryProvider));
 });

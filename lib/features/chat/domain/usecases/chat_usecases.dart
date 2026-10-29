@@ -13,6 +13,15 @@ class GetChatConversationsUseCase {
   }
 }
 
+class MarkConversationReadUseCase {
+  final ChatRepository _repository;
+  const MarkConversationReadUseCase(this._repository);
+
+  Future<Result<void>> call(String conversationId) {
+    return _repository.markConversationRead(conversationId);
+  }
+}
+
 class GetAnnouncementPostsUseCase {
   final ChatRepository _repository;
   const GetAnnouncementPostsUseCase(this._repository);

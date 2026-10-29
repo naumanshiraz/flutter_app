@@ -45,6 +45,18 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
+  Future<Result<void>> markConversationRead(String conversationId) async {
+    try {
+      await _remoteDataSource.markConversationRead(conversationId);
+      return const Success(null);
+    } on ServerException catch (e) {
+      return ResultError(ServerFailure(e.message));
+    } catch (e) {
+      return ResultError(UnknownFailure('Failed to mark conversation read: $e'));
+    }
+  }
+
+  @override
   Future<Result<ChatConversationsPage>> getConversations({
     required int limit,
     required int offset,

@@ -36,6 +36,24 @@ class ChatConversation extends Equatable {
     this.lastMessageAt,
   });
 
+  ChatConversation copyWith({bool? isUnread}) => ChatConversation(
+        id: id,
+        title: title,
+        avatarInitials: avatarInitials,
+        avatarUrl: avatarUrl,
+        lastMessageSender: lastMessageSender,
+        lastMessagePreview: lastMessagePreview,
+        timeLabel: timeLabel,
+        isUnread: isUnread ?? this.isUnread,
+        isGroup: isGroup,
+        type: type,
+        subscriberCount: subscriberCount,
+        canPost: canPost,
+        isArchived: isArchived,
+        projectId: projectId,
+        lastMessageAt: lastMessageAt,
+      );
+
   @override
   List<Object?> get props => [
         id,

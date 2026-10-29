@@ -42,8 +42,6 @@ class _ChatConversationsViewState extends ConsumerState<ChatConversationsView> {
     }
   }
 
-  /// If the (filtered) list is too short to scroll, keep pulling pages
-  /// until the viewport fills or the server runs out.
   void _fillViewportIfNeeded(ChatConversationsState state) {
     if (state.isLoading ||
         state.isLoadingMore ||
@@ -145,6 +143,7 @@ class _ChatConversationsViewState extends ConsumerState<ChatConversationsView> {
                         ChatConversationTile(
                           conversation: conversation,
                           onTap: () {
+                            notifier.markRead(conversation.id);
                             if (conversation.type == ConversationType.announcement) {
                               context.push(
                                 RouteNames.chatAnnouncement,

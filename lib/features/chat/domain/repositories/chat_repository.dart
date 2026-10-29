@@ -4,6 +4,8 @@ import 'package:pms_app/features/chat/domain/entities/chat_conversations_page.da
 import 'package:pms_app/features/chat/domain/entities/chat_message.dart';
 
 abstract class ChatRepository {
+  Future<Result<void>> markConversationRead(String conversationId);
+
   Future<Result<ChatConversationsPage>> getConversations({
     required int limit,
     required int offset,

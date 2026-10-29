@@ -12,6 +12,7 @@ abstract class ChatRemoteDataSource {
     required String conversationId,
     required String postId,
   });
+  Future<void> markConversationRead(String conversationId);
   Future<List<ChatMessageModel>> getMessages(String conversationId);
   Future<ChatMessageModel> sendMessage({
     required String threadId,
@@ -105,6 +106,20 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   }) async {
     final rows = await _fetchRows(AppConstants.endpointChatPostComments(conversationId, postId));
     return rows.map(ChatMessageModel.fromJson).toList();
+  }
+
+  /// LIVE: POST /api/app/conversations/{id}/read
+  @override
+  Future<void> markConversationRead(String conversationId) async {
+    try {
+      await _dio.post(AppConstants.endpointChatConversationRead(conversationId));
+    } on DioException catch (e) {
+      final data = e.response?.data;
+      final serverMessage = data is Map ? (data['message'] ?? data['detail'])?.toString() : null;
+      throw ServerException(serverMessage ?? e.message ?? 'Failed to mark conversation read.');
+    } catch (e) {
+      throw ServerException('Unexpected error marking conversation read: $e');
+    }
   }
 
   @override

@@ -47,7 +47,10 @@ class AppConstants {
   
   static String endpointChatPostComments(String conversationId, String postId) =>
       '/api/app/conversations/$conversationId/posts/$postId/comments';
-      
+
+  static String endpointChatConversationRead(String conversationId) =>
+      '/api/app/conversations/$conversationId/read';
+          
   static String endpointChatMessages(String conversationId) =>
       '/api/app/conversations/$conversationId/messages';
   
