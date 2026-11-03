@@ -28,7 +28,6 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
 
   static const int _messagesLimit = 50;
 
-  /// LIVE: GET /api/app/conversations?limit=&offset=
   @override
   Future<List<ChatConversationModel>> getConversations({
     required int limit,
@@ -60,7 +59,6 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     }
   }
 
-  /// LIVE: GET /api/app/conversations/{id}/messages?limit=50
   Future<List<Map<String, dynamic>>> _fetchRows(String path) async {
     try {
       final response = await _dio.get(
@@ -98,7 +96,6 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     return rows.map(ChatMessageModel.fromJson).toList();
   }
 
-  /// LIVE: GET /api/app/conversations/{id}/posts/{postId}/comments?limit=50
   @override
   Future<List<ChatMessageModel>> getPostComments({
     required String conversationId,
@@ -108,7 +105,6 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     return rows.map(ChatMessageModel.fromJson).toList();
   }
 
-  /// LIVE: POST /api/app/conversations/{id}/read
   @override
   Future<void> markConversationRead(String conversationId) async {
     try {
@@ -137,7 +133,6 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
       if (body is Map<String, dynamic> && body['id'] != null) {
         return ChatMessageModel.fromJson(body);
       }
-      // Server returned no message body — show what was sent.
       return ChatMessageModel(
         id: 'local-${DateTime.now().microsecondsSinceEpoch}',
         groupId: threadId,
