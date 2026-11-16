@@ -6,7 +6,7 @@ class GetInvoicesUseCase {
   final InvoiceRepository _repository;
   const GetInvoicesUseCase(this._repository);
 
-  Future<Result<List<InvoiceSummary>>> call(String propertyId) => _repository.getInvoices(propertyId);
+  Future<Result<List<InvoiceSummary>>> call(String householdId) => _repository.getInvoices(householdId);
 }
 
 class GetInvoiceDetailUseCase {
@@ -14,4 +14,11 @@ class GetInvoiceDetailUseCase {
   const GetInvoiceDetailUseCase(this._repository);
 
   Future<Result<InvoiceDetail>> call(String invoiceId) => _repository.getInvoiceDetail(invoiceId);
+}
+
+class GetInvoicePdfUrlUseCase {
+  final InvoiceRepository _repository;
+  const GetInvoicePdfUrlUseCase(this._repository);
+
+  Future<Result<String>> call(String invoiceId) => _repository.getInvoicePdfUrl(invoiceId);
 }

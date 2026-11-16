@@ -123,7 +123,7 @@ class _PropertyDetailPageState extends ConsumerState<PropertyDetailPage> {
             SizedBox(height: 14.h),
             ActionButtonsRow(
               onReportPressed: () => ReportSheet.show(context),
-              onInvoicePressed: () => InvoiceSheet.show(context),
+              onInvoicePressed: () => InvoiceSheet.show(context, widget.propertyId),
             ),
             SizedBox(height: 18.h),
             Text.rich(

@@ -53,6 +53,17 @@ class AppConstants {
           
   static String endpointChatMessages(String conversationId) =>
       '/api/app/conversations/$conversationId/messages';
+
+  /// GET /api/app/households/{householdId}/invoices?limit=50
+  static String endpointHouseholdInvoices(String householdId) =>
+      '/api/app/households/$householdId/invoices';
+
+  /// GET /api/app/invoices/{invoiceId}
+  static String endpointInvoice(String invoiceId) => '/api/app/invoices/$invoiceId';
+
+  /// GET /api/app/invoices/{invoiceId}/pdf
+  static String endpointInvoicePdf(String invoiceId) => '/api/app/invoices/$invoiceId/pdf';
+    
   
   /// GET /api/app/campuses/{campusId}/households
   static String endpointCampusHouseholds(String campusId) =>

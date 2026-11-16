@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pms_app/core/theme/app_colors.dart';
 import 'package:pms_app/core/theme/app_text_styles.dart';
 import 'package:pms_app/features/invoice/presentation/providers/invoice_detail_provider.dart';
+import 'package:pms_app/features/invoice/presentation/providers/invoice_pdf_launcher.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pms_app/core/router/route_names.dart';
 
@@ -35,7 +36,10 @@ class InvoicePaymentPage extends ConsumerWidget {
                       style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700, fontSize: 15.sp),
                     ),
                   ),
-                  SizedBox(width: 48.w),
+                  IconButton(
+                    onPressed: () => openInvoicePdf(context, ref, invoiceId),
+                    icon: const Icon(Icons.file_download_outlined),
+                  ),
                 ],
               ),
             ),

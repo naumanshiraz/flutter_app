@@ -1,78 +1,99 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
+import 'package:pms_app/core/constants/app_constants.dart';
 import 'package:pms_app/core/error/exceptions.dart';
 import 'package:pms_app/features/invoice/data/models/invoice_model.dart';
 
 abstract class InvoiceRemoteDataSource {
-  Future<List<InvoiceSummaryModel>> getInvoices(String propertyId);
+  Future<List<InvoiceSummaryModel>> getInvoices(String householdId);
   Future<InvoiceDetailModel> getInvoiceDetail(String invoiceId);
+  Future<String> getInvoicePdfUrl(String invoiceId);
 }
 
 class InvoiceRemoteDataSourceImpl implements InvoiceRemoteDataSource {
   final Dio _dio;
   InvoiceRemoteDataSourceImpl(this._dio);
 
-  static const List<Map<String, dynamic>> _mockInvoices = [
-    {'id': 'inv-2024-05', 'label': 'May 5, 2024 - Invoice', 'status': 'pending'},
-    {'id': 'inv-2024-04', 'label': 'April 5, 2024 - Invoice', 'status': 'overdue'},
-    {'id': 'inv-2024-03', 'label': 'March 5, 2024 - Invoice', 'status': 'none'},
-  ];
+  static const int _limit = 50;
 
-  static const Map<String, Map<String, dynamic>> _mockDetails = {
-    'inv-2024-05': {
-      'id': 'inv-2024-05',
-      'label': 'May 5, 2024 - Invoice',
-      'propertyName': 'Khos urguu',
-      'propertyAddress': '85 - 2, Gerlug Vista\n15th Khoroo, Khan Uul\nUB, Mongolia 13146',
-      'date': 'May 5, 2024',
-      'dueDate': 'May 20, 2024',
-      'invoiceNumber': '050524',
-      'billToName': 'Tulgabaatar Dashdorj',
-      'billToAddress': '85 - 75, Gerlug Vista\n15th Khoroo, Khan Uul\nUB, Mongolia 13146',
-      'balanceDue': 'MNT 45,000',
-      'charges': [
-        {'label': 'Maintenance & repairs', 'amount': 'MNT 15,000'},
-        {'label': 'Cleaning fees', 'amount': 'MNT 10,000'},
-        {'label': 'Inspection and background checks', 'amount': 'MNT 5,000'},
-        {'label': 'Management fee', 'amount': 'MNT 5,000'},
-        {'label': 'Security', 'amount': 'MNT 5,000'},
-        {'label': 'Insurance', 'amount': 'MNT 5,000'},
-        {'label': 'Overdue penalty', 'amount': '-'},
-      ],
-    },
-  };
+  ServerException _toServerException(DioException e, String fallback) {
+    final data = e.response?.data;
+    final serverMessage = data is Map ? (data['message'] ?? data['detail'])?.toString() : null;
+    return ServerException(serverMessage ?? e.message ?? fallback);
+  }
 
+  /// LIVE: GET /api/app/households/{id}/invoices?limit=50
   @override
-  Future<List<InvoiceSummaryModel>> getInvoices(String propertyId) async {
+  Future<List<InvoiceSummaryModel>> getInvoices(String householdId) async {
     try {
-      await Future.delayed(const Duration(milliseconds: 400));
-      return _mockInvoices.map(InvoiceSummaryModel.fromJson).toList();
-
-      // final response = await _dio.get('/properties/$propertyId/invoices');
-      // final data = response.data as List<dynamic>;
-      // return data.map((j) => InvoiceSummaryModel.fromJson(j as Map<String, dynamic>)).toList();
+      final response = await _dio.get(
+        AppConstants.endpointHouseholdInvoices(householdId),
+        queryParameters: {'limit': _limit},
+      );
+      final body = response.data;
+      final rows = body is List
+          ? body
+          : (body is Map ? (body['items'] ?? body['data'] ?? body['results']) : null);
+      if (rows is! List) throw const ServerException('Unexpected invoices response.');
+      return rows.map((j) => InvoiceSummaryModel.fromJson(j as Map<String, dynamic>)).toList();
     } on DioException catch (e) {
-      throw ServerException(e.message ?? 'Failed to fetch invoices.');
+      throw _toServerException(e, 'Failed to fetch invoices.');
+    } on ServerException {
+      rethrow;
     } catch (e) {
       throw ServerException('Unexpected error fetching invoices: $e');
     }
   }
 
+  /// LIVE: GET /api/app/invoices/{id}
   @override
   Future<InvoiceDetailModel> getInvoiceDetail(String invoiceId) async {
     try {
-      await Future.delayed(const Duration(milliseconds: 400));
-      final json = _mockDetails[invoiceId];
-      if (json == null) throw ServerException('Invoice not found: $invoiceId');
-      return InvoiceDetailModel.fromJson(json);
-
-      // final response = await _dio.get('/invoices/$invoiceId');
-      // return InvoiceDetailModel.fromJson(response.data as Map<String, dynamic>);
+      final response = await _dio.get(AppConstants.endpointInvoice(invoiceId));
+      return InvoiceDetailModel.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
-      throw ServerException(e.message ?? 'Failed to fetch invoice.');
+      throw _toServerException(e, 'Failed to fetch invoice.');
+    } catch (e) {
+      throw ServerException('Unexpected error fetching invoice: $e');
+    }
+  }
+
+  /// LIVE: GET /api/app/invoices/{id}/pdf — resolved to a URL the browser can open.
+  /// Handles a redirect (Location header) or a JSON body carrying a url.
+  @override
+  Future<String> getInvoicePdfUrl(String invoiceId) async {
+    final path = AppConstants.endpointInvoicePdf(invoiceId);
+    try {
+      final response = await _dio.get<List<int>>(
+        path,
+        options: Options(
+          responseType: ResponseType.bytes,
+          followRedirects: false,
+          validateStatus: (s) => s != null && s < 400,
+        ),
+      );
+      final location = response.headers.value('location');
+      if (location != null && location.isNotEmpty) {
+        return response.requestOptions.uri.resolve(location).toString();
+      }
+      final type = response.headers.value('content-type') ?? '';
+      if (type.contains('json')) {
+        final json = jsonDecode(utf8.decode(response.data ?? const []));
+        if (json is Map) {
+          final url = json['url'] ?? json['pdf_url'] ?? json['download_url'];
+          if (url is String && url.isNotEmpty) return url;
+        }
+        throw const ServerException('Invoice PDF link was not provided.');
+      }
+      // Raw PDF served directly from the endpoint.
+      return response.requestOptions.uri.toString();
+    } on DioException catch (e) {
+      throw _toServerException(e, 'Failed to open invoice PDF.');
     } on ServerException {
       rethrow;
     } catch (e) {
-      throw ServerException('Unexpected error fetching invoice: $e');
+      throw ServerException('Unexpected error opening invoice PDF: $e');
     }
   }
 }
