@@ -36,13 +36,13 @@ class InvoiceRepositoryImpl implements InvoiceRepository {
   }
 
   @override
-  Future<Result<String>> getInvoicePdfUrl(String invoiceId) async {
+  Future<Result<String>> downloadInvoicePdf(String invoiceId) async {
     try {
-      return Success(await _remoteDataSource.getInvoicePdfUrl(invoiceId));
+      return Success(await _remoteDataSource.downloadInvoicePdf(invoiceId));
     } on ServerException catch (e) {
       return ResultError(ServerFailure(e.message));
     } catch (e) {
-      return ResultError(UnknownFailure('Failed to open invoice PDF: $e'));
+      return ResultError(UnknownFailure('Failed to download invoice PDF: $e'));
     }
   }
 }

@@ -23,6 +23,6 @@ final getInvoiceDetailUseCaseProvider = Provider<GetInvoiceDetailUseCase>((ref) 
   return GetInvoiceDetailUseCase(ref.watch(invoiceRepositoryProvider));
 });
 
-final getInvoicePdfUrlUseCaseProvider = Provider<GetInvoicePdfUrlUseCase>((ref) {
-  return GetInvoicePdfUrlUseCase(ref.watch(invoiceRepositoryProvider));
+final downloadInvoicePdfUseCaseProvider = Provider<DownloadInvoicePdfUseCase>((ref) {
+  return DownloadInvoicePdfUseCase(ref.watch(invoiceRepositoryProvider));
 });

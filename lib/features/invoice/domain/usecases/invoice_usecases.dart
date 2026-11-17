@@ -16,9 +16,9 @@ class GetInvoiceDetailUseCase {
   Future<Result<InvoiceDetail>> call(String invoiceId) => _repository.getInvoiceDetail(invoiceId);
 }
 
-class GetInvoicePdfUrlUseCase {
+class DownloadInvoicePdfUseCase {
   final InvoiceRepository _repository;
-  const GetInvoicePdfUrlUseCase(this._repository);
+  const DownloadInvoicePdfUseCase(this._repository);
 
-  Future<Result<String>> call(String invoiceId) => _repository.getInvoicePdfUrl(invoiceId);
+  Future<Result<String>> call(String invoiceId) => _repository.downloadInvoicePdf(invoiceId);
 }

@@ -1,6 +1,7 @@
-import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pms_app/core/constants/app_constants.dart';
 import 'package:pms_app/core/error/exceptions.dart';
 import 'package:pms_app/features/invoice/data/models/invoice_model.dart';
@@ -8,7 +9,8 @@ import 'package:pms_app/features/invoice/data/models/invoice_model.dart';
 abstract class InvoiceRemoteDataSource {
   Future<List<InvoiceSummaryModel>> getInvoices(String householdId);
   Future<InvoiceDetailModel> getInvoiceDetail(String invoiceId);
-  Future<String> getInvoicePdfUrl(String invoiceId);
+  
+  Future<String> downloadInvoicePdf(String invoiceId);
 }
 
 class InvoiceRemoteDataSourceImpl implements InvoiceRemoteDataSource {
@@ -59,41 +61,35 @@ class InvoiceRemoteDataSourceImpl implements InvoiceRemoteDataSource {
     }
   }
 
-  /// LIVE: GET /api/app/invoices/{id}/pdf — resolved to a URL the browser can open.
-  /// Handles a redirect (Location header) or a JSON body carrying a url.
+  /// LIVE: GET /api/app/invoices/{id}/pdf
   @override
-  Future<String> getInvoicePdfUrl(String invoiceId) async {
-    final path = AppConstants.endpointInvoicePdf(invoiceId);
+  Future<String> downloadInvoicePdf(String invoiceId) async {
     try {
       final response = await _dio.get<List<int>>(
-        path,
-        options: Options(
-          responseType: ResponseType.bytes,
-          followRedirects: false,
-          validateStatus: (s) => s != null && s < 400,
-        ),
+        AppConstants.endpointInvoicePdf(invoiceId),
+        options: Options(responseType: ResponseType.bytes),
       );
-      final location = response.headers.value('location');
-      if (location != null && location.isNotEmpty) {
-        return response.requestOptions.uri.resolve(location).toString();
-      }
-      final type = response.headers.value('content-type') ?? '';
-      if (type.contains('json')) {
-        final json = jsonDecode(utf8.decode(response.data ?? const []));
-        if (json is Map) {
-          final url = json['url'] ?? json['pdf_url'] ?? json['download_url'];
-          if (url is String && url.isNotEmpty) return url;
-        }
-        throw const ServerException('Invoice PDF link was not provided.');
-      }
-      // Raw PDF served directly from the endpoint.
-      return response.requestOptions.uri.toString();
+      final bytes = response.data;
+      final isPdf = bytes != null &&
+          bytes.length > 4 &&
+          bytes[0] == 0x25 && // %
+          bytes[1] == 0x50 && // P
+          bytes[2] == 0x44 && // D
+          bytes[3] == 0x46; // F
+      if (!isPdf) throw const ServerException('Invoice PDF is not available.');
+
+      final dir = await getTemporaryDirectory();
+      final file = File('${dir.path}/invoice-$invoiceId.pdf');
+      await file.writeAsBytes(bytes, flush: true);
+      return file.path;
     } on DioException catch (e) {
-      throw _toServerException(e, 'Failed to open invoice PDF.');
+      throw _toServerException(e, 'Failed to download invoice PDF.');
     } on ServerException {
       rethrow;
+    } on FileSystemException catch (e) {
+      throw ServerException('Could not save invoice PDF: ${e.message}');
     } catch (e) {
-      throw ServerException('Unexpected error opening invoice PDF: $e');
+      throw ServerException('Unexpected error downloading invoice PDF: $e');
     }
   }
 }
